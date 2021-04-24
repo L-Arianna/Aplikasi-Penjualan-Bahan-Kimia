@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 22, 2021 at 10:19 AM
+-- Generation Time: Apr 24, 2021 at 06:54 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.4.16
 
@@ -42,7 +42,7 @@ CREATE TABLE `backset` (
 --
 
 INSERT INTO `backset` (`url`, `sessiontime`, `footer`, `themesback`, `responsive`, `namabisnis1`, `batas`) VALUES
-('http://localhost/k2021', '100', 'KURNIA MAKMUR. PT', '1', '0', 'KURNIA MAKMUR. PT', 50);
+('http://localhost/k2021', '100', 'KURNIA MAKMUR. PT', '1', '1', 'KURNIA MAKMUR. PT', 100);
 
 -- --------------------------------------------------------
 
@@ -63,6 +63,8 @@ CREATE TABLE `barang` (
   `terjual` int(11) DEFAULT NULL,
   `terbeli` int(11) DEFAULT NULL,
   `sisa` int(11) DEFAULT NULL,
+  `satuan` varchar(11) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL,
   `retur` int(10) NOT NULL,
   `avatar` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -71,8 +73,9 @@ CREATE TABLE `barang` (
 -- Dumping data for table `barang`
 --
 
-INSERT INTO `barang` (`no`, `kode`, `sku`, `nama`, `kategori`, `brand`, `keterangan`, `gudang`, `barcode`, `terjual`, `terbeli`, `sisa`, `retur`, `avatar`) VALUES
-(11, '000001', 'SKU000001', 'asasas', 'segar', 'garnier', 'asasas', 'Gudang 1', 'SKU000016', 111, 240, 129, 0, 'dist/upload/');
+INSERT INTO `barang` (`no`, `kode`, `sku`, `nama`, `kategori`, `brand`, `keterangan`, `gudang`, `barcode`, `terjual`, `terbeli`, `sisa`, `satuan`, `jumlah`, `retur`, `avatar`) VALUES
+(11, '000001', 'SKU000001', 'asasas', 'segar', 'garnier', 'asasas', 'Gudang 1', 'SKU000016', 440, 585, 145, 'liter', 200, 0, 'dist/upload/'),
+(12, '000002', 'SKU000002', 'segar dingin', 'segar', 'garnier', 'asadasdf', 'Gudang 1', 'SKU000023', 12, 148, 136, 'Kg', 250, 0, '');
 
 -- --------------------------------------------------------
 
@@ -383,6 +386,8 @@ CREATE TABLE `invoicejual` (
 --
 
 INSERT INTO `invoicejual` (`nota`, `kode`, `nama`, `harga`, `jumlah`, `hargaakhir`, `modal`, `total_satuan`, `satuan`, `jumlah_satuan`, `no`) VALUES
+('00001', '000001', 'asasas', 145000, 12, 1740000, 0, 2400, 'Liter', 200, 24),
+('00002', '000001', 'asasas', 145000, 300, 43500000, 0, 60000, 'Liter', 200, 25),
 ('00003', '000001', 'asasas', 145000, 24, 3480000, 0, 4800, 'Liter', 200, 23);
 
 -- --------------------------------------------------------
@@ -435,7 +440,6 @@ CREATE TABLE `mutasi` (
   `namauser` varchar(50) NOT NULL,
   `tgl` date NOT NULL,
   `kodebarang` varchar(10) NOT NULL,
-  `gudang` varchar(100) NOT NULL,
   `sisa` int(10) NOT NULL,
   `jumlah` int(10) NOT NULL,
   `kegiatan` varchar(100) NOT NULL,
@@ -448,34 +452,55 @@ CREATE TABLE `mutasi` (
 -- Dumping data for table `mutasi`
 --
 
-INSERT INTO `mutasi` (`namauser`, `tgl`, `kodebarang`, `gudang`, `sisa`, `jumlah`, `kegiatan`, `keterangan`, `no`, `status`) VALUES
-('admin', '2021-04-01', '000001', '', 589, -12, 'menjual barang memakai invoice', '00002', 1, 'berhasil'),
-('admin', '2021-04-01', '000001', '', 577, -12, 'menjual barang memakai struk', '00003', 2, 'berhasil'),
-('admin', '2021-04-14', '000001', '', 89, -12, 'menjual barang memakai invoice', '00002', 3, 'berhasil'),
-('admin', '2021-04-14', '000001', '', 88, -1, 'menjual barang memakai invoice', '00003', 4, 'berhasil'),
-('admin', '2021-04-14', '000001', '', 81, -12, 'menjual barang memakai invoice', '00001', 5, 'berhasil'),
-('admin', '2021-04-14', '000001', '', 81, -12, 'menjual barang memakai invoice', '00001', 6, 'berhasil'),
-('admin', '2021-04-14', '000001', '', 81, -12, 'menjual barang memakai invoice', '00001', 7, 'berhasil'),
-('admin', '2021-04-14', '000001', '', 81, -12, 'menjual barang memakai invoice', '00001', 8, 'berhasil'),
-('Haryzzar', '2021-04-14', '000002', '', 120, 120, 'stok masuk', 'PT TEGUS', 9, 'berhasil'),
-('admin', '2021-04-15', '000002', '', 108, -12, 'menjual barang memakai invoice', '00004', 10, 'berhasil'),
-('admin', '2021-04-15', '000001', '', 69, -12, 'menjual barang memakai invoice', '00004', 11, 'berhasil'),
-('admin', '2021-04-15', '000002', '', 108, -12, 'menjual barang memakai invoice', '00004', 12, 'berhasil'),
-('admin', '2021-04-15', '000001', '', 69, -12, 'menjual barang memakai invoice', '00004', 13, 'berhasil'),
-('Haryzzar', '2021-04-15', '000002', '', 132, 12, 'stok masuk', 'PT TEGUS', 14, 'berhasil'),
-('Haryzzar', '2021-04-15', '000003', '', 100, 100, 'stok masuk', '0008', 15, 'pending'),
-('admin', '2021-04-15', '000003', '', 88, -12, 'menjual barang memakai invoice', '00002', 16, 'berhasil'),
-('admin', '2021-04-16', '0007', '', 88, -12, 'menjual barang memakai invoice', '00002', 17, 'berhasil'),
-('Haryzzar', '2021-04-16', '', '', 120, 120, 'stok masuk', '0008', 18, 'pending'),
-('Haryzzar', '2021-04-16', '000003', '', 120, 120, 'stok masuk', 'PT TEGUS', 19, 'berhasil'),
-('Haryzzar', '2021-04-16', '000001', '', 120, 120, 'stok masuk', 'PT TEGUS', 20, 'berhasil'),
-('Haryzzar', '2021-04-16', '000002', '', 120, 120, 'stok masuk', 'PT TEGUS', 21, 'berhasil'),
-('admin', '2021-04-16', '000003', '', 108, -12, 'menjual barang memakai invoice', '00002', 22, 'berhasil'),
-('admin', '2021-04-16', '000001', '', 0, -120, 'menjual barang memakai invoice', '00002', 23, 'berhasil'),
-('admin', '2021-04-16', '000002', '', 108, -12, 'menjual barang memakai invoice', '00003', 24, 'pending'),
-('Haryzzar', '2021-04-16', '000001', '', 120, 119, 'stok masuk', 'PT TEGUS', 25, 'berhasil'),
-('Haryzzar', '2021-04-19', '000001', '', 120, 120, 'stok masuk', 'PT TEGUS', 26, 'berhasil'),
-('Haryzzar', '2021-04-19', '000001', '', 240, 120, 'stok masuk', '0004', 27, 'pending');
+INSERT INTO `mutasi` (`namauser`, `tgl`, `kodebarang`, `sisa`, `jumlah`, `kegiatan`, `keterangan`, `no`, `status`) VALUES
+('admin', '2021-04-01', '000001', 589, -12, 'menjual barang memakai invoice', '00002', 1, 'berhasil'),
+('admin', '2021-04-01', '000001', 577, -12, 'menjual barang memakai struk', '00003', 2, 'berhasil'),
+('admin', '2021-04-14', '000001', 89, -12, 'menjual barang memakai invoice', '00002', 3, 'berhasil'),
+('admin', '2021-04-14', '000001', 88, -1, 'menjual barang memakai invoice', '00003', 4, 'berhasil'),
+('admin', '2021-04-14', '000001', 81, -12, 'menjual barang memakai invoice', '00001', 5, 'berhasil'),
+('admin', '2021-04-14', '000001', 81, -12, 'menjual barang memakai invoice', '00001', 6, 'berhasil'),
+('admin', '2021-04-14', '000001', 81, -12, 'menjual barang memakai invoice', '00001', 7, 'berhasil'),
+('admin', '2021-04-14', '000001', 81, -12, 'menjual barang memakai invoice', '00001', 8, 'berhasil'),
+('Haryzzar', '2021-04-14', '000002', 120, 120, 'stok masuk', 'PT TEGUS', 9, 'berhasil'),
+('admin', '2021-04-15', '000002', 108, -12, 'menjual barang memakai invoice', '00004', 10, 'berhasil'),
+('admin', '2021-04-15', '000001', 69, -12, 'menjual barang memakai invoice', '00004', 11, 'berhasil'),
+('admin', '2021-04-15', '000002', 108, -12, 'menjual barang memakai invoice', '00004', 12, 'berhasil'),
+('admin', '2021-04-15', '000001', 69, -12, 'menjual barang memakai invoice', '00004', 13, 'berhasil'),
+('Haryzzar', '2021-04-15', '000002', 132, 12, 'stok masuk', 'PT TEGUS', 14, 'berhasil'),
+('Haryzzar', '2021-04-15', '000003', 100, 100, 'stok masuk', 'PT TEGUS', 15, 'berhasil'),
+('admin', '2021-04-15', '000003', 88, -12, 'menjual barang memakai invoice', '00002', 16, 'berhasil'),
+('admin', '2021-04-16', '0007', 88, -12, 'menjual barang memakai invoice', '00002', 17, 'berhasil'),
+('Haryzzar', '2021-04-16', '', 120, 120, 'stok masuk', 'PT TEGUS', 18, 'berhasil'),
+('Haryzzar', '2021-04-16', '000003', 120, 120, 'stok masuk', 'PT TEGUS', 19, 'berhasil'),
+('Haryzzar', '2021-04-16', '000001', 120, 120, 'stok masuk', 'PT TEGUS', 20, 'berhasil'),
+('Haryzzar', '2021-04-16', '000002', 120, 120, 'stok masuk', 'PT TEGUS', 21, 'berhasil'),
+('admin', '2021-04-16', '000003', 108, -12, 'menjual barang memakai invoice', '00002', 22, 'berhasil'),
+('admin', '2021-04-16', '000001', 0, -120, 'menjual barang memakai invoice', '00002', 23, 'berhasil'),
+('admin', '2021-04-16', '000002', 108, -12, 'menjual barang memakai invoice', '00003', 24, 'pending'),
+('Haryzzar', '2021-04-16', '000001', 120, 119, 'stok masuk', 'PT TEGUS', 25, 'berhasil'),
+('Haryzzar', '2021-04-19', '000001', 120, 120, 'stok masuk', 'PT TEGUS', 26, 'berhasil'),
+('Haryzzar', '2021-04-19', '000001', 240, 120, 'stok masuk', 'PT TEGUS', 27, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 12, 12, 'stok masuk', 'PT TEGUS', 28, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 100, 100, 'stok masuk', 'PT TEGUS', 29, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 100, 100, 'stok masuk', 'PT TEGUS', 30, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 100, 100, 'stok masuk', 'PT TEGUS', 31, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 100, 100, 'stok masuk', 'PT TEGUS', 32, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 1, 1, 'stok masuk', 'PT TEGUS', 33, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 100, 17, 'stok keluar', 'ok', 34, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 1, 1, 'stok masuk', 'PT TEGUS', 35, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 100, 100, 'stok masuk', 'PT TEGUS', 36, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 100, 100, 'stok masuk', 'PT TEGUS', 37, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 1, 1, 'stok masuk', 'PT TEGUS', 38, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 200, 100, 'stok masuk', 'PT TEGUS', 39, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 100, 100, 'stok masuk', 'PT TEGUS', 40, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 400, 100, 'stok masuk', 'PT TEGUS', 41, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 200, 100, 'stok masuk', 'PT TEGUS', 42, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 9200, 45, 'stok masuk', 'PT TEGUS', 43, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 15200, 30, 'stok masuk', 'PT TEGUS', 44, 'berhasil'),
+('Haryzzar', '2021-04-23', '000001', 445, 45, 'stok masuk', 'PT TEGUS', 45, 'berhasil'),
+('admin', '2021-04-23', '000001', 145, -300, 'menjual barang memakai invoice', '00002', 46, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 124, 124, 'stok masuk', 'PT TEGUS', 47, 'berhasil'),
+('Haryzzar', '2021-04-23', '000002', 136, 12, 'stok keluar', '', 48, 'berhasil');
 
 -- --------------------------------------------------------
 
@@ -594,8 +619,8 @@ CREATE TABLE `pelanggan` (
 --
 
 INSERT INTO `pelanggan` (`kode`, `tgldaftar`, `nama`, `alamat`, `nohp`, `email`, `no`) VALUES
-('0001', '2020-09-16', 'baju oblos', '', '11111', 'qqq@gmal.com', 1),
-('0002', '0000-00-00', 'L-arianna', 'sadafafafada', '083286323011', 'admin@gmail.com', 2);
+('0001', '2020-09-16', 'baju oblos', 'asdasdasdasdas', '11111', 'qqq@gmal.com', 1),
+('0003', '2021-04-24', 'ea', 'asdafaeqwwq', '083286323011', 'sinta@gmail.com', 3);
 
 -- --------------------------------------------------------
 
@@ -678,8 +703,6 @@ CREATE TABLE `sale` (
   `potongan` int(10) NOT NULL,
   `biaya` int(10) NOT NULL,
   `pelanggan` varchar(200) DEFAULT NULL,
-  `alamat` varchar(255) NOT NULL,
-  `no_hp` varchar(100) NOT NULL,
   `kasir` varchar(100) DEFAULT NULL,
   `keterangan` varchar(250) DEFAULT NULL,
   `no` int(11) NOT NULL,
@@ -696,9 +719,8 @@ CREATE TABLE `sale` (
 -- Dumping data for table `sale`
 --
 
-INSERT INTO `sale` (`nota`, `nomor`, `tglsale`, `duedate`, `total`, `diskon`, `potongan`, `biaya`, `pelanggan`, `alamat`, `no_hp`, `kasir`, `keterangan`, `no`, `status`, `faktur_pajak`, `no_po`, `no_surat_jalan`, `nama_pt`, `alamat_pt`, `no_tlp`) VALUES
-('00001', 'INV00001', '2021-04-15', '2021-04-15', 1332000, 12, 18000, 1200000, 'a', 'aa', '0989', 'admin', 'aasdasdasd', 19, 'belum', 'pjk003', 'po002', 'sjl0011', 'PT. Maju Jaya', 'jl.sidoarjo 12', '089764356671'),
-('00002', 'INV00002', '2021-04-16', '2021-04-16', 1440000, 12, 180000, 120000, 'frassono', 'jalan hahadsdsd', '0989897537233', 'admin', 'asasAS', 20, 'belum', '1231312', '102021', '12012012', 'PT.andromedia', 'farnosudin', '08976537112');
+INSERT INTO `sale` (`nota`, `nomor`, `tglsale`, `duedate`, `total`, `diskon`, `potongan`, `biaya`, `pelanggan`, `kasir`, `keterangan`, `no`, `status`, `faktur_pajak`, `no_po`, `no_surat_jalan`, `nama_pt`, `alamat_pt`, `no_tlp`) VALUES
+('00001', 'INV00001', '2021-04-24', '2021-04-24', 1968800, 12, 208800, 20000, '0003', 'admin', 'wewewrw', 23, 'belum', '012.546.23', '11/12/2021', '587/456/2021', 'PT. Maju Jaya', 'jalan kedondong nomo 45, Semarang Utara', '024653987');
 
 -- --------------------------------------------------------
 
@@ -764,7 +786,10 @@ INSERT INTO `stok_keluar` (`nota`, `cabang`, `tgl`, `pelanggan`, `userid`, `kete
 ('0007', '01', '2021-01-17', 'customer', '1', '', 7),
 ('0008', '01', '2021-01-18', 'customer', '1', 'aaaa', 8),
 ('0009', '01', '2021-01-18', 'customer', '1', '112eeqwdscdd', 9),
-('0010', '01', '2021-03-27', 'customer', '1', 'dasadadfs', 10);
+('0010', '01', '2021-03-27', 'customer', '1', 'dasadadfs', 10),
+('0011', '01', '2021-04-23', 'customer', '1', '', 11),
+('0012', '01', '2021-04-23', 'customer', '1', 'ok', 12),
+('0013', '01', '2021-04-23', 'customer', '1', '', 13);
 
 -- --------------------------------------------------------
 
@@ -789,7 +814,9 @@ INSERT INTO `stok_keluar_daftar` (`nota`, `kode_barang`, `nama`, `jumlah`, `no`)
 ('0009', '000004', 'manual liesa', 1, 16),
 ('0009', '000005', 'kategori', 1, 17),
 ('0010', '000001', 'adadasda', 1, 18),
-('0011', '000001', 'adadasda', 501, 19);
+('0011', '000001', 'adadasda', 501, 19),
+('0012', '000001', 'asasas', 17, 20),
+('0013', '000002', 'segar dingin', 12, 21);
 
 -- --------------------------------------------------------
 
@@ -799,7 +826,6 @@ INSERT INTO `stok_keluar_daftar` (`nota`, `kode_barang`, `nama`, `jumlah`, `no`)
 
 CREATE TABLE `stok_masuk` (
   `nota` varchar(10) NOT NULL,
-  `cabang` varchar(2) NOT NULL,
   `tgl` date NOT NULL,
   `supplier` varchar(10) NOT NULL,
   `userid` varchar(10) NOT NULL,
@@ -810,10 +836,34 @@ CREATE TABLE `stok_masuk` (
 -- Dumping data for table `stok_masuk`
 --
 
-INSERT INTO `stok_masuk` (`nota`, `cabang`, `tgl`, `supplier`, `userid`, `no`) VALUES
-('0001', '', '2021-04-16', 'PT TEGUS', '1', 10),
-('0002', '', '2021-04-16', 'PT TEGUS', '1', 11),
-('0003', '', '2021-04-19', 'PT TEGUS', '1', 12);
+INSERT INTO `stok_masuk` (`nota`, `tgl`, `supplier`, `userid`, `no`) VALUES
+('0001', '2021-04-16', 'PT TEGUS', '1', 10),
+('0002', '2021-04-16', 'PT TEGUS', '1', 11),
+('0003', '2021-04-19', 'PT TEGUS', '1', 12),
+('0004', '2021-04-22', 'PT TEGUS', '1', 13),
+('0005', '2021-04-23', 'PT TEGUS', '1', 14),
+('0006', '2021-04-23', 'PT TEGUS', '1', 15),
+('0007', '2021-04-23', 'PT TEGUS', '1', 16),
+('0008', '2021-04-23', 'PT TEGUS', '1', 17),
+('0009', '2021-04-23', 'PT TEGUS', '1', 18),
+('0010', '2021-04-23', 'PT TEGUS', '1', 19),
+('0011', '2021-04-23', 'PT TEGUS', '1', 20),
+('0012', '2021-04-23', 'PT TEGUS', '1', 21),
+('0013', '2021-04-23', 'PT TEGUS', '1', 22),
+('0014', '2021-04-23', 'PT TEGUS', '1', 23),
+('0015', '2021-04-23', 'PT TEGUS', '1', 24),
+('0016', '2021-04-23', 'PT TEGUS', '1', 25),
+('0017', '2021-04-23', 'PT TEGUS', '1', 26),
+('0018', '2021-04-23', 'PT TEGUS', '1', 27),
+('0019', '2021-04-23', 'PT TEGUS', '1', 28),
+('0020', '2021-04-23', 'PT TEGUS', '1', 29),
+('0021', '2021-04-23', 'PT TEGUS', '1', 30),
+('0022', '2021-04-23', 'PT TEGUS', '1', 31),
+('0023', '2021-04-23', 'PT TEGUS', '1', 32),
+('0024', '2021-04-23', 'PT TEGUS', '1', 33),
+('0025', '2021-04-23', 'PT TEGUS', '1', 34),
+('0026', '2021-04-23', 'PT TEGUS', '1', 35),
+('0027', '2021-04-23', 'PT TEGUS', '1', 36);
 
 -- --------------------------------------------------------
 
@@ -825,7 +875,6 @@ CREATE TABLE `stok_masuk_daftar` (
   `nota` varchar(10) NOT NULL,
   `kode_barang` varchar(10) NOT NULL,
   `nama` varchar(200) NOT NULL,
-  `gudang` varchar(100) NOT NULL,
   `jumlah` int(10) NOT NULL,
   `no` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -834,13 +883,35 @@ CREATE TABLE `stok_masuk_daftar` (
 -- Dumping data for table `stok_masuk_daftar`
 --
 
-INSERT INTO `stok_masuk_daftar` (`nota`, `kode_barang`, `nama`, `gudang`, `jumlah`, `no`) VALUES
-('0001', '000003', 'Sianida', '', 120, 21),
-('0001', '000001', 'segar', '', 120, 22),
-('0001', '000002', 'segar dingin', '', 120, 23),
-('0002', '000001', 'segar', '', 119, 24),
-('0003', '000001', 'asasas', 'gudang 1', 120, 25),
-('0004', '000001', 'asasas', '', 123, 26);
+INSERT INTO `stok_masuk_daftar` (`nota`, `kode_barang`, `nama`, `jumlah`, `no`) VALUES
+('0001', '000003', 'Sianida', 120, 21),
+('0001', '000001', 'segar', 120, 22),
+('0001', '000002', 'segar dingin', 120, 23),
+('0002', '000001', 'segar', 119, 24),
+('0003', '000001', 'asasas', 120, 25),
+('0004', '000001', 'asasas', 123, 26),
+('0005', '000001', 'asasas', 1, 27),
+('0006', '000001', 'asasas', 1, 28),
+('0007', '000001', 'asasas', 100, 29),
+('0008', '000001', 'asasas', 100, 30),
+('0009', '000001', 'asasas', 12, 31),
+('0010', '000002', 'segar dingin', 100, 32),
+('0011', '000002', 'segar dingin', 100, 33),
+('0012', '000002', 'segar dingin', 100, 34),
+('0013', '000002', 'segar dingin', 100, 35),
+('0014', '000001', 'asasas', 1, 36),
+('0015', '000001', 'asasas', 1, 37),
+('0016', '000001', 'asasas', 100, 38),
+('0017', '000001', 'asasas', 100, 39),
+('0018', '000001', 'asasas', 1, 40),
+('0019', '000001', 'asasas', 200, 41),
+('0021', '000002', 'segar dingin', 100, 42),
+('0022', '000001', 'asasas', 100, 43),
+('0023', '000002', 'segar dingin', 100, 44),
+('0024', '000002', 'segar dingin', 45, 45),
+('0025', '000002', 'segar dingin', 30, 46),
+('0026', '000001', 'asasas', 45, 47),
+('0027', '000002', 'segar dingin', 148, 48);
 
 -- --------------------------------------------------------
 
@@ -907,6 +978,26 @@ INSERT INTO `transaksimasuk` (`nota`, `kode`, `nama`, `harga`, `hargabeli`, `jum
 ('00001', '000001', 'adadasda', 12500, 11000, 0, 0, 0, 'YES', 1),
 ('00002', '000001', 'adadasda', 12500, 11000, 0, 0, 0, 'YES', 2),
 ('00003', '000001', 'adadasda', 12500, 11000, 12, 150000, 132000, 'NO', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `update_pelanggan`
+--
+
+CREATE TABLE `update_pelanggan` (
+  `kode` varchar(20) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `alamat` varchar(255) NOT NULL,
+  `nohp` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `update_pelanggan`
+--
+
+INSERT INTO `update_pelanggan` (`kode`, `nama`, `alamat`, `nohp`) VALUES
+('0003', 'antonio', 'asass', '083286323011');
 
 -- --------------------------------------------------------
 
@@ -1174,6 +1265,12 @@ ALTER TABLE `transaksimasuk`
   ADD KEY `no5_2` (`no`);
 
 --
+-- Indexes for table `update_pelanggan`
+--
+ALTER TABLE `update_pelanggan`
+  ADD PRIMARY KEY (`kode`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -1188,7 +1285,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `bayar`
@@ -1248,7 +1345,7 @@ ALTER TABLE `invoicebeli`
 -- AUTO_INCREMENT for table `invoicejual`
 --
 ALTER TABLE `invoicejual`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
@@ -1266,7 +1363,7 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `mutasi`
 --
 ALTER TABLE `mutasi`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `operasional`
@@ -1296,7 +1393,7 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `pelanggan`
 --
 ALTER TABLE `pelanggan`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `rekening`
@@ -1314,7 +1411,7 @@ ALTER TABLE `retur`
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `satuan`
@@ -1332,25 +1429,25 @@ ALTER TABLE `stokretur`
 -- AUTO_INCREMENT for table `stok_keluar`
 --
 ALTER TABLE `stok_keluar`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `stok_keluar_daftar`
 --
 ALTER TABLE `stok_keluar_daftar`
-  MODIFY `no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `stok_masuk`
 --
 ALTER TABLE `stok_masuk`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `stok_masuk_daftar`
 --
 ALTER TABLE `stok_masuk_daftar`
-  MODIFY `no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `supplier`
