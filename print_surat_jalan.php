@@ -82,18 +82,25 @@ $tglbayar = date("d-m-Y", strtotime($row['tglsale']));
 
 $due = date("d-m-Y", strtotime($row['duedate']));
 
+$sql2 = "SELECT * FROM pelanggan where kode='$pelanggan' ";
+$hasil2 = mysqli_query($conn, $sql2);
+$row = mysqli_fetch_assoc($hasil2);
+
+$customer = $row['nama'];
+$nohp = $row['nohp'];
+$address = $row['alamat'];
+
 $sql1 = "SELECT * FROM sale where nota='$nota' ";
 $hasil1 = mysqli_query($conn, $sql1);
 $row = mysqli_fetch_assoc($hasil1);
-$customer = $row['pelanggan'];
-$nohp = $row['no_hp'];
-$address = $row['alamat'];
+
 $noPO = $row['no_po'];
 $faktur_pajak = $row['faktur_pajak'];
 $no_surat = $row['no_surat_jalan'];
 $namapt = $row['nama_pt'];
 $alamatpt = $row['alamat_pt'];
 $notelppt = $row['no_tlp'];
+
 
 
 ?>
@@ -115,33 +122,43 @@ $notelppt = $row['no_tlp'];
 				<!-- /.col -->
 			</div>
 			<!-- info row -->
-			<div class="row invoice-info">
-				<div class="col-sm-5 invoice-col">
-					From
+			<div class="row mb-2">
+				<div class="col-sm-4 invoice-col">
+					FROM:
 					<address>
-						<strong><?php echo $namapt; ?></strong><br>
+						<strong> <?php echo $namapt; ?></strong><br>
 						<?php echo $alamatpt; ?><br>
 						Phone: <?php echo $notelppt; ?><br>
-						<!--    Email: info@<almasaeedstudio class="com">-->
-					</address>
-				</div>
-				<!-- /.col -->
-				<div class="col-sm-3 invoice-col">
-					To
-					<address>
-						<strong><?php echo $customer; ?></strong><br>
-						<?php echo $address; ?><br>
-
-						Phone: <?php echo $nohp; ?><br>
+						<b>No Surat Jalan : <?= $no_surat ?></b><br>
+						<b>No PO : <?= $noPO ?></b><br>
 					</address>
 				</div>
 				<!-- /.col -->
 				<div class="col-sm-4 invoice-col">
-					<b>Invoice #<?php echo $nota; ?></b><br>
-					<b>No Surat Jalan : <?= $no_surat ?></b><br>
-					<b>No PO : <?= $noPO ?></b><br>
-					<b>Jatuh Tempo:</b> <?php echo $due; ?><br>
 
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-4 invoice-col">
+					To : <br>
+					<?php
+					$sql3 = "SELECT * FROM update_pelanggan where kode='$pelanggan' ";
+					$hasil3 = mysqli_query($conn, $sql3);
+					$row = mysqli_fetch_assoc($hasil3);
+
+					$kode_new = $row['kode'];
+					$customer_new = $row['nama'];
+					$nohp_new = $row['nohp'];
+					$address_new = $row['alamat'];
+
+					if ($kode_new == null) { ?>
+						<strong> <?php echo $customer; ?></strong><br>
+						<?php echo $address; ?><br>
+						Phone: <?php echo $nohp; ?><br>
+					<?php } elseif ($kode_new > 0) { ?>
+						<strong> <?php echo $customer_new; ?></strong><br>
+						<?php echo $address_new; ?><br>
+						Phone: <?php echo $nohp_new; ?><br>
+					<?php } ?>
 				</div>
 				<!-- /.col -->
 			</div>
@@ -169,10 +186,12 @@ $notelppt = $row['no_tlp'];
 				$no_urut = ($page - 1) * $rpp;
 				?>
 				<div class="col-xs-12 table-responsive">
-					<table class="table table-striped">
+					<table class="table table-bordered">
 						<thead>
 							<tr>
+								<th>Packing</th>
 								<th>Qty</th>
+								<th>Total Qty </th>
 								<th>Product</th>
 							</tr>
 						</thead>
@@ -184,11 +203,11 @@ $notelppt = $row['no_tlp'];
 						?>
 							<tbody>
 								<tr>
+									<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
 									<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+									<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
 									<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
 								</tr>
-
-
 							<?php
 							$i++;
 							$count++;
@@ -215,7 +234,12 @@ $notelppt = $row['no_tlp'];
 					</thead>
 					<tbody>
 						<tr>
-							<td><?php echo $customer; ?></td>
+							<td><?php if ($kode_new == null) { ?>
+									<strong><?php echo $customer; ?></strong><br>
+								<?php } elseif ($kode_new > 0) { ?>
+									<strong><?php echo $customer_new; ?></strong><br>
+								<?php } ?>
+							</td>
 							<td></td>
 							<td></td>
 							<td></td>

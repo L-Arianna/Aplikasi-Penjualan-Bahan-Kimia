@@ -277,8 +277,8 @@ body();
             <!-- /.Paginasi -->
             <?php
             error_reporting(E_ALL ^ E_DEPRECATED);
-            // $sql    = "select * from sale inner join pelanggan on sale.pelanggan=pelanggan.kode order by sale.nota desc";
-            $sql    = "select * from sale order by nota desc";
+            $sql    = "select * from sale inner join pelanggan on sale.pelanggan=pelanggan.kode order by sale.nota desc";
+            // $sql    = "select * from sale order by nota desc";
             $result = mysqli_query($conn, $sql);
             $rpp    = 15;
             $reload = "$halaman" . "?pagination=true";
@@ -337,7 +337,7 @@ body();
                                 <span class="badge bg-danger"><?php echo $due; ?></span>
                               <?php } ?>
                             </td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['pelanggan']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
                             <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                             <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
 
@@ -398,7 +398,7 @@ body();
 
 
               </td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['pelanggan']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>

@@ -12,6 +12,7 @@ timing();
 pagination();
 ?>
 
+
 <?php
 if (!login_check()) {
 ?>
@@ -26,9 +27,10 @@ theader();
 menu();
 body();
 ?>
+
 <div class="page-wrapper">
   <div class="page-content">
-
+    <!-- Main content -->
 
     <!-- ./col -->
 
@@ -91,10 +93,6 @@ body();
       ?>
     </ol>
 
-
-    <h6 class="mb-0 text-uppercase"></h6>
-    <hr />
-
     <!-- BREADCRUMB -->
 
     <?php
@@ -102,12 +100,10 @@ body();
 
     if (isset($_POST['barcode'])) {
       $barcode = mysqli_real_escape_string($conn, $_POST["barcode"]);
-      $gudang = mysqli_real_escape_string($conn, $_POST["gudang"]);
-      $sql1 = "SELECT * FROM barang where barcode='$barcode' AND gudang='$gudang'";
+      $sql1 = "SELECT * FROM barang where barcode='$barcode'";
       $query = mysqli_query($conn, $sql1);
       $data = mysqli_fetch_assoc($query);
       $nama = $data['nama'];
-      $nama = $data['gudang'];
       $kode = $data['kode'];
       $jumlah = '1';
     }
@@ -120,7 +116,6 @@ body();
         $nota = mysqli_real_escape_string($conn, $_POST["nota"]);
         $kode = mysqli_real_escape_string($conn, $_POST["kode"]);
         $nama = mysqli_real_escape_string($conn, $_POST["nama"]);
-        $gudang = mysqli_real_escape_string($conn, $_POST["gudang"]);
         $jumlah = mysqli_real_escape_string($conn, $_POST["jumlah"]);
 
         $kegiatan = "Stok Masuk";
@@ -129,25 +124,25 @@ body();
         $today = date('Y-m-d');
 
 
-        $brg = mysqli_query($conn, "SELECT * FROM barang WHERE kode='$kode' AND gudang='$gudang'");
+        $brg = mysqli_query($conn, "SELECT * FROM barang WHERE kode='$kode'");
         $ass = mysqli_fetch_assoc($brg);
         $oldstok = $ass['sisa'];
         $oldin = $ass['terbeli'];
         $newstok = $oldstok + $jumlah;
         $newin = $oldin + $jumlah;
 
-        $sqlx = "UPDATE barang SET sisa='$newstok', terbeli='$newin' WHERE kode='$kode' AND gudang='$gudang'";
+        $sqlx = "UPDATE barang SET sisa='$newstok', terbeli='$newin' WHERE kode='$kode'";
         $updx = mysqli_query($conn, $sqlx);
         if ($updx) {
 
-          $sql = "select * from stok_masuk_daftar where nota='$nota' and kode_barang='$kode' and gudang='$gudang'";
+          $sql = "select * from stok_masuk_daftar where nota='$nota' and kode_barang='$kode'";
           $resulte = mysqli_query($conn, $sql);
 
           if (mysqli_num_rows($resulte) > 0) {
             $q = mysqli_fetch_assoc($resulte);
             $cart = $q['jumlah'];
             $newcart = $cart + $jumlah;
-            $sqlu = "UPDATE stok_masuk_daftar SET jumlah='$newcart' where nota='$nota' AND kode_barang='$kode' AND gudang='$gudang'";
+            $sqlu = "UPDATE stok_masuk_daftar SET jumlah='$newcart' where nota='$nota' AND kode_barang='$kode'";
             $ucart = mysqli_query($conn, $sqlu);
             if ($ucart) {
 
@@ -162,12 +157,12 @@ body();
             }
           } else {
 
-            $sql2 = "insert into stok_masuk_daftar values( '$nota','$kode','$nama','$gudang','$jumlah','')";
+            $sql2 = "insert into stok_masuk_daftar values( '$nota','$kode','$nama','$jumlah','')";
             $insertan = mysqli_query($conn, $sql2);
 
             if ($insertan) {
 
-              $sql9 = "INSERT INTO mutasi VALUES('$usr','$today','$kode','$gudang','$newstok','$jumlah','stok masuk','$nota','','pending')";
+              $sql9 = "INSERT INTO mutasi VALUES('$usr','$today','$kode','$newstok','$jumlah','stok masuk','$nota','','pending')";
               $mutasi = mysqli_query($conn, $sql9);
 
               echo "<script type='text/javascript'>  alert('Produk telah dimasukan dalam daftar!');</script>";
@@ -198,14 +193,10 @@ body();
     <?php
     if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
     ?>
-
-
-      <!-- KONTEN BODY AWAL -->
-      <!-- Default box -->
       <div class="row">
-        <div class="col-lg-5 col-xs-12">
+        <div class="col-lg-8 col-xs-12">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header with-border">
               <h3>Form Stok Masuk</h3>
             </div>
             <div class="card-body">
@@ -213,9 +204,9 @@ body();
               <body OnLoad='document.getElementById("barcode").focus();'>
                 <form method="post" action="">
                   <div class="row">
-                    <div class="form-group">
+                    <div class="form-group col-md-12 col-xs-12">
                       <label for="barang" class="col-sm-2 control-label">Barcode:</label>
-                      <div class="col-md-12">
+                      <div class="col-sm-8">
                         <input type="text" class="form-control" id="barcode" name="barcode">
                       </div>
                       <div class="col-sm-2">
@@ -224,15 +215,16 @@ body();
                     </div>
                   </div>
                 </form>
+
                 <div class="row">
-                  <div class="form-group">
+                  <div class="form-group col-md-12 col-xs-12">
                     <label for="barang" class="col-sm-2 control-label">Pilih Barang:</label>
-                    <div class="col-md-12">
+                    <div class="col-sm-10">
                       <select class="form-control select2" style="width: 100%;" name="produk" id="produk">
                         <option selected="selected">Pilih Barang</option>
                         <?php
                         error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                        $sql = mysqli_query($conn, "select *,barang.nama as nama, barang.kode as kode, barang.sku as sku, barang.gudang as gudang from barang");
+                        $sql = mysqli_query($conn, "select *,barang.nama as nama, barang.kode as kode, barang.sku as sku from barang");
                         while ($row = mysqli_fetch_assoc($sql)) {
                           if ($barcode == $row['barcode'])
                             echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
@@ -244,49 +236,63 @@ body();
                     </div>
                   </div>
                 </div>
+
                 <form method="post" action="">
                   <div class="row">
-                    <div class="form-group">
+                    <div class="form-group col-md-12 col-xs-12">
                       <label for="barang" class="col-sm-2 control-label">Nama Produk:</label>
-                      <div class="col-md-12">
+                      <div class="col-sm-10">
                         <input type="text" class="form-control" readonly id="nama" name="nama" value="<?php echo $nama; ?>">
-                        <input type="hidden" class="form-control" readonly id="gudang" name="gudang" value="<?php echo $gudang; ?>">
                         <input type="hidden" class="form-control" readonly id="kode" name="kode" value="<?php echo $kode; ?>">
                         <input type="hidden" class="form-control" readonly id="nota" name="nota" value="<?php echo autoNumber(); ?>">
+
                       </div>
+
                     </div>
                   </div>
+
+
                   <?php
                   error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                   ?>
+                  <?php
+                  $s = $stok + $sa;
+                  ?>
+
                   <div class="row">
-                    <div class="form-group">
-                      <label for="barang" class="col-sm-2 control-label">Stok Tersedia:</label>
-                      <div class="col-md-12">
+                    <div class="form-group col-md-12 col-xs-12">
+                      <label for="form-control">Stok Tersedia:</label>
+                      <div class="col-sm-5">
                         <input type="text" class="form-control" id="stok" name="stok" value="<?php echo $stok; ?>" readonly>
                       </div>
                     </div>
                   </div>
+
+
+
+
                   <div class="row">
-                    <div class="form-group mb-1">
+                    <div class="form-group col-md-12 col-xs-12">
                       <label for="barang" class="col-sm-2 control-label">Jumlah:</label>
-                      <div class="col-md-12">
+                      <div class="col-sm-5 mb-1">
                         <input type="text" class="form-control" id="jumlah" name="jumlah" value="<?php echo $jumlah; ?>">
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-2">
-                        <button type="submit" name="masuk" class="btn btn-warning btn-sm">Tambahkan</button>
+                      <div class="col-sm-5">
+                        <button type="submit" name="masuk" class="btn btn-primary btn btn-sm">Tambahkan</button>
                       </div>
                     </div>
                   </div>
+
+
                 </form>
             </div>
-            <!-- /.box-body -->
           </div>
         </div>
 
-        <div class="col-lg-7 col-xs-12">
+
+
+
+        <div class="col-lg-4 col-xs-12">
           <div class="card">
             <div class="card-header with-border">
               <h3>Daftar Masuk</h3>
@@ -296,6 +302,7 @@ body();
                 <div class="col-md-12">
                   <div class="box box-success">
                     <div class="box-header with-border">
+
                     </div>
 
                     <?php
@@ -306,6 +313,9 @@ body();
                     $rpp    = 30;
                     $reload = "$halaman" . "?pagination=true";
                     $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+
+
                     if ($page <= 0)
                       $page = 1;
                     $tcount  = mysqli_num_rows($result);
@@ -314,14 +324,14 @@ body();
                     $i       = ($page - 1) * $rpp;
                     $no_urut = ($page - 1) * $rpp;
                     ?>
-                    <div class="table-responsive">
+                    <div class="box-body table-responsive">
                       <table class="data table table-hover table-bordered">
                         <thead>
                           <tr>
                             <th style="width:10px">No</th>
                             <th>Nama Barang</th>
-                            <th>gudang</th>
                             <th style="width:10%">Jumlah Masuk</th>
+
                             <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
                               <th style="width:10px">Opsi</th>
                             <?php } else {
@@ -337,9 +347,12 @@ body();
                           <tbody>
                             <tr>
                               <td><?php echo ++$no_urut; ?></td>
+
+
                               <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                              <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+
                               <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+
                               <td>
                                 <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
                                   <button type="button" class="btn btn-danger btn-xs" onclick="window.location.href='component/delete/delete_stok?get=<?php echo 'in' . '&'; ?>barang=<?php echo $fill['kode_barang'] . '&'; ?>jumlah=<?php echo $fill['jumlah'] . '&'; ?>&kode=<?php echo $kode . '&'; ?>no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo $tabel . '&'; ?>forwardpage=<?php echo "" . $forwardpage . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
@@ -359,8 +372,13 @@ body();
                                             echo paginate_one($reload, $page, $tpages);
                                           } else {
                                           } ?></div>
+
+
                     </div>
+
                   </div>
+
+
                 </div>
               </div>
 
@@ -368,11 +386,12 @@ body();
                 <div class="col-md-12">
                   <div class="box box-danger">
                     <div class="box-header with-border">
+
                       <form method="post" action="">
                         <div class="row">
                           <div class="form-group col-md-12 col-xs-12">
                             <label for="barang" class="col-sm-2 control-label">Supplier:</label>
-                            <div class="col-md-12">
+                            <div class="col-sm-10">
                               <select class="form-control select2" style="width: 100%;" name="supplier">
                                 <?php
                                 $sql = mysqli_query($conn, "select * from supplier");
@@ -385,13 +404,14 @@ body();
                                 ?>
                               </select>
                             </div>
+
                           </div>
                         </div>
                         <br>
                         <input type="hidden" class="form-control" readonly id="notae" name="notae" value="<?php echo autoNumber(); ?>">
                         <div class="row">
                           <div class="form-group col-md-12 col-xs-12">
-                            <button type="submit" name="simpan" class="btn btn-primary btn-sm">SIMPAN</button>
+                            <button type="submit" name="simpan" class="btn btn-primary btn btn-sm">SIMPAN</button>
                           </div>
                         </div>
                       </form>
@@ -400,22 +420,11 @@ body();
                 </div>
               </div>
             </div>
+            <!-- /.box-body -->
           </div>
-
-          <!-- /.box-body -->
         </div>
 
-
       </div>
-
-
-
-
-
-
-
-
-
 
 
       <?php
@@ -426,11 +435,11 @@ body();
           $sup = mysqli_real_escape_string($conn, $_POST["supplier"]);
           $tgl = date('Y-m-d');
           $usr = $_SESSION['nouser'];
-          $cab = $_SESSION['cab'];
+          // $cab = $_SESSION['cab'];
 
           $kegiatan = "Stok Masuk";
 
-          $sql2 = "insert into stok_masuk values( '$nota','$cab','$tgl','$sup','$usr','')";
+          $sql2 = "insert into stok_masuk values( '$nota','$tgl','$sup','$usr','')";
           $insertan = mysqli_query($conn, $sql2);
 
           $mut = "UPDATE mutasi SET status='berhasil', keterangan='$sup' WHERE keterangan='$nota' AND kegiatan='stok masuk'";
@@ -440,8 +449,6 @@ body();
           echo "<script type='text/javascript'>window.location = 'stok_in';</script>";
         }
       } ?>
-
-
     <?php
     } else {
     ?>
@@ -453,234 +460,240 @@ body();
     }
     ?>
 
-    <script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
-    <script src="dist/plugins/jQuery/jquery-ui.min.js"></script>
+  </div>
+</div>
+
+
+<script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="dist/plugins/jQuery/jquery-ui.min.js"></script>
 
 
 
 
 
-    <script>
-      $("#produk").on("change", function() {
+<script>
+  $("#produk").on("change", function() {
 
-        var nama = $("#produk option:selected").attr("nama");
-        var kode = $("#produk option:selected").attr("kode");
-        var stok = $("#produk option:selected").attr("stok");
-
-
-        $("#nama").val(nama);
-        $("#stok").val(stok);
-        $("#kode").val(kode);
-
-        $("#jumlah").val(1);
-      });
-    </script>
+    var nama = $("#produk option:selected").attr("nama");
+    var kode = $("#produk option:selected").attr("kode");
+    var stok = $("#produk option:selected").attr("stok");
 
 
-    <script>
-      $.widget.bridge('uibutton', $.ui.button);
-    </script>
-    <script src="dist/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="dist/plugins/morris/morris.min.js"></script>
-    <script src="dist/plugins/sparkline/jquery.sparkline.min.js"></script>
-    <script src="dist/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-    <script src="dist/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="dist/plugins/knob/jquery.knob.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-    <script src="dist/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="dist/plugins/datepicker/bootstrap-datepicker.js"></script>
-    <script src="dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-    <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-    <script src="dist/plugins/fastclick/fastclick.js"></script>
-    <script src="dist/js/app.min.js"></script>
-    <script src="dist/js/demo.js"></script>
-    <script src="dist/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-    <script src="dist/plugins/fastclick/fastclick.js"></script>
-    <script src="dist/plugins/select2/select2.full.min.js"></script>
-    <script src="dist/plugins/input-mask/jquery.inputmask.js"></script>
-    <script src="dist/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-    <script src="dist/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-    <script src="dist/plugins/timepicker/bootstrap-timepicker.min.js"></script>
-    <script src="dist/plugins/iCheck/icheck.min.js"></script>
 
-    <!--fungsi AUTO Complete-->
-    <!-- Script -->
-    <script type='text/javascript'>
-      $(function() {
 
-        $("#barcode").autocomplete({
-          source: function(request, response) {
+    $("#nama").val(nama);
+    $("#stok").val(stok);
+    $("#kode").val(kode);
 
-            $.ajax({
-              url: "server.php",
-              type: 'post',
-              dataType: "json",
-              data: {
-                search: request.term
-              },
-              success: function(data) {
-                response(data);
-              }
-            });
+    $("#jumlah").val(1);
+  });
+</script>
+
+
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="dist/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="dist/plugins/morris/morris.min.js"></script>
+<script src="dist/plugins/sparkline/jquery.sparkline.min.js"></script>
+<script src="dist/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="dist/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<script src="dist/plugins/knob/jquery.knob.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="dist/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="dist/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="dist/plugins/fastclick/fastclick.js"></script>
+<script src="dist/js/app.min.js"></script>
+<script src="dist/js/demo.js"></script>
+<script src="dist/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="dist/plugins/fastclick/fastclick.js"></script>
+<script src="dist/plugins/select2/select2.full.min.js"></script>
+<script src="dist/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="dist/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="dist/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="dist/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="dist/plugins/iCheck/icheck.min.js"></script>
+
+<!--fungsi AUTO Complete-->
+<!-- Script -->
+<script type='text/javascript'>
+  $(function() {
+
+    $("#barcode").autocomplete({
+      source: function(request, response) {
+
+        $.ajax({
+          url: "server.php",
+          type: 'post',
+          dataType: "json",
+          data: {
+            search: request.term
           },
-          select: function(event, ui) {
-            $('#nama').val(ui.item.label);
-            $('#barcode').val(ui.item.value); // display the selected text
-            $('#hargajual').val(ui.item.hjual);
-            $('#stok').val(ui.item.sisa); // display the selected text
-            $('#hargabeli').val(ui.item.hbeli);
-            $('#jumlah').val(ui.item.jumlah);
-            $('#kode').val(ui.item.kode); // save selected id to input
-            return false;
-
+          success: function(data) {
+            response(data);
           }
         });
+      },
+      select: function(event, ui) {
+        $('#nama').val(ui.item.label);
+        $('#barcode').val(ui.item.value); // display the selected text
+        $('#hargajual').val(ui.item.hjual);
+        $('#stok').val(ui.item.sisa); // display the selected text
+        $('#hargabeli').val(ui.item.hbeli);
+        $('#jumlah').val(ui.item.jumlah);
+        $('#kode').val(ui.item.kode); // save selected id to input
+        return false;
 
-        // Multiple select
-        $("#multi_autocomplete").autocomplete({
-          source: function(request, response) {
+      }
+    });
 
-            var searchText = extractLast(request.term);
-            $.ajax({
-              url: "server.php",
-              type: 'post',
-              dataType: "json",
-              data: {
-                search: searchText
-              },
-              success: function(data) {
-                response(data);
-              }
-            });
+    // Multiple select
+    $("#multi_autocomplete").autocomplete({
+      source: function(request, response) {
+
+        var searchText = extractLast(request.term);
+        $.ajax({
+          url: "server.php",
+          type: 'post',
+          dataType: "json",
+          data: {
+            search: searchText
           },
-          select: function(event, ui) {
-            var terms = split($('#multi_autocomplete').val());
-
-            terms.pop();
-
-            terms.push(ui.item.label);
-
-            terms.push("");
-            $('#multi_autocomplete').val(terms.join(", "));
-
-            // Id
-            var terms = split($('#selectuser_ids').val());
-
-            terms.pop();
-
-            terms.push(ui.item.value);
-
-            terms.push("");
-            $('#selectuser_ids').val(terms.join(", "));
-
-            return false;
+          success: function(data) {
+            response(data);
           }
-
         });
-      });
+      },
+      select: function(event, ui) {
+        var terms = split($('#multi_autocomplete').val());
 
-      function split(val) {
-        return val.split(/,\s*/);
+        terms.pop();
+
+        terms.push(ui.item.label);
+
+        terms.push("");
+        $('#multi_autocomplete').val(terms.join(", "));
+
+        // Id
+        var terms = split($('#selectuser_ids').val());
+
+        terms.pop();
+
+        terms.push(ui.item.value);
+
+        terms.push("");
+        $('#selectuser_ids').val(terms.join(", "));
+
+        return false;
       }
 
-      function extractLast(term) {
-        return split(term).pop();
+    });
+  });
+
+  function split(val) {
+    return val.split(/,\s*/);
+  }
+
+  function extractLast(term) {
+    return split(term).pop();
+  }
+</script>
+
+<!--AUTO Complete-->
+
+<script>
+  $(function() {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("yyyy-mm-dd", {
+      "placeholder": "yyyy/mm/dd"
+    });
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("yyyy-mm-dd", {
+      "placeholder": "yyyy/mm/dd"
+    });
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      format: 'YYYY/MM/DD h:mm A'
+    });
+    //Date range as a button
+    $('#daterange-btn').daterangepicker({
+        ranges: {
+          'Hari Ini': [moment(), moment()],
+          'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Akhir 7 Hari': [moment().subtract(6, 'days'), moment()],
+          'Akhir 30 Hari': [moment().subtract(29, 'days'), moment()],
+          'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+          'Akhir Bulan': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate: moment()
+      },
+      function(start, end) {
+        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
       }
-    </script>
+    );
 
-    <!--AUTO Complete-->
+    //Date picker
+    $('#datepicker').datepicker({
+      autoclose: true
+    });
 
-    <script>
-      $(function() {
-        //Initialize Select2 Elements
-        $(".select2").select2();
+    $('.datepicker').datepicker({
+      dateFormat: 'yyyy-mm-dd'
+    });
 
-        //Datemask dd/mm/yyyy
-        $("#datemask").inputmask("yyyy-mm-dd", {
-          "placeholder": "yyyy/mm/dd"
-        });
-        //Datemask2 mm/dd/yyyy
-        $("#datemask2").inputmask("yyyy-mm-dd", {
-          "placeholder": "yyyy/mm/dd"
-        });
-        //Money Euro
-        $("[data-mask]").inputmask();
+    //Date picker 2
+    $('#datepicker2').datepicker('update', new Date());
 
-        //Date range picker
-        $('#reservation').daterangepicker();
-        //Date range picker with time picker
-        $('#reservationtime').daterangepicker({
-          timePicker: true,
-          timePickerIncrement: 30,
-          format: 'YYYY/MM/DD h:mm A'
-        });
-        //Date range as a button
-        $('#daterange-btn').daterangepicker({
-            ranges: {
-              'Hari Ini': [moment(), moment()],
-              'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-              'Akhir 7 Hari': [moment().subtract(6, 'days'), moment()],
-              'Akhir 30 Hari': [moment().subtract(29, 'days'), moment()],
-              'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
-              'Akhir Bulan': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            },
-            startDate: moment().subtract(29, 'days'),
-            endDate: moment()
-          },
-          function(start, end) {
-            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-          }
-        );
+    $('#datepicker2').datepicker({
+      autoclose: true
+    });
 
-        //Date picker
-        $('#datepicker').datepicker({
-          autoclose: true
-        });
-
-        $('.datepicker').datepicker({
-          dateFormat: 'yyyy-mm-dd'
-        });
-
-        //Date picker 2
-        $('#datepicker2').datepicker('update', new Date());
-
-        $('#datepicker2').datepicker({
-          autoclose: true
-        });
-
-        $('.datepicker2').datepicker({
-          dateFormat: 'yyyy-mm-dd'
-        });
+    $('.datepicker2').datepicker({
+      dateFormat: 'yyyy-mm-dd'
+    });
 
 
-        //iCheck for checkbox and radio inputs
-        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-          checkboxClass: 'icheckbox_minimal-blue',
-          radioClass: 'iradio_minimal-blue'
-        });
-        //Red color scheme for iCheck
-        $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-          checkboxClass: 'icheckbox_minimal-red',
-          radioClass: 'iradio_minimal-red'
-        });
-        //Flat red color scheme for iCheck
-        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-          checkboxClass: 'icheckbox_flat-green',
-          radioClass: 'iradio_flat-green'
-        });
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
 
-        //Colorpicker
-        $(".my-colorpicker1").colorpicker();
-        //color picker with addon
-        $(".my-colorpicker2").colorpicker();
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
 
-        //Timepicker
-        $(".timepicker").timepicker({
-          showInputs: false
-        });
-      });
-    </script>
-    <?php footer(); ?>
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+<?php footer(); ?>

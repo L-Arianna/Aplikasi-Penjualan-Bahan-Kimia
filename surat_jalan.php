@@ -120,18 +120,35 @@ if (!login_check()) {
 					$biaya = $row['biaya'];
 					$totalprice = $total + $pot - $biaya;
 
+					$sql2 = "SELECT * FROM pelanggan where kode='$pelanggan' ";
+					$hasil2 = mysqli_query($conn, $sql2);
+					$row = mysqli_fetch_assoc($hasil2);
+
+					$kode = $row['kode'];
+					$customer = $row['nama'];
+					$nohp = $row['nohp'];
+					$address = $row['alamat'];
+
 					$sql1 = "SELECT * FROM sale where nota='$nota' ";
 					$hasil1 = mysqli_query($conn, $sql1);
 					$row = mysqli_fetch_assoc($hasil1);
-					$customer = $row['pelanggan'];
-					$nohp = $row['no_hp'];
-					$address = $row['alamat'];
+
 					$noPO = $row['no_po'];
 					$faktur_pajak = $row['faktur_pajak'];
 					$no_surat = $row['no_surat_jalan'];
 					$namapt = $row['nama_pt'];
 					$alamatpt = $row['alamat_pt'];
 					$notelppt = $row['no_tlp'];
+
+					$sql3 = "SELECT * FROM update_pelanggan where kode='$pelanggan' ";
+					$hasil3 = mysqli_query($conn, $sql3);
+					$row = mysqli_fetch_assoc($hasil3);
+
+					$kode_new = $row['kode'];
+					$customer_new = $row['nama'];
+					$nohp_new = $row['nohp'];
+					$address_new = $row['alamat'];
+
 					?>
 
 					<!-- BOX INSERT BERHASIL -->
@@ -142,9 +159,15 @@ if (!login_check()) {
 					if (isset($_POST["simpan"])) {
 						if ($_SERVER["REQUEST_METHOD"] == "POST") {
 							// $nota = mysqli_real_escape_string($conn, $_POST["nota"]);
-							$customer = mysqli_real_escape_string($conn, $_POST["pelanggan"]);
+							$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
+							$customer = mysqli_real_escape_string($conn, $_POST["nama"]);
 							$address = mysqli_real_escape_string($conn, $_POST["alamat"]);
-							$nohp = mysqli_real_escape_string($conn, $_POST["no_hp"]);
+							$nohp = mysqli_real_escape_string($conn, $_POST["nohp"]);
+
+							$kode_new = mysqli_real_escape_string($conn, $_POST["kode"]);
+							$customer_new = mysqli_real_escape_string($conn, $_POST["nama"]);
+							$address_new = mysqli_real_escape_string($conn, $_POST["alamat"]);
+							$nohp_new = mysqli_real_escape_string($conn, $_POST["nohp"]);
 
 
 
@@ -163,10 +186,14 @@ if (!login_check()) {
 							} else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
 
 
-								$sql2 = "UPDATE `sale` SET `pelanggan`='$customer',`alamat`='$address' ,`no_hp`= '$nohp' WHERE `nota` = '$nota'";
-
+								// $sql2 = "UPDATE `sale` SET `pelanggan`='$customer',`alamat`='$address' ,`no_hp`= '$nohp' WHERE `nota` = '$nota'";
+								$sql2 = "INSERT INTO `update_pelanggan`(`kode`, `nama`, `alamat`, `nohp`) VALUES ('$kode','$customer','$address','$nohp')";
 
 								$insertan = mysqli_query($conn, $sql2);
+
+								$sql5 = "UPDATE `update_pelanggan` SET `nama`='$customer_new',`alamat`='$address_new',`nohp`='$nohp_new' WHERE `kode` = '$kode_new'";
+								$insertan = mysqli_query($conn, $sql5);
+
 
 								//update mutasi
 								$sql3 = "UPDATE mutasi SET status='$berhasil' where keterangan='$nota'";
@@ -224,53 +251,51 @@ if (!login_check()) {
 											<section class="invoice">
 												<!-- title row -->
 												<div class="row">
-													<div class="col-md-6">
-														<h1 class="page-header">
+													<div class="col-sm">
+														<h3>
 															<?php echo $namapt; ?>
-														</h1>
+														</h3>
 													</div>
-													<!-- /.col -->
-												</div>
-												<div class="row justify-content-end mb-1">
-													<div class="col-sm-4">
+													<div class="col-sm">
+													</div>
+													<div class="col-sm">
 														<small>Date: <?php echo $today; ?></small>
 													</div>
 												</div>
 												<!-- info row -->
-												<div class="box box-info">
-													<div class="box-body">
-														<div class="row invoice-info">
-															<div class="col-sm-4 invoice-col">
-																FROM:
-																<address>
-																	<strong> <?php echo $namapt; ?></strong><br>
-																	<?php echo $alamatpt; ?><br>
-																	Phone: <?php echo $notelppt; ?><br>
-																	<!--       Email: info@almasaeedstudio.com                 -->
-																</address>
-															</div>
-															<!-- /.col -->
-															<div class="col-sm-4 invoice-col">
-																To:
-																<address>
-																	<strong> <?php echo $customer; ?></strong><br>
-																	<?php echo $address; ?><br>
 
-																	Phone: <?php echo $nohp; ?><br>
-
-																</address>
-															</div>
-															<!-- /.col -->
-															<div class="col-sm-4 invoice-col">
-																<b>Surat Jalan</b><br>
-																<b>No Surat Jalan : <?= $no_surat ?></b><br>
-																<b>No PO : <?= $noPO ?></b><br>
-																<b>Invoice #<?php echo $nota; ?></b><br>
-															</div>
-															<!-- /.col -->
-														</div>
+												<div class="row mb-2">
+													<div class="col-sm-4 invoice-col">
+														FROM:
+														<address>
+															<strong> <?php echo $namapt; ?></strong><br>
+															<?php echo $alamatpt; ?><br>
+															Phone: <?php echo $notelppt; ?><br>
+															<b>No Surat Jalan : <?= $no_surat ?></b><br>
+															<b>No PO : <?= $noPO ?></b><br>
+															<!--       Email: info@almasaeedstudio.com                 -->
+														</address>
 													</div>
+													<!-- /.col -->
+													<div class="col-sm-4 invoice-col">
+
+													</div>
+													<!-- /.col -->
+													<div class="col-sm-4 invoice-col">
+														To : <br>
+														<?php if ($kode_new == null) { ?>
+															<strong> <?php echo $customer; ?></strong><br>
+															<?php echo $address; ?><br>
+															Phone: <?php echo $nohp; ?><br>
+														<?php } elseif ($kode_new > 0) { ?>
+															<strong> <?php echo $customer_new; ?></strong><br>
+															<?php echo $address_new; ?><br>
+															Phone: <?php echo $nohp_new; ?><br>
+														<?php } ?>
+													</div>
+													<!-- /.col -->
 												</div>
+
 												<!-- /.row -->
 												<div class="box box-warning">
 													<div class="box-body">
@@ -299,7 +324,9 @@ if (!login_check()) {
 																<table class="table table-striped">
 																	<thead>
 																		<tr>
+																			<th>Packing</th>
 																			<th>Qty</th>
+																			<th>Total Qty</th>
 																			<th>Product</th>
 																		</tr>
 																	</thead>
@@ -311,12 +338,10 @@ if (!login_check()) {
 																	?>
 																		<tbody>
 																			<tr>
+																				<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
 																				<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
-																				<!-- <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td> -->
-
+																				<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
 																				<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-																				<!-- <td><?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td> -->
-
 																			</tr>
 
 
@@ -340,7 +365,11 @@ if (!login_check()) {
 														<div class="row mb-1">
 															<div class="col-md-10">
 																<p class="lead">Tanda terima:</p>
-																<strong><?php echo $customer; ?></strong><br>
+																<?php if ($kode_new == null) { ?>
+																	<strong><?php echo $customer; ?></strong><br>
+																<?php } elseif ($kode_new > 0) { ?>
+																	<strong><?php echo $customer_new; ?></strong><br>
+																<?php } ?>
 																<br>
 																<br>
 																<br>
@@ -357,15 +386,19 @@ if (!login_check()) {
 														<div class="col">
 															<div class="btn-group" role="group" aria-label="First group">
 																<a href="print_surat_jalan?nota=<?php echo $nota; ?>" target="_blank" class="btn btn-primary btn-sm"><i class="bx bx-printer"></i> Print</a>
+
 															</div>
-															<a href="" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleExtraLargeModal"><i class="bx bx-edit-alt"></i>Edit</a>
-															<!-- Button trigger modal -->
-															<!-- Modal -->
+															<?php if ($kode_new == 0) { ?>
+																<a href="" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleExtraLargeModal"><i class="bx bx-edit-alt"></i>Ganti Nama Penerima</a>
+															<?php } else { ?>
+																<a href="" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleExtraLargeModal1"><i class="bx bx-edit-alt"></i>Ganti Nama </a>
+															<?php } ?>
+
 															<div class="modal fade" id="exampleExtraLargeModal" tabindex="-1" aria-hidden="true">
 																<div class="modal-dialog modal-xl">
 																	<div class="modal-content">
 																		<div class="modal-header">
-																			<h5 class="modal-title">Edit Penerima Barang</h5>
+																			<h5 class="modal-title">Tambah Penerima Barang Baru</h5>
 																			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 																		</div>
 																		<form method="post" id="Myform" class="form-user">
@@ -373,7 +406,8 @@ if (!login_check()) {
 																				<div class="row">
 																					<div class="col-md-4">
 																						<label for="form-control">Nama Pelanggan</label>
-																						<input type="text" name="pelanggan" class="form-control" value="<?php echo $customer; ?>" placeholder="masukan nama pelanggan" required>
+																						<input type="text" name="nama" class="form-control" value="<?php echo $customer; ?>" placeholder="masukan nama pelanggan" required>
+																						<input type="hidden" name="kode" class="form-control" value="<?php echo $kode ?>">
 																					</div>
 																					<div class="col-md-4">
 																						<label for="form-control">Alamat Pelanggan</label>
@@ -381,7 +415,7 @@ if (!login_check()) {
 																					</div>
 																					<div class="col-md-4">
 																						<label for="form-control">Nomor Hp Pelanggan</label>
-																						<input type="text" name="no_hp" class="form-control" value="<?php echo $nohp; ?>" placeholder="masukan nomor hp pelanggan" required>
+																						<input type="text" name="nohp" class="form-control" value="<?php echo $nohp; ?>" placeholder="masukan nomor hp pelanggan" required>
 																					</div>
 																				</div>
 																			</div>
@@ -393,6 +427,43 @@ if (!login_check()) {
 																	</div>
 																</div>
 															</div>
+
+															<div class="modal fade" id="exampleExtraLargeModal1" tabindex="-1" aria-hidden="true">
+																<div class="modal-dialog modal-xl">
+																	<div class="modal-content">
+																		<div class="modal-header">
+																			<h5 class="modal-title">Edit Penerima Barang</h5>
+																			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																		</div>
+																		<form method="post" id="Myform" class="form-user">
+																			<div class="modal-body">
+																				<div class="row">
+																					<div class="col-md-4">
+																						<label for="form-control">Nama Pelanggan</label>
+																						<input type="text" name="nama" class="form-control" value="<?php echo $customer_new; ?>" placeholder="masukan nama pelanggan" required>
+																						<input type="hidden" name="kode" class="form-control" value="<?php echo $kode_new ?>">
+																					</div>
+																					<div class="col-md-4">
+																						<label for="form-control">Alamat Pelanggan</label>
+																						<input type="text" name="alamat" class="form-control" value="<?php echo $address_new; ?>" placeholder="masukan alamat pelanggan" required>
+																					</div>
+																					<div class="col-md-4">
+																						<label for="form-control">Nomor Hp Pelanggan</label>
+																						<input type="text" name="nohp" class="form-control" value="<?php echo $nohp_new; ?>" placeholder="masukan nomor hp pelanggan" required>
+																					</div>
+																				</div>
+																			</div>
+																			<div class="modal-footer">
+																				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																				<button type="submit" class="btn btn-primary" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button>
+																			</div>
+																		</form>
+																	</div>
+																</div>
+															</div>
+
+
+
 														</div>
 													</div>
 													<!-- this row will not appear when printing -->

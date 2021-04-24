@@ -107,12 +107,18 @@ if (!login_check()) {
       $biaya = $row['biaya'];
       $totalprice = $total + $pot - $biaya;
 
+      $sql2 = "SELECT * FROM pelanggan where kode='$pelanggan' ";
+      $hasil2 = mysqli_query($conn, $sql2);
+      $row = mysqli_fetch_assoc($hasil2);
+
+      $customer = $row['nama'];
+      $nohp = $row['nohp'];
+      $address = $row['alamat'];
+
       $sql1 = "SELECT * FROM sale where nota='$nota' ";
       $hasil1 = mysqli_query($conn, $sql1);
       $row = mysqli_fetch_assoc($hasil1);
-      $customer = $row['pelanggan'];
-      $nohp = $row['no_hp'];
-      $address = $row['alamat'];
+
       $noPO = $row['no_po'];
       $faktur_pajak = $row['faktur_pajak'];
       $no_surat = $row['no_surat_jalan'];
@@ -154,9 +160,9 @@ if (!login_check()) {
               <section class="invoice">
                 <div class="row">
                   <div class="col-sm">
-                    <h2>
+                    <h3>
                       <?php echo $namapt; ?>
-                    </h2>
+                    </h3>
                   </div>
                   <div class="col-sm">
                   </div>
@@ -164,28 +170,26 @@ if (!login_check()) {
                     <small>Date: <?php echo $today; ?></small>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mb-1">
                   <div class="col-md-4 ">
                     FROM:
                     <address>
                       <strong> <?php echo $namapt; ?></strong><br>
                       <?php echo $alamatpt; ?><br>
-                      Phone: <?php echo $notelppt; ?><br><br>
+                      Phone: <?php echo $notelppt; ?><br>
+                      <b>Nomor Invoice #<?php echo $nota; ?></b><br>
+                      <b>Jatuh Tempo</b> <?php echo $due; ?><br>
+                      <strong>Faktur Pajak: <?= $faktur_pajak ?></strong>
                     </address>
                   </div>
                   <div class="col-md-4 ">
-                    To:
-                    <address>
-                      <strong> <?php echo $customer; ?></strong><br>
-                      <?php echo $address; ?><br>
-                      Phone: <?php echo $nohp; ?><br>
-                    </address>
+
                   </div>
-                  <div class="col-md-4 ">
-                    <b>Invoice #<?php echo $nota; ?></b><br>
-                    <b>Jatuh Tempo</b> <?php echo $due; ?><br>
-                    <b>No Po: <?= $noPO ?><br>
-                      <strong>Faktur Pajak: <?= $faktur_pajak ?> </strong>
+                  <div class="col-sm-4 invoice-col">
+                    To : <br>
+                    <strong><?php echo $customer; ?></strong><br>
+                    <?php echo $address; ?><br>
+                    Phone: <?php echo $nohp; ?>
                   </div>
                 </div>
                 <div class="row">
@@ -213,7 +217,9 @@ if (!login_check()) {
                       <table class="table table-striped">
                         <thead>
                           <tr>
+                            <th>Satuan</th>
                             <th>Qty</th>
+                            <th>Total Qty</th>
                             <th>Product</th>
                             <th>Price/item</th>
                             <th>Subtotal</th>
@@ -227,10 +233,12 @@ if (!login_check()) {
                         ?>
                           <tbody>
                             <tr>
+                              <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+                              <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                              <td><?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
-                              <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                              <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                              <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                             </tr>
 
 

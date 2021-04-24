@@ -356,6 +356,10 @@ if (!login_check()) {
             <?php } ?>
 
                 </div>
+
+
+
+
                 <!-- /.box-body -->
               </div>
 
@@ -369,6 +373,118 @@ if (!login_check()) {
             </div>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Data Dalam Satuan</h3>
+          </div>
+          <div class="card-body">
+            <?php
+            error_reporting(E_ALL ^ E_DEPRECATED);
+            $sql    = "select * from barang order by kode";
+            $result = mysqli_query($conn, $sql);
+            $rpp    = 15;
+            $reload = "$halaman" . "?pagination=true";
+            $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+            if ($page <= 0)
+              $page = 1;
+            $tcount  = mysqli_num_rows($result);
+            $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+            $count   = 0;
+            $i       = ($page - 1) * $rpp;
+            $no_urut = ($page - 1) * $rpp;
+            ?>
+            <div class="box-body table-responsive">
+              <table class="table table-hover ">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Kode Barang</th>
+                    <th>Nama barang</th>
+                    <th>Gudang</th>
+                    <th>Merek</th>
+                    <th>Stok Keluar</th>
+                    <th>Stok Masuk</th>
+                    <th>Sisa Stok</th>
+
+                  </tr>
+                </thead>
+                <?php
+                error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+                $search = $_POST['search'];
+
+                if ($search != null || $search != "") {
+
+                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                    if (isset($_POST['search'])) {
+                      $query1 = "select * from barang where kode like '%$search%' or nama like '%$search%' or brand like '%$search%' order by barang.no limit $rpp";
+                      $hasil = mysqli_query($conn, $query1);
+                      $no = 1;
+                      while ($fill = mysqli_fetch_assoc($hasil)) {
+                ?>
+                        <tbody>
+                          <tr>
+                            <td><?php echo ++$no_urut; ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
+                          </tr><?php;
+                                }
+
+                                  ?>
+                        </tbody>
+              </table>
+              <div align="right"><?php if ($tcount >= $rpp) {
+                                    echo paginate_one($reload, $page, $tpages);
+                                  } else {
+                                  } ?></div>
+          <?php }
+                    }
+                  }
+                } else {
+                  while (($count < $rpp) && ($i < $tcount)) {
+                    mysqli_data_seek($result, $i);
+                    $fill = mysqli_fetch_array($result);
+          ?>
+          <tbody>
+            <tr>
+              <td><?php echo ++$no_urut; ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['terjual'] * $fill['jumlah']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']  * $fill['jumlah']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['sisa'] * $fill['jumlah']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
+            </tr>
+          <?php
+                    $i++;
+                    $count++;
+                  }
+
+          ?>
+          </tbody>
+          </table>
+          <div align="right"><?php if ($tcount >= $rpp) {
+                                echo paginate_one($reload, $page, $tpages);
+                              } else {
+                              } ?></div>
+        <?php } ?>
+
+            </div>
+
+
+          </div>
+        </div>
+
     </div>
   </div>
 </div>

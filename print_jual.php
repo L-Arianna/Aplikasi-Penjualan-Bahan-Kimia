@@ -82,12 +82,19 @@ $tglbayar = date("d-m-Y", strtotime($row['tglsale']));
 
 $due = date("d-m-Y", strtotime($row['duedate']));
 
+
+$sql2 = "SELECT * FROM pelanggan where kode='$pelanggan' ";
+$hasil2 = mysqli_query($conn, $sql2);
+$row = mysqli_fetch_assoc($hasil2);
+
+$customer = $row['nama'];
+$nohp = $row['nohp'];
+$address = $row['alamat'];
+
 $sql1 = "SELECT * FROM sale where nota='$nota' ";
 $hasil1 = mysqli_query($conn, $sql1);
 $row = mysqli_fetch_assoc($hasil1);
-$customer = $row['pelanggan'];
-$nohp = $row['no_hp'];
-$address = $row['alamat'];
+
 $noPO = $row['no_po'];
 $faktur_pajak = $row['faktur_pajak'];
 $no_surat = $row['no_surat_jalan'];
@@ -116,28 +123,28 @@ $notelppt = $row['no_tlp'];
       <!-- info row -->
       <div class="row invoice-info">
         <div class="col-sm-4 invoice-col">
-          From
-          <address>
-            <strong><?php echo $namapt; ?></strong><br>
-            <?php echo $alamatpt; ?><br>
-            Phone: <?php echo $notelppt; ?><br>
-            <strong>Faktur Pajak: <?= $faktur_pajak ?></strong><br>
-          </address>
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-4 invoice-col">
-          To
-          <address>
-            <strong><?php echo $customer; ?></strong><br>
-            <?php echo $address; ?><br>
-            Phone: <?php echo $nohp; ?><br>
-          </address>
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-4 invoice-col">
-          <b>Invoice #<?php echo $nota; ?></b><br>
-          <b>Payment Due:</b> <?php echo $due; ?><br>
+          From <br>
+          <strong><?php echo $namapt; ?></strong><br>
+          <?php echo $alamatpt; ?><br>
+          Phone: <?php echo $notelppt; ?><br>
           <b>No PO: <?= $noPO ?></b><br>
+          <b>Nomor Invoice #<?php echo $nota; ?></b><br>
+          <b>Jatuh Tempo</b> <?php echo $due; ?><br>
+          <strong>Faktur Pajak: <?= $faktur_pajak ?></strong><br>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 invoice-col">
+
+          <address>
+
+          </address>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 invoice-col">
+          To : <br>
+          <strong><?php echo $customer; ?></strong><br>
+          <?php echo $address; ?><br>
+          Phone: <?php echo $nohp; ?><br>
         </div>
         <!-- /.col -->
       </div>
@@ -165,10 +172,12 @@ $notelppt = $row['no_tlp'];
         $no_urut = ($page - 1) * $rpp;
         ?>
         <div class="col-xs-12 table-responsive">
-          <table class="table table-striped">
+          <table class="table table-bordered">
             <thead>
               <tr>
+                <th>Satuan</th>
                 <th>Qty</th>
+                <th>Total Qty</th>
                 <th>Product</th>
                 <th>Price/item</th>
                 <th>Subtotal</th>
@@ -182,10 +191,12 @@ $notelppt = $row['no_tlp'];
             ?>
               <tbody>
                 <tr>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                  <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                  <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                 </tr>
 
 

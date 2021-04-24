@@ -177,7 +177,7 @@ body();
                       <div class="form-group">
                         <label for="tgldaftar" class="col-sm-3 control-label">Tanggal Berlangganan</label>
                         <div class="col-md-12">
-                          <input type="text" class="form-control pull-right" id="datepicker2" name="tgldaftar" placeholder="Masukan Tanggal Daftar" value="<?php echo $tgldaftar; ?>">
+                          <input type="date" class="form-control pull-right" id="datepicker2" name="tgldaftar" placeholder="Masukan Tanggal Daftar" value="<?php echo $tgldaftar; ?>">
                         </div>
                       </div>
                     </div>

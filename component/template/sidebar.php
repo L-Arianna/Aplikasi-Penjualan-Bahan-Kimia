@@ -128,8 +128,8 @@ $avatar = $row['avatar'];
 					</li>
 					<li> <a href="penjualan"><i class="bx bx-right-arrow-alt"></i>Data Invoice</a>
 					</li>
-					<!-- <li> <a href="pelanggan"><i class="bx bx-right-arrow-alt"></i>Pelanggan</a>
-					</li> -->
+					<li> <a href="pelanggan"><i class="bx bx-right-arrow-alt"></i>Pelanggan</a>
+					</li>
 					<li> <a href="retur"><i class="bx bx-right-arrow-alt"></i>Retur Barang</a>
 					</li>
 					<li> <a href="rekening"><i class="bx bx-right-arrow-alt"></i>Rekening Saya</a>

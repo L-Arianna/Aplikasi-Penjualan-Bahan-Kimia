@@ -539,7 +539,9 @@ body();
                                       <th>No</th>
                                       <th>Kode Barang</th>
                                       <th>Nama Barang</th>
-                                      <th>Harga Satuan</th>
+                                      <th>Harga</th>
+                                      <th>Jenis Satuan</th>
+                                      <th>Total Satuan</th>
                                       <th>Jumlah Jual</th>
                                       <th>Total Bayar</th>
                                       <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
@@ -563,6 +565,8 @@ body();
                                             echo mysqli_real_escape_string($conn, $r['sku']); ?>
                                         </td>
                                         <td><?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                                        <td><?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+                                        <td><?php echo mysqli_real_escape_string($conn, $fill['total_satuan']); ?></td>
                                         <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
                                         <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                                         <td>
@@ -594,22 +598,6 @@ body();
                           </div>
                         </div>
                       </div>
-
-
-
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="box box-solid">
-                            <div class="box-header with-border">
-
-
-
-
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
                       <!-- /.box-body -->
                       <div class="box-footer">
                         <div class="col-sm-6">

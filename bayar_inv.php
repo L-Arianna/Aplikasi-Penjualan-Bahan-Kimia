@@ -95,8 +95,6 @@ body();
             $total = mysqli_real_escape_string($conn, $_POST["total"]);
             $tglnota = mysqli_real_escape_string($conn, $_POST["tglnota"]);
             $pelanggan = mysqli_real_escape_string($conn, $_POST["pelanggan"]);
-            $alamat = mysqli_real_escape_string($conn, $_POST["alamat"]);
-            $no_hp = mysqli_real_escape_string($conn, $_POST["no_hp"]);
             $faktur_pajak = mysqli_real_escape_string($conn, $_POST["faktur_pajak"]);
             $no_po = mysqli_real_escape_string($conn, $_POST["no_po"]);
             $no_surat_jalan = mysqli_real_escape_string($conn, $_POST["no_surat_jalan"]);
@@ -122,7 +120,7 @@ body();
               echo "<script type='text/javascript'>  alert('Data penjualan yang sudah ada tidak bisa diubah!');</script>";
             } else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
 
-              $sql2 = "insert into sale values( '$nota','$nomor','$tglnota','$duedate','$total','$diskon','$pot','$biaya','$pelanggan','$alamat','$no_hp','$kasir','$keterangan','','$belum', '$faktur_pajak', '$no_po', '$no_surat_jalan', '$nama_pt', '$alamat_pt', '$no_tlp')";
+              $sql2 = "insert into sale values( '$nota','$nomor','$tglnota','$duedate','$total','$diskon','$pot','$biaya','$pelanggan','$kasir','$keterangan','','$belum', '$faktur_pajak', '$no_po', '$no_surat_jalan', '$nama_pt', '$alamat_pt', '$no_tlp')";
               $insertan = mysqli_query($conn, $sql2);
 
               //update mutasi
@@ -201,11 +199,11 @@ body();
                       <thead>
                         <tr>
                           <th>No</th>
-                          <th style="width: 55%">Nama Barang</th>
-
+                          <th>Nama Barang</th>
+                          <th>Total Satuan</th>
                           <th>Jumlah Jual</th>
+                          <th>Satuan Terjual</th>
                           <th>Total</th>
-
                         </tr>
                       </thead>
 
@@ -220,8 +218,9 @@ body();
                             <td><?php echo ++$no_urut; ?></td>
 
                             <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?> x <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> * <?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?> </td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?> * <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['total_satuan']))) ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?> </td>
                             <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                           </tr>
                         <?php
@@ -289,7 +288,7 @@ body();
 
                                 var nilaidiskon = Math.round(diskon);
 
-                                var result = parseFloat(txtFirstNumberValue) - parseFloat(nilaidiskon);
+                                var result = parseFloat(txtFirstNumberValue) + parseFloat(nilaidiskon);
 
 
                                 if (!isNaN(result)) {
@@ -325,7 +324,7 @@ body();
                               var txtFirstNumberValue = document.getElementById('subtotal').value
                               var txtSecondNumberValue = document.getElementById('potongan').value;
 
-                              var result = parseFloat(txtFirstNumberValue) - parseFloat(txtSecondNumberValue);
+                              var result = parseFloat(txtFirstNumberValue) + parseFloat(txtSecondNumberValue);
                               var diskon = (parseFloat(txtSecondNumberValue) / parseFloat(txtFirstNumberValue)) * 100;
                               var nilaidis = Math.round(diskon);
 
@@ -346,7 +345,7 @@ body();
                           </script>
 
 
-                          <input type="hidden" class="form-control" id="tot" value="<?php echo $datatotal; ?>">
+                          <input type="hidden" class="form-control" id="tot" value="<?php echo number_format($datatotal); ?>">
 
                           <tr>
 
@@ -375,7 +374,7 @@ body();
 
                             <td>Total</td>
 
-                            <td><input type="text" class="form-control" value="<?php echo $datatotal; ?>" id="total" name="total" readonly></td>
+                            <td><input type="text" class="form-control" value="<?php echo number_format($datatotal); ?>" id="total" name="total" readonly></td>
                           </tr>
                           <tr>
 
@@ -401,17 +400,27 @@ body();
                           </tr>
 
                           <tr>
+
                             <td>Pelanggan</td>
-                            <td><input type="text" name="pelanggan" class="form-control" required></td>
+
+                            <td>
+                              <select name="pelanggan" class="form-control">
+                                <option>Pilih</option>
+                                <?php
+                                $sql = mysqli_query($conn, "select * from pelanggan");
+                                while ($row = mysqli_fetch_assoc($sql)) {
+                                  if ($pelanggan == $row['kode'])
+                                    echo "<option value='" . $row['kode'] . "' selected='selected'>" . $row['kode'] . " | " . $row['nama'] . "</option>";
+                                  else
+                                    echo "<option value='" . $row['kode'] . "'>" . $row['kode'] . " | " . $row['nama'] . "</option>";
+                                }
+                                ?>
+                              </select>
+                            </td>
+
+
                           </tr>
-                          <tr>
-                            <td>Alamat Pelanggan</td>
-                            <td><input type="text" name="alamat" class="form-control" required></td>
-                          </tr>
-                          <tr>
-                            <td>Nomor Hp Pelanggan</td>
-                            <td><input type="text" name="no_hp" class="form-control" required></td>
-                          </tr>
+
                           <tr>
                             <td>Faktur Pajak</td>
                             <td><input type="text" name="faktur_pajak" class="form-control" required></td>
@@ -440,22 +449,11 @@ body();
                             <td>Keterangan</td>
                             <td><textarea class="form-control" name="keterangan"></textarea> </td>
                           </tr>
-
-
-
-
-
                           <table>
-
                             <tr>
-
                               <td> <input type="button" class="btn btn-danger btn-sm" onclick="window.open('add_sale','_self')" value="KEMBALI" /> </td>
                               <td><button type="submit" class="btn btn-success btn-sm" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button></td>
-
-
-
                             </tr>
-
                           </table>
                       </form>
                     </div>
@@ -471,32 +469,7 @@ body();
               </div>
               <!-- /.box-body -->
             </div>
-
-
           </div>
-
-          <!--
-<script>
-function myFunction() {
-    document.getElementById("Myform").submit();
-}
-
-         var helpWindow;
-
-function Struk(url) {
-    helpWindow = window.open(url, 'helpWindow');
-
-
-}
-      </script>
-
-  -->
-
-          <!---STRUK-->
-
-
-
-
       </div>
 
       <!-- /.box-body -->
@@ -516,13 +489,7 @@ function Struk(url) {
         }
 ?>
 
-<!-- /.content -->
-</div>
-</div>
-</div>
-</div>
-<!-- /.content-wrapper -->
-<!-- ./wrapper -->
+
 
 <!-- Script -->
 <script src='jquery-3.1.1.min.js' type='text/javascript'></script>
