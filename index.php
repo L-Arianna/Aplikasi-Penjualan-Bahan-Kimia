@@ -285,8 +285,63 @@ body();
           </div>
         </div>
       </div>
-      <!-- END TABLE -->
 
+      <?php
+      $mySql  = "SELECT * FROM `satuan`";
+      $myQry  = mysqli_query($conn, $mySql);
+
+
+      ?>
+      <?php
+      while ($kolomData = mysqli_fetch_assoc($myQry)) { ?>
+        <div class="col-xl-6 d-flex">
+          <div class="card radius-10 w-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <h5 class="mb-1">Stock Barang Dalam Satuan <?= $kolomData['nama_satuan'] ?></h5>
+                </div>
+                <div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
+                </div>
+              </div>
+              <div class="table-responsive mt-4">
+                <table class="table table-strip">
+                  <thead class="table-light">
+                    <tr>
+                      <?php
+                      $Sql  = "SELECT nama,terjual,terbeli,sisa FROM barang";
+                      $Qry  = mysqli_query($conn, $Sql);
+                      $nomor  = 0;
+                      ?>
+                      <thead>
+                        <th style="width: 10px">#</th>
+                        <th>Nama Barang</th>
+                        <th>Stock Keluar</th>
+                        <th>Stock Masuk</th>
+                        <th>Sisa Stock</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php while ($barang = mysqli_fetch_array($Qry)) {
+                      $nomor++;  ?>
+                  <tbody>
+                    <tr>
+                      <td><?php echo $nomor; ?></td>
+                      <td><?php echo $barang['nama']; ?></td>
+                      <td><?php echo $barang['terjual'] * $kolomData['jumlah']; ?> <?= $kolomData['nama_satuan'] ?></td>
+                      <td><?php echo $barang['terbeli'] * $kolomData['jumlah']; ?> <?= $kolomData['nama_satuan'] ?></td>
+                      <td><?php echo $barang['sisa'] * $kolomData['jumlah']; ?> <?= $kolomData['nama_satuan'] ?></td>
+                    </tr>
+                  </tbody>
+                <?php } ?>
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
+      <!-- END TABLE -->
     </div>
   </div>
 </div>

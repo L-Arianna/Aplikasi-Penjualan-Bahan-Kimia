@@ -194,7 +194,7 @@ body();
     if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
     ?>
       <div class="row">
-        <div class="col-lg-8 col-xs-12">
+        <div class="col-lg-6 col-xs-12">
           <div class="card">
             <div class="card-header with-border">
               <h3>Form Stok Masuk</h3>
@@ -292,7 +292,7 @@ body();
 
 
 
-        <div class="col-lg-4 col-xs-12">
+        <div class="col-lg-6 col-xs-12">
           <div class="card">
             <div class="card-header with-border">
               <h3>Daftar Masuk</h3>

@@ -135,11 +135,13 @@ body();
 			$totaldata = $rowa['totaldata'];
 
 			?>
-
-
 			<h6 class="mb-0 text-uppercase"><?= $title ?></h6>
 			<hr />
-
+			<div class="row mb-2">
+				<div class="col-md-3">
+					<a href="add_satuan" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Satuan</a>
+				</div>
+			</div>
 			<div class="card">
 				<div class="card-header">
 					<h3>Data <?php echo $forward ?> <span class="label label-default"><?php echo $totaldata; ?></span>
@@ -162,7 +164,6 @@ body();
 				$no_urut = ($page - 1) * $rpp;
 				?>
 				<div class="card-body">
-
 					<form method="post">
 						<div class="input-group input-group-sm" style="width: 250px;">
 							<input type="text" name="search" class="form-control pull-right" placeholder="Cari">

@@ -139,6 +139,7 @@ if (!login_check()) {
 					$namapt = $row['nama_pt'];
 					$alamatpt = $row['alamat_pt'];
 					$notelppt = $row['no_tlp'];
+					$kirim = $row['kirim'];
 
 					$sql3 = "SELECT * FROM update_pelanggan where kode='$pelanggan' ";
 					$hasil3 = mysqli_query($conn, $sql3);
@@ -163,6 +164,7 @@ if (!login_check()) {
 							$customer = mysqli_real_escape_string($conn, $_POST["nama"]);
 							$address = mysqli_real_escape_string($conn, $_POST["alamat"]);
 							$nohp = mysqli_real_escape_string($conn, $_POST["nohp"]);
+							$kirim = mysqli_real_escape_string($conn, $_POST["kirim"]);
 
 							$kode_new = mysqli_real_escape_string($conn, $_POST["kode"]);
 							$customer_new = mysqli_real_escape_string($conn, $_POST["nama"]);
@@ -173,7 +175,7 @@ if (!login_check()) {
 
 							$kasir = $_SESSION["username"];
 							$berhasil = "berhasil";
-							$belum = "belum";
+							// $belum = "belum";
 							$insert = ($_POST["insert"]);
 
 
@@ -194,6 +196,8 @@ if (!login_check()) {
 								$sql5 = "UPDATE `update_pelanggan` SET `nama`='$customer_new',`alamat`='$address_new',`nohp`='$nohp_new' WHERE `kode` = '$kode_new'";
 								$insertan = mysqli_query($conn, $sql5);
 
+								$sql6 = "UPDATE `sale` SET `kirim`='$kirim' WHERE `nota` = '$nota'";
+								$insertan = mysqli_query($conn, $sql6);
 
 								//update mutasi
 								$sql3 = "UPDATE mutasi SET status='$berhasil' where keterangan='$nota'";
@@ -386,14 +390,14 @@ if (!login_check()) {
 														<div class="col">
 															<div class="btn-group" role="group" aria-label="First group">
 																<a href="print_surat_jalan?nota=<?php echo $nota; ?>" target="_blank" class="btn btn-primary btn-sm"><i class="bx bx-printer"></i> Print</a>
-
 															</div>
 															<?php if ($kode_new == 0) { ?>
 																<a href="" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleExtraLargeModal"><i class="bx bx-edit-alt"></i>Ganti Nama Penerima</a>
 															<?php } else { ?>
 																<a href="" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleExtraLargeModal1"><i class="bx bx-edit-alt"></i>Ganti Nama </a>
 															<?php } ?>
-
+															<a href="" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleExtraLargeModal2"><i class="bx bx-paper-plane"></i>Kirim</a>
+															<!-- modal tambah penerima baru -->
 															<div class="modal fade" id="exampleExtraLargeModal" tabindex="-1" aria-hidden="true">
 																<div class="modal-dialog modal-xl">
 																	<div class="modal-content">
@@ -420,14 +424,15 @@ if (!login_check()) {
 																				</div>
 																			</div>
 																			<div class="modal-footer">
-																				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-																				<button type="submit" class="btn btn-primary" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button>
+																				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+																				<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button>
 																			</div>
 																		</form>
 																	</div>
 																</div>
 															</div>
 
+															<!-- modal edit -->
 															<div class="modal fade" id="exampleExtraLargeModal1" tabindex="-1" aria-hidden="true">
 																<div class="modal-dialog modal-xl">
 																	<div class="modal-content">
@@ -454,8 +459,50 @@ if (!login_check()) {
 																				</div>
 																			</div>
 																			<div class="modal-footer">
-																				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-																				<button type="submit" class="btn btn-primary" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button>
+																				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+																				<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button>
+																			</div>
+																		</form>
+																	</div>
+																</div>
+															</div>
+
+															<!-- modal status kirim -->
+															<div class="modal fade" id="exampleExtraLargeModal2" tabindex="-1" aria-hidden="true">
+																<div class="modal-dialog modal-xl">
+																	<div class="modal-content">
+																		<div class="modal-header">
+																			<h5 class="modal-title">Pengiriman Barang</h5>
+																			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																		</div>
+																		<form method="post" id="Myform" class="form-user">
+																			<div class="modal-body">
+																				<div class="row">
+																					<div class="col-md-4">
+																						<label for="form-control">Nama Pelanggan</label>
+																						<input type="text" name="nama" class="form-control" value="<?php echo $customer_new; ?>" placeholder="masukan nama pelanggan" required readonly>
+																						<input type="hidden" name="kode" class="form-control" value="<?php echo $kode_new ?>">
+																					</div>
+																					<div class="col-md-4">
+																						<label for="form-control">Alamat Pelanggan</label>
+																						<input type="text" name="alamat" class="form-control" value="<?php echo $address_new; ?>" placeholder="masukan alamat pelanggan" required readonly>
+																					</div>
+																					<div class="col-md-4">
+																						<label for="form-control">Nomor Hp Pelanggan</label>
+																						<input type="text" name="nohp" class="form-control" value="<?php echo $nohp_new; ?>" placeholder="masukan nomor hp pelanggan" required readonly>
+																					</div>
+																					<div class="col-md-4">
+																						<label for="form-control">Status</label>
+																						<select name="kirim" class="form-control" required>
+																							<option value="">Pilih</option>
+																							<option value="terkirim">kirim</option>
+																						</select>
+																					</div>
+																				</div>
+																			</div>
+																			<div class="modal-footer">
+																				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+																				<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick=" document.getElementById('Myform').submit();">SIMPAN</button>
 																			</div>
 																		</form>
 																	</div>
@@ -539,216 +586,6 @@ if (!login_check()) {
 				</div>
 			</div>
 		</div>
-		<script src='jquery-3.1.1.min.js' type='text/javascript'></script>
-		<link href='jquery-ui.min.css' rel='stylesheet' type='text/css'>
-		<script src='jquery-ui.min.js' type='text/javascript'></script>
+	</div>
 
-		<script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
-		<script src="1-11-4-jquery-ui.min.js"></script>
-		<script>
-			$.widget.bridge('uibutton', $.ui.button);
-		</script>
-		<script src="dist/bootstrap/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-		<script src="dist/plugins/morris/morris.min.js"></script>
-		<script src="dist/plugins/sparkline/jquery.sparkline.min.js"></script>
-		<script src="dist/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-		<script src="dist/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-		<script src="dist/plugins/knob/jquery.knob.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-		<script src="dist/plugins/daterangepicker/daterangepicker.js"></script>
-		<script src="dist/plugins/datepicker/bootstrap-datepicker.js"></script>
-		<script src="dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-		<script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-		<script src="dist/plugins/fastclick/fastclick.js"></script>
-		<script src="dist/js/app.min.js"></script>
-		<script src="dist/js/demo.js"></script>
-		<script src="dist/plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
-		<script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-		<script src="dist/plugins/fastclick/fastclick.js"></script>
-		<script src="dist/plugins/select2/select2.full.min.js"></script>
-		<script src="dist/plugins/input-mask/jquery.inputmask.js"></script>
-		<script src="dist/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-		<script src="dist/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-		<script src="dist/plugins/timepicker/bootstrap-timepicker.min.js"></script>
-		<script src="dist/plugins/iCheck/icheck.min.js"></script>
-
-		<!--fungsi AUTO Complete-->
-		<!-- Script -->
-		<script type='text/javascript'>
-			$(function() {
-
-				$("#barcode").autocomplete({
-					source: function(request, response) {
-
-						$.ajax({
-							url: "server.php",
-							type: 'post',
-							dataType: "json",
-							data: {
-								search: request.term
-							},
-							success: function(data) {
-								response(data);
-							}
-						});
-					},
-					select: function(event, ui) {
-						$('#nama').val(ui.item.label);
-						$('#barcode').val(ui.item.value); // display the selected text
-						$('#hargajual').val(ui.item.hjual);
-						$('#stok').val(ui.item.sisa); // display the selected text
-						$('#hargabeli').val(ui.item.hbeli);
-						$('#jumlah').val(ui.item.jumlah);
-						$('#kode').val(ui.item.kode); // save selected id to input
-						return false;
-
-					}
-				});
-
-				// Multiple select
-				$("#multi_autocomplete").autocomplete({
-					source: function(request, response) {
-
-						var searchText = extractLast(request.term);
-						$.ajax({
-							url: "server.php",
-							type: 'post',
-							dataType: "json",
-							data: {
-								search: searchText
-							},
-							success: function(data) {
-								response(data);
-							}
-						});
-					},
-					select: function(event, ui) {
-						var terms = split($('#multi_autocomplete').val());
-
-						terms.pop();
-
-						terms.push(ui.item.label);
-
-						terms.push("");
-						$('#multi_autocomplete').val(terms.join(", "));
-
-						// Id
-						var terms = split($('#selectuser_ids').val());
-
-						terms.pop();
-
-						terms.push(ui.item.value);
-
-						terms.push("");
-						$('#selectuser_ids').val(terms.join(", "));
-
-						return false;
-					}
-
-				});
-			});
-
-			function split(val) {
-				return val.split(/,\s*/);
-			}
-
-			function extractLast(term) {
-				return split(term).pop();
-			}
-		</script>
-
-		<!--AUTO Complete-->
-
-		<script>
-			$(function() {
-				//Initialize Select2 Elements
-				$(".select2").select2();
-
-				//Datemask dd/mm/yyyy
-				$("#datemask").inputmask("yyyy-mm-dd", {
-					"placeholder": "yyyy/mm/dd"
-				});
-				//Datemask2 mm/dd/yyyy
-				$("#datemask2").inputmask("yyyy-mm-dd", {
-					"placeholder": "yyyy/mm/dd"
-				});
-				//Money Euro
-				$("[data-mask]").inputmask();
-
-				//Date range picker
-				$('#reservation').daterangepicker();
-				//Date range picker with time picker
-				$('#reservationtime').daterangepicker({
-					timePicker: true,
-					timePickerIncrement: 30,
-					format: 'YYYY/MM/DD h:mm A'
-				});
-				//Date range as a button
-				$('#daterange-btn').daterangepicker({
-						ranges: {
-							'Hari Ini': [moment(), moment()],
-							'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-							'Akhir 7 Hari': [moment().subtract(6, 'days'), moment()],
-							'Akhir 30 Hari': [moment().subtract(29, 'days'), moment()],
-							'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
-							'Akhir Bulan': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-						},
-						startDate: moment().subtract(29, 'days'),
-						endDate: moment()
-					},
-					function(start, end) {
-						$('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-					}
-				);
-
-				//Date picker
-				$('#datepicker').datepicker({
-					autoclose: true
-				});
-
-				$('.datepicker').datepicker({
-					dateFormat: 'yyyy-mm-dd'
-				});
-
-				//Date picker 2
-				$('#datepicker2').datepicker('update', new Date());
-
-				$('#datepicker2').datepicker({
-					autoclose: true
-				});
-
-				$('.datepicker2').datepicker({
-					dateFormat: 'yyyy-mm-dd'
-				});
-
-
-				//iCheck for checkbox and radio inputs
-				$('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-					checkboxClass: 'icheckbox_minimal-blue',
-					radioClass: 'iradio_minimal-blue'
-				});
-				//Red color scheme for iCheck
-				$('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-					checkboxClass: 'icheckbox_minimal-red',
-					radioClass: 'iradio_minimal-red'
-				});
-				//Flat red color scheme for iCheck
-				$('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-					checkboxClass: 'icheckbox_flat-green',
-					radioClass: 'iradio_flat-green'
-				});
-
-				//Colorpicker
-				$(".my-colorpicker1").colorpicker();
-				//color picker with addon
-				$(".my-colorpicker2").colorpicker();
-
-				//Timepicker
-				$(".timepicker").timepicker({
-					showInputs: false
-				});
-			});
-		</script>
-		<?php footer() ?>
+	<?php footer() ?>

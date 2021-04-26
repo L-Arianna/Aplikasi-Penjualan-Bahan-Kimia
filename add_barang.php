@@ -128,7 +128,7 @@ body();
                     <?php
                     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 
-                    $kode = $nama = $hargabeli = $hargajual = $keterangan = $kategori = $deposit = $brand = $gudang = $satuan = "";
+                    $kode = $nama = $hargabeli = $hargajual = $keterangan = $kategori = $deposit = $brand = $gudang = "";
                     $no = $_GET["no"];
                     $insert = '1';
 
@@ -150,7 +150,6 @@ body();
                         $kategori = $fill["kategori"];
                         $keterangan = $fill["keterangan"];
                         $gudang = $fill["gudang"];
-                        $satuan = $fill["satuan"];
                         $barcode = $fill["barcode"];
                         $gambar = $fill["avatar"];
                         $insert = '3';
@@ -282,36 +281,6 @@ body();
                                 </div>
                               </div>
                             </div>
-
-                            <div class="row">
-                              <div class="form-group col-md-9 col-xs-12 mb-2">
-                                <label for="brand" class="col-sm-3 control-label">Satuan</label>
-                                <div class="col-sm-9">
-                                  <select class="form-control select2" style="width: 100%;" name="satuan">
-                                    <option value="pilih">Pilih</option>
-                                    <?php
-                                    $sql = mysqli_query($conn, "select * from satuan");
-                                    while ($row = mysqli_fetch_assoc($sql)) {
-                                      if ($satuan == $row['kode'])
-                                        echo "<option value='" . $row['jumlah'] . "' selected='selected'>" . $row['nama_satuan'] . "</option>";
-                                      else
-                                        echo "<option value='" . $row['jumlah'] . "'>" . $row['nama_satuan'] . "</option>";
-                                    }
-                                    ?>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div class="form-group col-md-6 col-xs-6">
-                                <div class="col-sm-9">
-                                  <div class="col-xs-1" align="left">
-                                    <a href="add_satuan" class="btn btn-info btn-sm" role="button">Tambah Satuan</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-
                             <div class="row">
                               <div class="form-group col-md-9 col-xs-12">
                                 <label for="keterangan" class="col-sm-3 control-label">Keterangan:</label>
@@ -381,7 +350,6 @@ body();
                         $brand = mysqli_real_escape_string($conn, $_POST["brand"]);
                         $keterangan = mysqli_real_escape_string($conn, $_POST["keterangan"]);
                         $gudang = mysqli_real_escape_string($conn, $_POST["gudang"]);
-                        $satuan = mysqli_real_escape_string($conn, $_POST["satuan"]);
                         $barcode = mysqli_real_escape_string($conn, $_POST["barcode"]);
                         $namaavatar = $_FILES['avatar']['name'];
                         $ukuranavatar = $_FILES['avatar']['size'];
@@ -398,13 +366,13 @@ body();
                         if (mysqli_num_rows($result) > 0) {
                           if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
                             move_uploaded_file($tmp, $avatar);
-                            $sql1 = "update $tabeldatabase set nama='$nama', sku='$sku', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang','barcode='$barcode',satuan='$satuan', avatar='$avatar' where kode='$kode'";
+                            $sql1 = "update $tabeldatabase set nama='$nama', sku='$sku', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang','barcode='$barcode', avatar='$avatar' where kode='$kode'";
                             $updatean = mysqli_query($conn, $sql1);
                             echo "<script type='text/javascript'>  alert('Berhasil, Data barang telah diupdate!'); </script>";
                             echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                           } else if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
                             $avatar = "dist/upload/index.jpg";
-                            $sql1 = "update $tabeldatabase set nama='$nama', sku='$sku', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang, barcode='$barcode',satuan='$satuan', avatar='$avatar' where kode='$kode'";
+                            $sql1 = "update $tabeldatabase set nama='$nama', sku='$sku', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang, barcode='$barcode', avatar='$avatar' where kode='$kode'";
                             $updatean = mysqli_query($conn, $sql1);
                             echo "<script type='text/javascript'>  alert('Berhasil, Data barang telah diupdate!'); </script>";
                             echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
@@ -415,13 +383,13 @@ body();
                           }
                         } else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
                           move_uploaded_file($tmp, $avatar);
-                          $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','$barcode','','','','$satuan','','$avatar')";
+                          $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','$barcode','','','','','$avatar')";
                           if (mysqli_query($conn, $sql2)) {
                             echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
                             echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                           } else {
                             $avatar = "dist/upload/index.jpg";
-                            $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','$barcode','','','','$satuan','','$avatar')";
+                            $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','$barcode','','','','','$avatar')";
 
                             // print_r($sql2);
 

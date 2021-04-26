@@ -139,7 +139,11 @@ body();
 
       <h6 class="mb-0 text-uppercase"><?= $title ?></h6>
       <hr />
-
+      <div class="row mb-2">
+        <div class="col-md-3">
+          <a href="add_kategori" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Kategori</a>
+        </div>
+      </div>
       <div class="card">
         <div class="card-header">
           <h3>Data <?php echo $forward ?> <span class="label label-default"><?php echo $totaldata; ?></span>

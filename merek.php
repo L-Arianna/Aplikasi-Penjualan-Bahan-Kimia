@@ -136,6 +136,11 @@ body();
 
       ?>
       <hr />
+      <div class="row mb-2">
+        <div class="col-md-3">
+          <a href="add_merek" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Brand</a>
+        </div>
+      </div>
       <div class="card">
         <div class="card-header">
           <h3>Data <?php echo $forward ?> <span class="label label-default"><?php echo $totaldata; ?></span>

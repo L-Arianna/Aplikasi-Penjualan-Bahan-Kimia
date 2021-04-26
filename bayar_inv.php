@@ -109,6 +109,7 @@ body();
             $kasir = $_SESSION["username"];
             $berhasil = "berhasil";
             $belum = "belum";
+            $kirim = "belum";
             $insert = ($_POST["insert"]);
 
 
@@ -120,7 +121,7 @@ body();
               echo "<script type='text/javascript'>  alert('Data penjualan yang sudah ada tidak bisa diubah!');</script>";
             } else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
 
-              $sql2 = "insert into sale values( '$nota','$nomor','$tglnota','$duedate','$total','$diskon','$pot','$biaya','$pelanggan','$kasir','$keterangan','','$belum', '$faktur_pajak', '$no_po', '$no_surat_jalan', '$nama_pt', '$alamat_pt', '$no_tlp')";
+              $sql2 = "insert into sale values( '$nota','$nomor','$tglnota','$duedate','$total','$diskon','$pot','$biaya','$pelanggan','$kasir','$keterangan','','$belum','$kirim', '$faktur_pajak', '$no_po', '$no_surat_jalan', '$nama_pt', '$alamat_pt', '$no_tlp')";
               $insertan = mysqli_query($conn, $sql2);
 
               //update mutasi

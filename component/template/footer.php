@@ -120,11 +120,34 @@
 		<script src="assets/js/table-datatable.js"></script>
 
 		<script src="config.js" type="text/javascript"></script>
-
-		</style>
-		<script src="assets/js/index.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<!-- <script src="assets/js/index.js"></script> -->
 		<!--app JS-->
+		<script src='https://cdn.tiny.cloud/1/vdqx2klew412up5bcbpwivg1th6nrh3murc6maz8bukgos4v/tinymce/5/tinymce.min.js' referrerpolicy="origin">
+		</script>
+		<script src="assets/js/form-text-editor.js"></script>
 		<script src="assets/js/app.js"></script>
+
+		<script type="text/javascript">
+			//modal auto load
+			$(window).on('load', function() {
+				// $('#exampleModal').modal('show');
+			});
+		</script>
+		<script type="text/javascript">
+			$(function() {
+				$(".open-AddBookDialog").click(function() {
+					$('#id_gaji').val($(this).data('id'));
+					$('#nama_pegawai').val($(this).data('nama'));
+					$('#nip').val($(this).data('nip'));
+					$('#nama_bank').val($(this).data('bank'));
+					$('#no_rek').val($(this).data('rek'));
+					$('#atas_nama').val($(this).data('an'));
+					$("#addBookDialog").modal("show");
+				});
+			});
+		</script>
+
 
 		<script>
 			// start fungsi filter

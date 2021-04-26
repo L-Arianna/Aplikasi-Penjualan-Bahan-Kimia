@@ -192,7 +192,7 @@ if (!login_check()) {
                     Phone: <?php echo $nohp; ?>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                   <?php
                   error_reporting(E_ALL ^ E_DEPRECATED);
 
@@ -201,8 +201,6 @@ if (!login_check()) {
                   $rpp    = 15;
                   $reload = "$halaman" . "?pagination=true";
                   $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
-
-
 
                   if ($page <= 0)
                     $page = 1;
@@ -254,96 +252,80 @@ if (!login_check()) {
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-4">
-                    <p class="lead">Payment Options:</p>
-                    <?php if ($status == 'belum') { ?>
-                      <?php $query1 = "SELECT * FROM  rekening order by no ";
-                      $hasil = mysqli_query($conn, $query1);
-                      while ($fill = mysqli_fetch_assoc($hasil)) { ?>
-                        <table>
-                          <thead>
-                            <th><strong><?php echo $fill['bank']; ?>:</strong> <?php echo $fill['norek']; ?> A.n <?php echo $fill['nama']; ?></th>
-                          </thead>
-                        </table>
-                      <?php } ?>
-                      <div class="col-md-6">
-                        <p class="text-muted">Keterangan : <?php echo $keterangan; ?></p>
-                        <p class="lead">Jatuh Tempo <?php echo $due; ?></p>
-                      </div>
+                  <?php if ($status == 'belum') { ?>
+                    <div class="col-lg-6">
+                      <p class="text-muted">Keterangan : <?php echo $keterangan; ?></p>
+                      <p class="lead">Jatuh Tempo <?php echo $due; ?></p>
+                    </div>
+                  <?php } else { ?>
+                    <div class="col-lg-6 mb-2">
+                      <img src="dist/img/lunas.png" alt="Visa">
+                    </div>
+                  <?php } ?>
 
-                    <?php } else { ?>
-                      <div class="col-sm-6">
-                        <img src="dist/img/lunas.png" alt="Visa">
-                      </div>
-                      <div class="col-sm-6">
-                        <p class="lead">Paid</p>
-                      <?php } ?>
-                      </div>
+                  <?php function penyebut($nilai)
+                  {
+                    $nilai = abs($nilai);
+                    $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+                    $temp = "";
+                    if ($nilai < 12) {
+                      $temp = " " . $huruf[$nilai];
+                    } else if ($nilai < 20) {
+                      $temp = penyebut($nilai - 10) . " belas";
+                    } else if ($nilai < 100) {
+                      $temp = penyebut($nilai / 10) . " puluh" . penyebut($nilai % 10);
+                    } else if ($nilai < 200) {
+                      $temp = " seratus" . penyebut($nilai - 100);
+                    } else if ($nilai < 1000) {
+                      $temp = penyebut($nilai / 100) . " ratus" . penyebut($nilai % 100);
+                    } else if ($nilai < 2000) {
+                      $temp = " seribu" . penyebut($nilai - 1000);
+                    } else if ($nilai < 1000000) {
+                      $temp = penyebut($nilai / 1000) . " ribu" . penyebut($nilai % 1000);
+                    } else if ($nilai < 1000000000) {
+                      $temp = penyebut($nilai / 1000000) . " juta" . penyebut($nilai % 1000000);
+                    } else if ($nilai < 1000000000000) {
+                      $temp = penyebut($nilai / 1000000000) . " milyar" . penyebut(fmod($nilai, 1000000000));
+                    } else if ($nilai < 1000000000000000) {
+                      $temp = penyebut($nilai / 1000000000000) . " trilyun" . penyebut(fmod($nilai, 1000000000000));
+                    }
+                    return $temp;
+                  }
 
-                      <?php function penyebut($nilai)
-                      {
-                        $nilai = abs($nilai);
-                        $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
-                        $temp = "";
-                        if ($nilai < 12) {
-                          $temp = " " . $huruf[$nilai];
-                        } else if ($nilai < 20) {
-                          $temp = penyebut($nilai - 10) . " belas";
-                        } else if ($nilai < 100) {
-                          $temp = penyebut($nilai / 10) . " puluh" . penyebut($nilai % 10);
-                        } else if ($nilai < 200) {
-                          $temp = " seratus" . penyebut($nilai - 100);
-                        } else if ($nilai < 1000) {
-                          $temp = penyebut($nilai / 100) . " ratus" . penyebut($nilai % 100);
-                        } else if ($nilai < 2000) {
-                          $temp = " seribu" . penyebut($nilai - 1000);
-                        } else if ($nilai < 1000000) {
-                          $temp = penyebut($nilai / 1000) . " ribu" . penyebut($nilai % 1000);
-                        } else if ($nilai < 1000000000) {
-                          $temp = penyebut($nilai / 1000000) . " juta" . penyebut($nilai % 1000000);
-                        } else if ($nilai < 1000000000000) {
-                          $temp = penyebut($nilai / 1000000000) . " milyar" . penyebut(fmod($nilai, 1000000000));
-                        } else if ($nilai < 1000000000000000) {
-                          $temp = penyebut($nilai / 1000000000000) . " trilyun" . penyebut(fmod($nilai, 1000000000000));
-                        }
-                        return $temp;
-                      }
+                  function terbilang($nilai)
+                  {
+                    if ($nilai < 0) {
+                      $hasil = "minus " . trim(penyebut($nilai));
+                    } else {
+                      $hasil = trim(penyebut($nilai));
+                    }
+                    return $hasil;
+                  }
+                  ?>
 
-                      function terbilang($nilai)
-                      {
-                        if ($nilai < 0) {
-                          $hasil = "minus " . trim(penyebut($nilai));
-                        } else {
-                          $hasil = trim(penyebut($nilai));
-                        }
-                        return $hasil;
-                      }
-                      ?>
-
-                      <div class="table-responsive">
-                        <table class="table">
-                          <tr>
-                            <th>Sub Total:</th>
-                            <td>Rp. <?php echo number_format($totalprice, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
-                          </tr>
-                          <tr>
-                            <th>PPn(<?php echo $diskon; ?>)%:</th>
-                            <td>Rp. <?php echo number_format($pot, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
-                          </tr>
-                          <tr>
-                            <th>Kirim Tambahan:</th>
-                            <td>Rp. <?php echo number_format($biaya, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
-                          </tr>
-                          <tr>
-                            <th>Total:</th>
-                            <td><b>Rp. <?php echo number_format($total, $decimal, $a_decimal, $thousand) . ',-'; ?></b></td>
-                          </tr>
-                          <tr>
-                            <th>Terbilang:</th>
-                            <td><b><?php echo terbilang($total); ?> rupiah</b></td>
-                          </tr>
-                        </table>
-                      </div>
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <tr>
+                        <th>Sub Total:</th>
+                        <td>Rp. <?php echo number_format($totalprice, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
+                      </tr>
+                      <tr>
+                        <th>PPn(<?php echo $diskon; ?>)%:</th>
+                        <td>Rp. <?php echo number_format($pot, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
+                      </tr>
+                      <tr>
+                        <th>Kirim Tambahan:</th>
+                        <td>Rp. <?php echo number_format($biaya, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
+                      </tr>
+                      <tr>
+                        <th>Total:</th>
+                        <td><b>Rp. <?php echo number_format($total, $decimal, $a_decimal, $thousand) . ',-'; ?></b></td>
+                      </tr>
+                      <tr>
+                        <th>Terbilang:</th>
+                        <td><b><?php echo terbilang($total); ?> rupiah</b></td>
+                      </tr>
+                    </table>
                   </div>
                   <div class="col-md-3">
                     <a href="print_jual?nota=<?php echo $nota; ?>" target="_blank" class="btn btn-primary btn-sm"><i class="bx bx-printer"></i> Print</a>

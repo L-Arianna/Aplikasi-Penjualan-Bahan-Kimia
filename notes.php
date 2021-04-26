@@ -29,20 +29,20 @@ body();
 <div class="page-wrapper">
 	<div class="page-content">
 
-		<!-- SETTING START-->
 
 		<?php
 		error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 		include "configuration/config_chmod.php";
-		$halaman = "gudang"; // halaman
-		$dataapa = "Gudang"; // data
-		$tabeldatabase = "gudang"; // tabel database
+		$halaman = "notes"; // halaman
+		$dataapa = "notes"; // data
+		$tabeldatabase = "notes"; // tabel database
 		$chmod = $chmenu3; // Hak akses Menu
 		$forward = mysqli_real_escape_string($conn, $tabeldatabase); // tabel database
 		$forwardpage = mysqli_real_escape_string($conn, $halaman); // halaman
 		$search = $_POST['search'];
 
 		?>
+
 
 		<!-- SETTING STOP -->
 
@@ -135,13 +135,10 @@ body();
 			$totaldata = $rowa['totaldata'];
 
 			?>
-
-
-			<h6 class="mb-0 text-uppercase"><?= $title ?></h6>
 			<hr />
 			<div class="row mb-2">
 				<div class="col-md-3">
-					<a href="add_gudang" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Gudang</a>
+					<a href="add_notes" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Notes</a>
 				</div>
 			</div>
 			<div class="card">
@@ -149,6 +146,9 @@ body();
 					<h3>Data <?php echo $forward ?> <span class="label label-default"><?php echo $totaldata; ?></span>
 					</h3>
 				</div>
+
+				<!-- /.box-header -->
+				<!-- /.Paginasi -->
 				<?php
 				error_reporting(E_ALL ^ E_DEPRECATED);
 				$sql    = "select * from $forward order by no";
@@ -166,22 +166,24 @@ body();
 				$no_urut = ($page - 1) * $rpp;
 				?>
 				<div class="card-body">
-
-					<form method="post">
-						<div class="input-group input-group-sm" style="width: 250px;">
-							<input type="text" name="search" class="form-control pull-right" placeholder="Cari">
-							<div class="input-group-btn">
-								<button type="submit" class="btn btn-primary"><i class="bx bx-search"></i></button>
-							</div>
-						</div>
-					</form>
 					<div class="table-responsive">
+						<form method="post">
+							<div class="input-group input-group-sm" style="width: 250px;">
+								<input type="text" name="search" class="form-control pull-right" placeholder="Cari">
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-primary"><i class="bx bx-search"></i></button>
+								</div>
+							</div>
+						</form>
 						<table class="table table-hover ">
 							<thead>
 								<tr>
 									<th>No</th>
-									<th>Kode Gudang</th>
-									<th>Nama Gudang</th>
+									<th>Kode</th>
+									<th>Nama Barang</th>
+									<th>Judul</th>
+									<th>Tanggal</th>
+									<th>Keterangan</th>
 									<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
 										<th>Opsi</th>
 									<?php } else {
@@ -207,6 +209,9 @@ body();
 													<td><?php echo ++$no_urut; ?></td>
 													<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
 													<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+													<td><?php echo mysqli_real_escape_string($conn, $fill['judul']); ?></td>
+													<td><?php echo mysqli_real_escape_string($conn, $fill['tgl']); ?></td>
+													<td><?php echo mysqli_real_escape_string($conn, $fill['keterangan']); ?></td>
 													<td>
 														<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
 															<button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
@@ -220,8 +225,7 @@ body();
 													</td>
 												</tr><?php;
                               }
-
-                           ?>
+                              ?>
 											</tbody>
 						</table>
 					</div>
@@ -242,6 +246,9 @@ body();
 					<td><?php echo ++$no_urut; ?></td>
 					<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
 					<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+					<td><?php echo mysqli_real_escape_string($conn, $fill['judul']); ?></td>
+					<td><?php echo mysqli_real_escape_string($conn, $fill['tgl']); ?></td>
+					<td><?php echo mysqli_real_escape_string($conn, $fill['keterangan']); ?></td>
 					<td>
 						<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
 							<button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
@@ -278,7 +285,6 @@ body();
 	<!-- ./col -->
 </div>
 
-
 <!-- ./wrapper -->
 <script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="dist/plugins/jQuery/jquery-ui.min.js"></script>
@@ -305,8 +311,4 @@ body();
 <script src="dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="dist/plugins/fastclick/fastclick.js"></script>
-
-</body>
-
-</html>
 <?php footer(); ?>

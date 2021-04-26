@@ -13,10 +13,10 @@ $avatar = $row['avatar'];
 <div class="sidebar-wrapper" data-simplebar="true">
 	<div class="sidebar-header">
 		<div>
-			<img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
+			<img src="assets/favicon/b.png" class="kk" alt="logo icon">
 		</div>
 		<div>
-			<h4 class="logo-text">KURNIA MAKMUR</h4>
+			<!-- <h4 class="logo-text">KURNIA MAKMUR</h4> -->
 		</div>
 		<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
 		</div>
@@ -88,19 +88,11 @@ $avatar = $row['avatar'];
 								<ul>
 									<li> <a href="kategori"><i class="bx bx-right-arrow-alt"></i>Data Kategori</a>
 									</li>
-									<li> <a href="add_kategori"><i class="bx bx-right-arrow-alt"></i>Tambah Kategori</a>
-									</li>
 									<li> <a href="merek"><i class="bx bx-right-arrow-alt"></i>Data Brand</a>
-									</li>
-									<li> <a href="add_merek"><i class="bx bx-right-arrow-alt"></i>Tambah Brand</a>
 									</li>
 									<li> <a href="gudang"><i class="bx bx-right-arrow-alt"></i>Data Gudang</a>
 									</li>
-									<li> <a href="add_gudang"><i class="bx bx-right-arrow-alt"></i>Tambah Gudang</a>
-									</li>
 									<li> <a href="satuan"><i class="bx bx-right-arrow-alt"></i>Data Satuan</a>
-									</li>
-									<li> <a href="add_satuan"><i class="bx bx-right-arrow-alt"></i>Tambah Satuan</a>
 									</li>
 								</ul>
 							</li>
@@ -132,8 +124,8 @@ $avatar = $row['avatar'];
 					</li>
 					<li> <a href="retur"><i class="bx bx-right-arrow-alt"></i>Retur Barang</a>
 					</li>
-					<li> <a href="rekening"><i class="bx bx-right-arrow-alt"></i>Rekening Saya</a>
-					</li>
+					<!-- <li> <a href="rekening"><i class="bx bx-right-arrow-alt"></i>Rekening Saya</a>
+					</li> -->
 				</ul>
 			</li>
 		<?php } else {
@@ -171,15 +163,15 @@ $avatar = $row['avatar'];
 					<div class="menu-title">Laporan</div>
 				</a>
 				<ul>
-					<li> <a href="report_beli"><i class="bx bx-right-arrow-alt"></i>Pembelian</a>
-					</li>
+					<!-- <li> <a href="report_beli"><i class="bx bx-right-arrow-alt"></i>Pembelian</a>
+					</li> -->
 					<!-- <li> <a href="report_jual"><i class="bx bx-right-arrow-alt"></i>Penjualan Retail</a>
 					</li> -->
 					<li> <a href="report_inv"><i class="bx bx-right-arrow-alt"></i>Invoice Penjualan</a>
 					</li>
-					<!-- <li> <a href="report_operasi"><i class="bx bx-right-arrow-alt"></i>Operasional</a>
-					</li> -->
-					<li> <a href="report_labarugi"><i class="bx bx-right-arrow-alt"></i>Laba Rugi</a>
+					<li> <a href="report_kirim"><i class="bx bx-right-arrow-alt"></i>Invoice Pengiriman</a>
+					</li>
+					<li> <a href="report_labarugi"><i class="bx bx-right-arrow-alt"></i>Notes</a>
 					</li>
 				</ul>
 			</li>
@@ -187,19 +179,17 @@ $avatar = $row['avatar'];
 		<?php } else {
 		}
 		if ($chmenu2 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-			<!-- <li>
+			<li>
 				<a class="has-arrow" href="javascript:;">
-					<div class="parent-icon"><i class="bx bx-group"></i>
+					<div class="parent-icon"><i class="bx bx-note"></i>
 					</div>
-					<div class="menu-title">Supplier</div>
+					<div class="menu-title">Notes</div>
 				</a>
 				<ul>
-					<li> <a href="supplier"><i class="bx bx-right-arrow-alt"></i>Data Suppliere</a>
-					</li>
-					<li> <a href="add_supplier"><i class="bx bx-right-arrow-alt"></i>Tambah Supplier</a>
+					<li> <a href="notes"><i class="bx bx-right-arrow-alt"></i>My Notes</a>
 					</li>
 				</ul>
-			</li> -->
+			</li>
 		<?php } else {
 		}
 		if ($chmenu3 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>

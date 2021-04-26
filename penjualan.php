@@ -85,18 +85,10 @@ body();
     </ol>
 
     <?php
-    if (isset($_POST["simpan"])) {
+    if (isset($_POST["submit"])) {
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nota = mysqli_real_escape_string($conn, $_POST["nota"]);
-        $payday = mysqli_real_escape_string($conn, $_POST["payday"]);
-        $bank = mysqli_real_escape_string($conn, $_POST["bank"]);
-        $cara = mysqli_real_escape_string($conn, $_POST["cara"]);
-        $ref = mysqli_real_escape_string($conn, $_POST["ref"]);
-        $tipe = 2;
         $bayar = "dibayar";
-
-        $sql2 = "insert into payment values( '$tipe','$nota','$cara','$bank','$ref','$payday','')";
-        $insertan = mysqli_query($conn, $sql2);
         $sale = "UPDATE sale SET status='$bayar' where nota='$nota'  ";
         $update = mysqli_query($conn, $sale);
         echo "<script type='text/javascript'>  alert('Berhasil, Pembayaran untuk kode transaksi $nota berhasil!'); </script>";
@@ -304,6 +296,7 @@ body();
                     <th>Total</th>
                     <th>Kasir</th>
                     <th>Status</th>
+                    <th>Pengiriman</th>
                     <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
                       <th>Opsi</th>
                     <?php } else {
@@ -342,6 +335,7 @@ body();
                             <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
 
                             <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
 
                             <td>
 
@@ -402,25 +396,24 @@ body();
               <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
 
               <td>
 
                 <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
-                  <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='penjualan_batal?q=<?php echo $fill['nota']; ?>'">Batal</button>
-                <?php } else {
-                    } ?>
-                <?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-                  <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'">Detail</button>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='surat_jalan?nota=<?php echo $fill['nota'] ?>'">Cetak Surat Jalan</button>
-                <?php } else {
-                    } ?>
 
-                <?php if ($fill['status'] == "dibayar") { ?>
+                <?php } ?>
+                <?php if ($fill['status'] == "belum") { ?>
+                  <a type="button" class="btn btn-danger btn-sm" onclick="window.location.href='penjualan_batal?q=<?php echo $fill['nota']; ?>'" title="Batal"><i class="bx bx-x"></i></a>
 
-                  <?php echo "<button type='button' class='btn btn-success btn-sm' data-toggle='modal' data-target='#modelId'" . $fill['nota'] . ">INFO BAYAR</button>"; ?>
+                  <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
 
-                <?php  } else { ?>
-                  <?php echo "<a href='#myModal' class='btn btn-warning btn-sm' id='custId' data-toggle='modal' data-id=" . $fill['nota'] . ">BAYAR</a>"; ?>
+                  <a data-id="<?= $fill['nota'] ?>" data-nama="<?= $fill['nama'] ?>" data-nip="<?= number_format($fill['total']) ?>" data-bank="<?= $pegawai->nama_bank ?>" data-an="<?= $pegawai->atas_nama ?>" data-rek="<?= $pegawai->no_rek ?>" title="Bayar" class="open-AddBookDialog btn btn-success btn-sm"><i class="bx bx-credit-card"></i></a>
+
+                <?php } else { ?>
+                  <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
+
+                  <a type="button" class="btn btn-primary btn-sm" onclick="window.location.href='surat_jalan?nota=<?php echo $fill['nota'] ?>'" title="Cetak Surat Jalan"><i class="bx bx-printer"></i></a>
                 <?php } ?>
               </td>
             </tr>
@@ -431,14 +424,7 @@ body();
 
 
           ?>
-          <script>
-            $('#exampleModal').on('show.bs.modal', event => {
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-              // Use above variables to manipulate the DOM
 
-            });
-          </script>
           </tbody>
           </table>
           <div align="right"><?php if ($tcount >= $rpp) {
@@ -447,59 +433,57 @@ body();
                               } ?></div>
         <?php }  ?>
         <div class="col-xs-1" align="right">
-          <a href="add_sale" class="btn btn-info" role="button">Tambah Penjualan</a>
+          <a href="add_sale" class="btn btn-info btn-sm" role="button">Tambah Penjualan</a>
         </div>
             </div>
-
-
             <!-- /.box-body -->
           </div>
-
-
-
-
         <?php
         } else {
         }
         ?>
-
       </div>
     </div>
 
-
-    <script>
-      $('#exampleModal').on('show.bs.modal', event => {
-        var button = $(event.relatedTarget);
-        var modal = $(this);
-        // Use above variables to manipulate the DOM
-
-      });
-    </script>
-
-    <script>
-      $('#exampleModal').on('show.bs.modal', event => {
-        var button = $(event.relatedTarget);
-        var modal = $(this);
-        // Use above variables to manipulate the DOM
-
-      });
-    </script>
-    <div class="modal fade" id="modelId" role="dialog">
-      <div class="modal-dialog" role="document">
+    <!-- Modal -->
+    <div class="modal fade" id="addBookDialog" tabindex="-1" aria-hidden="true" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Detail Transaksi</h4>
+            <h5 class="modal-title">Selesaikan Pembayaran</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="fetched-data"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
-          </div>
+          <form action="" method="post">
+            <div class="modal-body">
+              <div class="row mb-1">
+                <div class="col-md-4">
+                  <label for="form-control">Pelanggan</label>
+                  <input type="hidden" class="form-control" name="nota" id="id_gaji" value="" />
+                  <input type="text" name="nama" class="form-control" id="nama_pegawai" value="" readonly />
+                </div>
+                <div class="col-md-4">
+                  <label for="form-control">Total</label>
+                  <input type="text" name="total" class="form-control" id="nip" value="" readonly />
+                </div>
+                <div class="col-md-4">
+                  <label for="form-control">Status</label>
+                  <select name="status" class="form-control" required>
+                    <option value="">Pilih</option>
+                    <option value="dibayar">bayar</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" name="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
 
-    <?php footer(); ?>
+  </div>
+</div>
+<?php footer(); ?>
