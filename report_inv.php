@@ -324,9 +324,10 @@ $tahun = $_POST['tahun'];
                         <th>No</th>
                         <th>No Nota</th>
                         <th>Tanggal</th>
-                        <th>Total Tagihan</th>
-                        <th>Diskon</th>
                         <th>Pembeli</th>
+                        <th>Total qty</th>
+                        <th>Barang</th>
+                        <th>Total Tagihan</th>
                         <th>Status</th>
                         <th>Cc</th>
 
@@ -353,19 +354,26 @@ $tahun = $_POST['tahun'];
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
                                 <?php
                                 $cust = $fill['nota'];
-                                $sqle = "SELECT pelanggan FROM sale WHERE nota ='$cust'";
+                                $sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
+                                $hasile = mysqli_query($conn, $sql);
+                                $rowa = mysqli_fetch_assoc($hasile);
+                                $pembeli = $rowa['nama'];
+
+                                $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' ";
                                 $hasile = mysqli_query($conn, $sqle);
                                 $rowa = mysqli_fetch_assoc($hasile);
-                                $pembeli = $rowa['pelanggan'];
+                                $barang = $rowa['nama'];
 
-                                $jml = " SELECT SUM(jumlah) tot_jual FROM transaksimasuk WHERE nota ='$nota'";
-                                $hasil1 = mysqli_query($conn, $jml);
-                                $row1 = mysqli_fetch_array($hasil1);
-                                $jmljual = $row1['tot_jual'];
+                                $sqlx2 = "SELECT SUM(jumlah) AS data FROM invoicejual WHERE nota = '$cust'";
+                                $hasilx2 = mysqli_query($conn, $sqlx2);
+                                $row = mysqli_fetch_assoc($hasilx2);
+                                $jum = $row['data'];
+
                                 ?>
-                                <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
-                                <td><?php echo mysqli_real_escape_string($conn, $fill['diskon']); ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
+                                <td><?php echo mysqli_real_escape_string($conn, $jum); ?></td>
+                                <td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
+                                <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
                               </tr><?php;
@@ -393,17 +401,27 @@ $tahun = $_POST['tahun'];
                   <td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
                   <?php
                         $cust = $fill['nota'];
-                        $sqle = "SELECT pelanggan FROM sale WHERE nota ='$cust'";
+                        $sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
+                        $hasile = mysqli_query($conn, $sql);
+                        $rowa = mysqli_fetch_assoc($hasile);
+                        $pembeli = $rowa['nama'];
+
+                        $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' ";
                         $hasile = mysqli_query($conn, $sqle);
                         $rowa = mysqli_fetch_assoc($hasile);
-                        $pembeli = $rowa['pelanggan'];
+                        $barang = $rowa['nama'];
 
+                        $sqlx2 = "SELECT SUM(jumlah) AS data FROM invoicejual WHERE nota = '$cust'";
+                        $hasilx2 = mysqli_query($conn, $sqlx2);
+                        $row = mysqli_fetch_assoc($hasilx2);
+                        $jum = $row['data'];
                   ?>
 
 
-                  <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $fill['diskon']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $jum); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
+                  <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
                 </tr>

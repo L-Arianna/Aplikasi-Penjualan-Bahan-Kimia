@@ -66,7 +66,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Terbayar</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv1) ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap1) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -80,7 +80,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Belum dibayar</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv2)  ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap2)  ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -94,7 +94,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total bulan ini</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv3) ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap3) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -108,7 +108,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Hari Ini</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv4) ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap4) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -151,8 +151,8 @@ $tahun = $_POST['tahun'];
 				$sam = $_GET['sampai'];
 
 
-				$caba       = mysqli_query($conn, "SELECT DISTINCT status FROM sale order by total");
-				$biaya       = mysqli_query($conn, "SELECT status,SUM(total) as cost FROM sale WHERE tglsale BETWEEN '" . $dr . "' AND  '" . $sam . "' GROUP BY status ");
+				$caba       = mysqli_query($conn, "SELECT DISTINCT status FROM sale order by biaya");
+				$biaya       = mysqli_query($conn, "SELECT status,SUM(biaya) as cost FROM sale WHERE tglsale BETWEEN '" . $dr . "' AND  '" . $sam . "' GROUP BY status ");
 
 
 
@@ -172,38 +172,11 @@ $tahun = $_POST['tahun'];
 				<div class="row">
 					<div class="card">
 						<div class="card-header">
-							<h3 class="box-title">#Periode: <?php echo $dari; ?> - <?php echo $sampe; ?></h3>
+							<h3>#Periode: <?php echo $dari; ?> - <?php echo $sampe; ?></h3>
 						</div>
 						<div class="card-body">
 							<div class="row">
-								<div class="col-md-5">
-									<canvas id="percabang" style="height:280px"></canvas>
-									<script>
-										var ctx = document.getElementById("percabang").getContext("2d");
-										// Chart options
-										Chart.defaults.global.legend.display = false;
-										Chart.defaults.global.tooltips.enabled = true;
-										// tampilan chart
-										var piechart = new Chart(ctx, {
-											type: 'pie',
-											data: {
-												// label nama setiap Value
-												labels: [<?php while ($b = mysqli_fetch_array($caba)) {
-																echo '"' . $b['status'] . '",';
-															} ?>],
-												datasets: [{
-													// Jumlah Value yang ditampilkan
-													label: '# dalam rupiah',
-													data: [<?php while ($b = mysqli_fetch_array($biaya)) {
-																	echo '"' . $b['cost'] . '",';
-																} ?>],
-													borderWidth: 1
-												}],
-											}
-										});
-									</script>
-								</div>
-								<div class="col-md-7">
+								<div class="col-md-12">
 									<table class="table table-striped">
 										<tr>
 											<th style="width: 10px">#</th>
@@ -211,7 +184,7 @@ $tahun = $_POST['tahun'];
 											<th>Jumlah</th>
 										</tr>
 										<?php
-										$sql = "SELECT status,SUM(total) as cost FROM sale WHERE tglsale BETWEEN '" . $dr . "' AND  '" . $sam . "' GROUP BY status order by no asc";
+										$sql = "SELECT status,SUM(biaya) as cost FROM sale WHERE tglsale BETWEEN '" . $dr . "' AND  '" . $sam . "' GROUP BY status order by no asc";
 										$hasil = mysqli_query($conn, $sql);
 										$no_urut = 0;
 										while ($fill = mysqli_fetch_assoc($hasil)) { ?>
@@ -358,15 +331,16 @@ $tahun = $_POST['tahun'];
 																$nama = $rowa['nama'];
 
 																$sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust'";
-																// $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' IN (SELECT '$cust' FROM invoicejual GROUP BY nota HAVING count(nota) > 1)";
 																$hasile = mysqli_query($conn, $sqle);
 																$rowa = mysqli_fetch_assoc($hasile);
 																$barang = $rowa['nama'];
 
-																$jml = " SELECT SUM(jumlah) tot_jual FROM transaksimasuk WHERE nota ='$nota'";
-																$hasil1 = mysqli_query($conn, $jml);
-																$row1 = mysqli_fetch_array($hasil1);
-																$jmljual = $row1['tot_jual'];
+																// $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' IN (SELECT '$cust' FROM invoicejual GROUP BY nota HAVING count(*) > 1)";
+																// $hasile = mysqli_query($conn, $sqle);
+																// $rowa = mysqli_fetch_array($hasile);
+																// $b = $rowa['nama'];
+																// echo print_r($b);
+
 																?>
 
 																<td><?php echo mysqli_real_escape_string($conn, $nama); ?></td>
@@ -405,13 +379,17 @@ $tahun = $_POST['tahun'];
 												$pembeli = $rowa['pelanggan'];
 
 												$sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' ";
-												// $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' IN (SELECT '$cust' FROM invoicejual GROUP BY nota HAVING count(*) > 1)";
 												$hasile = mysqli_query($conn, $sqle);
 												$rowa = mysqli_fetch_assoc($hasile);
 												$barang = $rowa['nama'];
 
-												$sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
+												// $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' IN (SELECT '$cust' FROM invoicejual GROUP BY nota HAVING count(*) > 1)";
+												// $hasile = mysqli_query($conn, $sqle);
+												// $rowa = mysqli_fetch_array($hasile);
+												// $b = $rowa['nama'];
+												// echo print_r($b);
 
+												$sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
 												$hasile = mysqli_query($conn, $sql);
 												$rowa = mysqli_fetch_assoc($hasile);
 												$nama = $rowa['nama'];
