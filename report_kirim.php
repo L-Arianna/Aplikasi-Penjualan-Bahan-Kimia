@@ -66,7 +66,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Terbayar</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv1; ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv1) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -80,7 +80,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Belum dibayar</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv2; ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv2)  ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -94,7 +94,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total bulan ini</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv3; ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv3) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -108,7 +108,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Hari Ini</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv4; ?></h4>
+								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv4) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -324,13 +324,11 @@ $tahun = $_POST['tahun'];
 												<th>No</th>
 												<th>No Nota</th>
 												<th>Tanggal</th>
-
-												<th>Total Tagihan</th>
-												<th>Diskon</th>
 												<th>Pembeli</th>
-												<th>Status</th>
+												<th>Barang</th>
+												<th>Biaya Kirim</th>
+												<th>Status Pengiriman</th>
 												<th>Cc</th>
-
 											</tr>
 										</thead>
 										<?php
@@ -354,19 +352,26 @@ $tahun = $_POST['tahun'];
 																<td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
 																<?php
 																$cust = $fill['nota'];
-																$sqle = "SELECT pelanggan FROM sale WHERE nota ='$cust'";
+																$sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
+																$hasile = mysqli_query($conn, $sql);
+																$rowa = mysqli_fetch_assoc($hasile);
+																$nama = $rowa['nama'];
+
+																$sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust'";
+																// $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' IN (SELECT '$cust' FROM invoicejual GROUP BY nota HAVING count(nota) > 1)";
 																$hasile = mysqli_query($conn, $sqle);
 																$rowa = mysqli_fetch_assoc($hasile);
-																$pembeli = $rowa['pelanggan'];
+																$barang = $rowa['nama'];
 
 																$jml = " SELECT SUM(jumlah) tot_jual FROM transaksimasuk WHERE nota ='$nota'";
 																$hasil1 = mysqli_query($conn, $jml);
 																$row1 = mysqli_fetch_array($hasil1);
 																$jmljual = $row1['tot_jual'];
 																?>
-																<td><?php echo mysqli_real_escape_string($conn, $fill['total']); ?></td>
-																<td><?php echo mysqli_real_escape_string($conn, $fill['diskon']); ?></td>
-																<td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
+
+																<td><?php echo mysqli_real_escape_string($conn, $nama); ?></td>
+																<td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
+																<td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['biaya'])) ?></td>
 																<td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
 																<td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
 															</tr><?php;
@@ -385,7 +390,7 @@ $tahun = $_POST['tahun'];
 										} else {
 											while (($count < $rpp) && ($i < $tcount)) {
 												mysqli_data_seek($result, $i);
-												$fill = mysqli_fetch_array($result);
+												$fill = mysqli_fetch_assoc($result);
 							?>
 							<tbody>
 								<tr>
@@ -399,12 +404,21 @@ $tahun = $_POST['tahun'];
 												$rowa = mysqli_fetch_assoc($hasile);
 												$pembeli = $rowa['pelanggan'];
 
+												$sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' ";
+												// $sqle = "SELECT nama FROM invoicejual WHERE nota ='$cust' IN (SELECT '$cust' FROM invoicejual GROUP BY nota HAVING count(*) > 1)";
+												$hasile = mysqli_query($conn, $sqle);
+												$rowa = mysqli_fetch_assoc($hasile);
+												$barang = $rowa['nama'];
+
+												$sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
+
+												$hasile = mysqli_query($conn, $sql);
+												$rowa = mysqli_fetch_assoc($hasile);
+												$nama = $rowa['nama'];
 									?>
-
-
-									<td><?php echo mysqli_real_escape_string($conn, $fill['total']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['diskon']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
+									<td><?php echo mysqli_real_escape_string($conn, $nama); ?></td>
+									<td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
+									<td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['biaya'])) ?></td>
 									<td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
 									<td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
 								</tr>

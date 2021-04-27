@@ -66,7 +66,7 @@ $tahun = $_POST['tahun'];
             <div class="d-flex align-items-center">
               <div>
                 <p class="mb-0 text-white">Total Terbayar</p>
-                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv1; ?></h4>
+                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv1) ?></h4>
               </div>
               <div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
               </div>
@@ -80,7 +80,7 @@ $tahun = $_POST['tahun'];
             <div class="d-flex align-items-center">
               <div>
                 <p class="mb-0 text-white">Total Belum dibayar</p>
-                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv2; ?></h4>
+                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv2) ?></h4>
               </div>
               <div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
               </div>
@@ -94,7 +94,7 @@ $tahun = $_POST['tahun'];
             <div class="d-flex align-items-center">
               <div>
                 <p class="mb-0 text-white">Total bulan ini</p>
-                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv3; ?></h4>
+                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv3) ?></h4>
               </div>
               <div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
               </div>
@@ -108,7 +108,7 @@ $tahun = $_POST['tahun'];
             <div class="d-flex align-items-center">
               <div>
                 <p class="mb-0 text-white">Total Hari Ini</p>
-                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo $inv4; ?></h4>
+                <h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($inv4) ?></h4>
               </div>
               <div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
               </div>
@@ -219,7 +219,7 @@ $tahun = $_POST['tahun'];
                         <td><?php echo ++$no_urut; ?></td>
                         <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
                         <td>Rp
-                          <?php echo mysqli_real_escape_string($conn, $fill['cost']); ?>
+                          <?php echo number_format(mysqli_real_escape_string($conn, $fill['cost'])) ?>
                 </div>
                 </td>
                 </tr>
@@ -318,13 +318,12 @@ $tahun = $_POST['tahun'];
                 $no_urut = ($page - 1) * $rpp;
                 ?>
                 <div class="box-body table-responsive">
-                  <table class="table table-hover ">
+                  <table class="table table-bordered ">
                     <thead>
                       <tr>
                         <th>No</th>
                         <th>No Nota</th>
                         <th>Tanggal</th>
-
                         <th>Total Tagihan</th>
                         <th>Diskon</th>
                         <th>Pembeli</th>
@@ -364,7 +363,7 @@ $tahun = $_POST['tahun'];
                                 $row1 = mysqli_fetch_array($hasil1);
                                 $jmljual = $row1['tot_jual'];
                                 ?>
-                                <td><?php echo mysqli_real_escape_string($conn, $fill['total']); ?></td>
+                                <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['diskon']); ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
@@ -402,7 +401,7 @@ $tahun = $_POST['tahun'];
                   ?>
 
 
-                  <td><?php echo mysqli_real_escape_string($conn, $fill['total']); ?></td>
+                  <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['diskon']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
