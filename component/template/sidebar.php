@@ -171,7 +171,7 @@ $avatar = $row['avatar'];
 					</li>
 					<li> <a href="report_kirim"><i class="bx bx-right-arrow-alt"></i>Invoice Pengiriman</a>
 					</li>
-					<li> <a href="report_labarugi"><i class="bx bx-right-arrow-alt"></i>Notes</a>
+					<li> <a href="report_pelanggan"><i class="bx bx-right-arrow-alt"></i>Laporan History Pelanggan</a>
 					</li>
 				</ul>
 			</li>

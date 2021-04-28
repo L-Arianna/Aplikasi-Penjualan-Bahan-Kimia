@@ -32,7 +32,7 @@ body();
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 include "configuration/config_chmod.php";
 $halaman = "report_kirim"; // halaman
-$dataapa = "Laporan Invoice Pengiriman"; // data
+$dataapa = "Invoice Pengiriman"; // data
 $tabeldatabase = "sale"; // tabel database
 $chmod = $chmenu9; // Hak akses Menu
 $forward = mysqli_real_escape_string($conn, $tabeldatabase); // tabel database
