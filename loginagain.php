@@ -68,8 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container-fluid">
       <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
         <div class="col mx-auto">
-          <div class="mb-4 text-center">
-            <img src="assets/images/logo-img.png" width="180" alt="" />
+          <div class="mb-2 text-center">
+            <img src="assets/favicon/b.png" width="200" alt="logo icon">
           </div>
           <div class="card">
             <div class="card-body">
@@ -110,4 +110,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 </div>
-</div <?php footer_auth() ?>
+<?php footer_auth() ?>

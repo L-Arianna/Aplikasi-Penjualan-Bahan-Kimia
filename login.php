@@ -66,18 +66,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="wrapper">
   <div class="section-authentication-signin d-flex align-items-center justify-content-center my-5 my-lg-0">
     <div class="container-fluid">
-      <div class="row row-cols-2 row-cols-lg-2 row-cols-xl-3">
+      <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
         <div class="col mx-auto">
-          <div class="mb-4 text-center">
-            <img src="assets/images/logo-img.png" width="180" alt="" />
+          <div class="mb-2 text-center">
+            <img src="assets/favicon/b.png" width="200" alt="logo icon">
           </div>
           <div class="card">
             <div class="card-body">
               <div class="border p-4 rounded">
-                <div class="text-center">
-
-                </div>
-
                 <div class="form-body">
                   <form class="row g-3" action="op.php" method="post">
                     <div class="col-12">
@@ -106,4 +102,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 </div>
-</div <?php footer_auth() ?>
+<?php footer_auth() ?>
