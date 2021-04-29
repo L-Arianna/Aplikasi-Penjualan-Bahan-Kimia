@@ -259,7 +259,7 @@ if (!login_check()) {
                     </div>
                   <?php } else { ?>
                     <div class="col-lg-6 mb-2">
-                      <img src="dist/img/lunas.png" alt="Visa">
+                      <h4></h4>
                     </div>
                   <?php } ?>
 

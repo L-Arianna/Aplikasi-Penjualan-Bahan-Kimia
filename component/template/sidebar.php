@@ -122,8 +122,8 @@ $avatar = $row['avatar'];
 					</li>
 					<li> <a href="pelanggan"><i class="bx bx-right-arrow-alt"></i>Pelanggan</a>
 					</li>
-					<li> <a href="retur"><i class="bx bx-right-arrow-alt"></i>Retur Barang</a>
-					</li>
+					<!-- <li> <a href="retur"><i class="bx bx-right-arrow-alt"></i>Retur Barang</a>
+					</li> -->
 					<!-- <li> <a href="rekening"><i class="bx bx-right-arrow-alt"></i>Rekening Saya</a>
 					</li> -->
 				</ul>
@@ -171,7 +171,7 @@ $avatar = $row['avatar'];
 					</li>
 					<li> <a href="report_kirim"><i class="bx bx-right-arrow-alt"></i>Invoice Pengiriman</a>
 					</li>
-					<li> <a href="report_pelanggan"><i class="bx bx-right-arrow-alt"></i>Laporan History Pelanggan</a>
+					<li> <a href="report_pelanggan"><i class="bx bx-right-arrow-alt"></i>Transaksi Pelanggan</a>
 					</li>
 				</ul>
 			</li>

@@ -35,9 +35,6 @@ $thousand = ".";
   <div class="page-content">
 
 
-
-    <!-- SETTING START-->
-
     <?php
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
     include "configuration/config_chmod.php";
@@ -66,32 +63,6 @@ $thousand = ".";
       }
     </script>
 
-    <!-- BREADCRUMB -->
-
-    <ol class="breadcrumb ">
-      <li><a href="<?php echo $_SESSION['baseurl']; ?>">Dashboard </a></li>
-      <li><a href="<?php echo $halaman; ?>"><?php echo $dataapa ?></a></li>
-      <?php
-
-      if ($search != null || $search != "") {
-      ?>
-        <li> <a href="<?php echo $halaman; ?>">Data <?php echo $dataapa ?></a></li>
-        <li class="active"><?php
-                            echo $search;
-                            ?></li>
-      <?php
-      } else {
-      ?>
-        <li class="active">Data <?php echo $dataapa ?></li>
-      <?php
-      }
-      ?>
-    </ol>
-
-    <!-- BREADCRUMB -->
-
-    <!-- BOX HAPUS BERHASIL -->
-
     <script>
       window.setTimeout(function() {
         $("#myAlert").fadeTo(500, 0).slideUp(1000, function() {
@@ -99,6 +70,7 @@ $thousand = ".";
         });
       }, 5000);
     </script>
+
 
     <?php
     $hapusberhasil = $_POST['hapusberhasil'];
@@ -155,116 +127,108 @@ $thousand = ".";
 
       ?>
 
-      <h6 class="mb-0 text-uppercase"></h6>
-      <hr />
-      <div class="card">
-        <div class="box" id="tabel1">
-          <div class="card-header">
-            <h3>Data <?php echo $dataapa ?> <span class="no-print label label-default" id="no-print"><?php echo $totaldata; ?></span>
-            </h3>
 
-
-          </div>
-
-          <!-- /.box-header -->
-          <!-- /.Paginasi -->
-          <?php
-          error_reporting(E_ALL ^ E_DEPRECATED);
-          $sql    = "select mutasi.namauser,mutasi.tgl,mutasi.kodebarang,mutasi.status,mutasi.jumlah,mutasi.sisa,mutasi.kegiatan,mutasi.keterangan,barang.nama from mutasi inner join barang on mutasi.kodebarang=barang.kode order by mutasi.no desc";
-          $result = mysqli_query($conn, $sql);
-          $rpp    = 15;
-          $reload = "$halaman" . "?pagination=true";
-          $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
-
-          if ($page <= 0)
-            $page = 1;
-          $tcount  = mysqli_num_rows($result);
-          $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
-          $count   = 0;
-          $i       = ($page - 1) * $rpp;
-          $no_urut = ($page - 1) * $rpp;
-          ?>
-          <div class="card-body">
-            <div class="row d-flex justify-content-end">
-              <form method="post" action="">
-                <button name="truncate" type="submit" class="btn btn-danger btn-sm">Kosongkan</button>
-              </form>
-            </div>
-
-            <div class="no-print" id="no-print">
-              <form method="post">
-                <br />
-                <div class="input-group input-group-sm" style="width: 250px;">
-                  <input type="text" name="search" class="form-control pull-right" placeholder="Cari">
-
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-primary"><i class="bx bx-search"></i></button>
-                  </div>
+      <div class="row mb-2">
+        <form method="post" action="">
+          <div class="col-lg-12 d-flex justify-content-end">
+            <div class="ms-auto">
+              <div class="btn-group">
+                <div class="input-group">
+                  <input type="text" name="search" class="form-control radius-30" placeholder="cari">
+                  <span class="input-group-text">&</span>
+                  <input type="text" name="search" class="form-control radius-30" placeholder="cari">
+                  <button type="submit" class="btn btn-primary btn-sm radius-30"><i class="bx bx-search"></i></button>
                 </div>
-
-              </form>
+              </div>
+              <button name="truncate" type="submit" class="btn btn-danger btn-sm radius-30"><i class="bx bx-trash"></i> Kosongkan</button>
             </div>
-            <div class="table-responsive">
-              <table class="table table-hover ">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama User</th>
-                    <th>Tanggal</th>
-                    <th>Barang</th>
-                    <th>Kegiatan</th>
-                    <th>Jumlah</th>
-                    <th>Stok Akhir</th>
-                    <th>Status</th>
-                    <th>Keterangan</th>
+          </div>
+        </form>
+      </div>
 
-                  </tr>
-                </thead>
-                <?php
-                error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                $search = $_POST['search'];
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
+        </div>
+        <?php
+        error_reporting(E_ALL ^ E_DEPRECATED);
+        $sql    = "SELECT mutasi.namauser, mutasi.tgl, mutasi.kodebarang, mutasi.status, mutasi.jumlah, mutasi.sisa, mutasi.kegiatan, mutasi.keterangan, barang.nama, barang.brand, barang.kategori, barang.gudang FROM mutasi INNER JOIN barang ON mutasi.kodebarang = barang.kode ORDER BY mutasi.no ASC";
+        $result = mysqli_query($conn, $sql);
+        $rpp    = 15;
+        $reload = "$halaman" . "?pagination=true";
+        $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
 
-                if ($search != null || $search != "") {
+        if ($page <= 0)
+          $page = 1;
+        $tcount  = mysqli_num_rows($result);
+        $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+        $count   = 0;
+        $i       = ($page - 1) * $rpp;
+        $no_urut = ($page - 1) * $rpp;
+        ?>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered ">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama User</th>
+                  <th>Tanggal</th>
+                  <th>Barang</th>
+                  <th>Brand</th>
+                  <th>Kategori</th>
+                  <th>Gudang</th>
+                  <th>Jumlah</th>
+                  <th>Stok Akhir</th>
+                </tr>
+              </thead>
+              <?php
+              error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+              $search = $_POST['search'];
 
-                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+              if ($search != null || $search != "") {
 
-                    if (isset($_POST['search'])) {
-                      $query1 = "select mutasi.namauser,mutasi.tgl,mutasi.kodebarang,mutasi.status,mutasi.jumlah,mutasi.sisa,mutasi.kegiatan,mutasi.keterangan,barang.nama from mutasi inner join barang on mutasi.kodebarang=barang.kode where barang.nama like '%$search%' or mutasi.kegiatan like '%$search%' or mutasi.namauser like '%$search%' order by mutasi.no limit $rpp";
-                      $hasil = mysqli_query($conn, $query1);
-                      $no = 1;
-                      while ($fill = mysqli_fetch_assoc($hasil)) {
-                ?>
-                        <tbody>
-                          <tr>
-                            <td><?php echo ++$no_urut; ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['namauser']); ?></td>
-                            <?php $tgl = date("d-m-Y", strtotime($fill['tgl'])); ?>
-                            <td><?php echo mysqli_real_escape_string($conn, $tgl); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['kegiatan']); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['keterangan']); ?></td>
-                          </tr><?php;
-                              }
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                                ?>
-                        </tbody>
-              </table>
-              <div align="right"><?php if ($tcount >= $rpp) {
-                                    echo paginate_one($reload, $page, $tpages);
-                                  } else {
-                                  } ?></div>
+                  if (isset($_POST['search'])) {
+                    // $query1 = "SELECT mutasi.namauser, mutasi.tgl, mutasi.kodebarang, mutasi.status, mutasi.jumlah, mutasi.sisa, mutasi.kegiatan, mutasi.keterangan, barang.nama, barang.brand, barang.kategori, barang.gudang FROM mutasi INNER JOIN barang ON mutasi.kodebarang = barang.kode WHERE barang.gudang LIKE '%$search%' AND barang.nama LIKE '%$search%' order by mutasi.no limit $rpp";
+
+                    $query1 = "select mutasi.namauser,mutasi.tgl,mutasi.kodebarang,mutasi.status,mutasi.jumlah,mutasi.sisa,mutasi.kegiatan,mutasi.keterangan,barang.nama, barang.brand, barang.kategori, barang.gudang from mutasi inner join barang on mutasi.kodebarang=barang.kode where barang.nama like '%$search%' or barang.gudang like '%$search%' or barang.brand like '%$search%' or barang.kategori like '%$search%'or mutasi.namauser like '%$search%' order by mutasi.no limit $rpp";
+                    $hasil = mysqli_query($conn, $query1);
+                    $no = 1;
+                    while ($fill = mysqli_fetch_assoc($hasil)) {
+
+              ?>
+                      <tbody>
+                        <tr>
+                          <td><?php echo ++$no_urut; ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['namauser']); ?></td>
+                          <?php $tgl = date("d-m-Y", strtotime($fill['tgl'])); ?>
+                          <td><?php echo mysqli_real_escape_string($conn, $tgl); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['kategori']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
+                        </tr>
+                      <?php } ?>
+                      </tbody>
+            </table>
+            <div align="right"><?php if ($tcount >= $rpp) {
+                                  echo paginate_one($reload, $page, $tpages);
+                                } else {
+                                } ?></div>
 
           <?php }
-                    }
-                  }
-                } else {
-                  while (($count < $rpp) && ($i < $tcount)) {
-                    mysqli_data_seek($result, $i);
-                    $fill = mysqli_fetch_array($result);
+                }
+              } else {
+                while (($count < $rpp) && ($i < $tcount)) {
+                  mysqli_data_seek($result, $i);
+                  $fill = mysqli_fetch_array($result);
           ?>
+
+
           <tbody>
             <tr>
               <td><?php echo ++$no_urut; ?></td>
@@ -272,19 +236,17 @@ $thousand = ".";
               <?php $tgl = date("d-m-Y", strtotime($fill['tgl'])); ?>
               <td><?php echo mysqli_real_escape_string($conn, $tgl); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['kegiatan']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['kategori']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-              <td> <?php if ($fill['status'] == "berhasil") { ?> <span class="label label-success"><?php echo $fill['status']; ?> </span>
-                <?php } else { ?> <span class="label label-danger"><?php echo $fill['status']; ?></span> <?php } ?>
-              </td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['keterangan']); ?></td>
             </tr>
 
           <?php
-                    $i++;
-                    $count++;
-                  }
+                  $i++;
+                  $count++;
+                }
 
           ?>
           </tbody>
@@ -295,37 +257,38 @@ $thousand = ".";
                               } ?></div>
         <?php } ?>
 
-            </div>
-            <!-- /.box-body -->
           </div>
-
-        <?php } else {
-      } ?>
-        <div align="right" style="padding-right:15px" class="no-print" id="no-print">
-          <div align="left" class="no-print" id="no-print"> <a onclick="javascript:printDiv('tabel1');" class="btn btn-default btn-flat" name="cetak" value="cetak"><span class="glyphicon glyphicon-print"></span></a><?php echo " "; ?>
-            <a onclick="window.location.href='configuration/config_export?forward=<?php echo $forward; ?>&search=<?php echo $search; ?>'" class="btn btn-default btn-flat" name="cetak" value="export excel"><span class="glyphicon glyphicon-save-file"></span></a>
-          </div> <br />
+          <!-- /.box-body -->
         </div>
-        </div>
-        <!-- ./col -->
       </div>
 
+    <?php } else {
+    } ?>
+    <div align="right" style="padding-right:15px" class="no-print" id="no-print">
+      <div align="left" class="no-print" id="no-print"> <a onclick="javascript:printDiv('tabel1');" class="btn btn-default btn-flat" name="cetak" value="cetak"><span class="glyphicon glyphicon-print"></span></a><?php echo " "; ?>
+        <a onclick="window.location.href='configuration/config_export?forward=<?php echo $forward; ?>&search=<?php echo $search; ?>'" class="btn btn-default btn-flat" name="cetak" value="export excel"><span class="glyphicon glyphicon-save-file"></span></a>
+      </div> <br />
+    </div>
+  </div>
+  <!-- ./col -->
+</div>
 
 
-      <?php
 
-      if (isset($_POST["truncate"])) {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+<?php
 
-          $sql = "SELECT namauser FROM mutasi ";
+if (isset($_POST["truncate"])) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-          $result = mysqli_query($conn, $sql);
+    $sql = "SELECT namauser FROM mutasi ";
 
-          if (mysqli_num_rows($result) > 0) {
+    $result = mysqli_query($conn, $sql);
 
-            $truncate = mysqli_query($conn, 'TRUNCATE TABLE mutasi ');
-            if ($truncate) {
-              echo '<script>
+    if (mysqli_num_rows($result) > 0) {
+
+      $truncate = mysqli_query($conn, 'TRUNCATE TABLE mutasi ');
+      if ($truncate) {
+        echo '<script>
     setTimeout(function() {
         swal({
     title: "Berhasil!",
@@ -336,50 +299,15 @@ $thousand = ".";
 });
     }, 1000);
 </script>';
-            } else {
-              echo "<script type='text/javascript'>  alert('GAGAL, Mutasi gagal dikosongkan. Terjadi kesalahan silahkan hubungi admin!');</script>";
-            }
-          } else {
-            echo '<script type="text/javascript">';
-            echo 'setTimeout(function () { swal.fire("Gagal!","Mutasi sudah kosong, tidak bisa dikosongkan lagi!","error");';
-            echo '}, 1000);</script>';
-          }
-        }
+      } else {
+        echo "<script type='text/javascript'>  alert('GAGAL, Mutasi gagal dikosongkan. Terjadi kesalahan silahkan hubungi admin!');</script>";
       }
-
-
-      ?>
-
-      <!-- /.content -->
-  </div>
-
-  <!-- /.content-wrapper -->
-
-  <!-- ./wrapper -->
-  <script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
-  <script src="dist/plugins/jQuery/jquery-ui.min.js"></script>
-  <script>
-    $.widget.bridge('uibutton', $.ui.button);
-  </script>
-  <script src="dist/bootstrap/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-  <script src="dist/plugins/morris/morris.min.js"></script>
-  <script src="dist/plugins/sparkline/jquery.sparkline.min.js"></script>
-  <script src="dist/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-  <script src="dist/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-  <script src="dist/plugins/knob/jquery.knob.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-  <script src="dist/plugins/daterangepicker/daterangepicker.js"></script>
-  <script src="dist/plugins/datepicker/bootstrap-datepicker.js"></script>
-  <script src="dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-  <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-  <script src="dist/plugins/fastclick/fastclick.js"></script>
-  <script src="dist/js/app.min.js"></script>
-  <script src="dist/js/pages/dashboard.js"></script>
-  <script src="dist/js/demo.js"></script>
-  <script src="dist/plugins/datatables/jquery.dataTables.min.js"></script>
-  <script src="dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
-  <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-  <script src="dist/plugins/fastclick/fastclick.js"></script>
-  <script src="dist/sweet/js/sweetalert2.min.js"></script>
-  <?php footer(); ?>
+    } else {
+      echo '<script type="text/javascript">';
+      echo 'setTimeout(function () { swal.fire("Gagal!","Mutasi sudah kosong, tidak bisa dikosongkan lagi!","error");';
+      echo '}, 1000);</script>';
+    }
+  }
+}
+?>
+<?php footer(); ?>

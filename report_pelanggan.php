@@ -61,8 +61,7 @@
 				?>
 				<div class="card">
 					<div class="card-header">
-						<h5 class="box-title">Data <?php echo $dataapa ?>
-						</h5>
+						<h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
 					</div>
 					<?php
 					error_reporting(E_ALL ^ E_DEPRECATED);
@@ -99,11 +98,17 @@
 										<option value="1">Per Tanggal</option>
 										<option value="2">Per Bulan</option>
 										<option value="3">Per Tahun</option>
+										<option value="4">Per nama</option>
 									</select>
 
 									<div id="form-tanggal">
 										<label>Tanggal</label><br>
 										<input type="text" name="tanggal" class="input-tanggal form-control mb-2" />
+									</div>
+
+									<div id="form-nama">
+										<label>Nama</label><br>
+										<input type="text" name="nama" placeholder="Cari Nama Pembeli" class="form-control mb-2" />
 									</div>
 
 									<div id="form-bulan">
@@ -131,10 +136,10 @@
 										<select name="tahun" class="form-control mb-2">
 											<option value="">Pilih</option>
 											<?php
-											$query = "SELECT YEAR(tglsale) AS tahun FROM sale GROUP BY YEAR(tglsale)"; // Tampilkan tahun sesuai di tabel transaksi
-											$sql = mysqli_query($conn, $query); // Eksekusi/Jalankan query dari variabel $query
+											$query = "SELECT YEAR(tglsale) AS tahun FROM sale GROUP BY YEAR(tglsale)";
+											$sql = mysqli_query($conn, $query);
 
-											while ($data = mysqli_fetch_array($sql)) { // Ambil semua data dari hasil eksekusi $sql
+											while ($data = mysqli_fetch_array($sql)) {
 												echo '<option value="' . $data['tahun'] . '">' . $data['tahun'] . '</option>';
 											}
 											?>
@@ -149,34 +154,41 @@
 
 
 								<?php
-								if (isset($_GET['filter']) && !empty($_GET['filter'])) { // Cek apakah user telah memilih filter dan klik tombol tampilkan
-									$filter = $_GET['filter']; // Ambil data filder yang dipilih user
+								if (isset($_GET['filter']) && !empty($_GET['filter'])) {
+									$filter = $_GET['filter'];
 
-									if ($filter == '1') { // Jika filter nya 1 (per tanggal)
+									if ($filter == '1') {
 										$tgl = date('d-m-y', strtotime($_GET['tanggal']));
 
 										echo '<span class="badge bg-info">Data Transaksi Tanggal ' . $tgl . '</span> <br><br>';
 										echo '<a href="print.php?filter=1&tanggal=' . $_GET['tanggal'] . '" class="btn btn-primary btn-sm radius-30">Cetak PDF</a>';
 
-										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE DATE(tglsale)='" . $_GET['tanggal'] . "'"; // Tampilkan data transaksi sesuai tanggal yang diinput oleh user pada filter
-									} else if ($filter == '2') { // Jika filter nya 2 (per bulan)
+										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE DATE(tglsale)='" . $_GET['tanggal'] . "'";
+									} else if ($filter == '2') {
 										$nama_bulan = array('', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
 
 										echo '<span class="badge bg-info">Data Transaksi Bulan ' . $nama_bulan[$_GET['bulan']] . ' ' . $_GET['tahun'] . '</span> <br><br>';
 										echo '<a href="print.php?filter=2&bulan=' . $_GET['bulan'] . '&tahun=' . $_GET['tahun'] . '" class="btn btn-primary btn-sm radius-30">Cetak PDF</a>';
 
-										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE MONTH(tglsale)='" . $_GET['bulan'] . "' AND YEAR(tglsale)='" . $_GET['tahun'] . "'"; // Tampilkan data transaksi sesuai bulan dan tahun yang diinput oleh user pada filter
-									} else { // Jika filter nya 3 (per tahun)
+										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE MONTH(tglsale)='" . $_GET['bulan'] . "' AND YEAR(tglsale)='" . $_GET['tahun'] . "'";
+									} else if ($filter == '3') {
+										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE MONTH(tglsale)='" . $_GET['bulan'] . "' AND YEAR(tglsale)='" . $_GET['tahun'] . "'";
 										echo '<span class="badge bg-info">Data Transaksi Tahun ' . $_GET['tahun'] . '</span> <br><br>';
 										echo '<a href="print.php?filter=3&tahun=' . $_GET['tahun'] . '" class="btn btn-primary btn-sm radius-30">Cetak PDF</a>';
 
-										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE YEAR(tglsale)='" . $_GET['tahun'] . "'"; // Tampilkan data transaksi sesuai tahun yang diinput oleh user pada filter
+										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE YEAR(tglsale)='" . $_GET['tahun'] . "'";
+									} else {
+										$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE nama='" . $_GET['nama'] . "'";
+
+										echo '<span class="badge bg-info">Data Transaksi ' . $_GET['nama'] . '</span> <br><br>';
+
+										echo '<a href="print.php?filter=4&nama=' . $_GET['nama'] . '" class="btn btn-primary btn-sm radius-30">Cetak PDF</a>';
 									}
-								} else { // Jika user tidak mengklik tombol tampilkan
+								} else {
 									echo '<span class="badge bg-info">Semua Data Transaksi</span> <br><br>';
 									echo '<a href="print.php" class="btn btn-primary btn-sm radius-30">Cetak PDF</a>';
 
-									$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode ORDER BY tglsale"; // Tampilkan semua data transaksi diurutkan berdasarkan tanggal
+									$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode ORDER BY tglsale";
 								}
 								?>
 							</div>

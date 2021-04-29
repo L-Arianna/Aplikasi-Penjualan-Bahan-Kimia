@@ -132,7 +132,7 @@ body();
 
 
 								$kode = $fill["kode"];
-								$nama = $fill["nama_gudang"];
+								$nama = $fill["nama"];
 								$insert = '3';
 							}
 						}
@@ -160,7 +160,7 @@ body();
 											<div class="form-group">
 												<label for="nama" class="col-sm-3 control-label">Nama Gudang:</label>
 												<div class="col-md-12">
-													<input type="text" class="form-control" id="nama" name="nama_gudang" value="<?php echo $nama; ?>" placeholder="Masukan Kelas siswa dan program diambil" maxlength="50">
+													<input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama; ?>" placeholder="gudang" maxlength="50">
 												</div>
 											</div>
 										</div>
@@ -185,7 +185,7 @@ body();
 							if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 								$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
-								$nama = mysqli_real_escape_string($conn, $_POST["nama_gudang"]);
+								$nama = mysqli_real_escape_string($conn, $_POST["nama"]);
 								$insert = ($_POST["insert"]);
 
 
@@ -194,7 +194,7 @@ body();
 
 								if (mysqli_num_rows($result) > 0) {
 									if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
-										$sql1 = "update $tabeldatabase set nama_gudang='$nama' where kode='$kode'";
+										$sql1 = "update $tabeldatabase set nama='$nama' where kode='$kode'";
 										$updatean = mysqli_query($conn, $sql1);
 										echo "<script type='text/javascript'>  alert('Berhasil, Data telah diupdate!'); </script>";
 										echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";

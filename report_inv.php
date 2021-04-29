@@ -238,8 +238,7 @@ $tahun = $_POST['tahun'];
 
     <div class="card">
       <div class="card-header">
-        <h3>Data <?php echo $dataapa ?> <span class="no-print label label-default" id="no-print"><?php echo $totaldata; ?></span>
-        </h3>
+        <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
         <?php if ($totalinv != '' || $totalinv != null) { ?>
           <span class="no-print pull-right" id="no-print"> <?php echo 'Total Invoice terbayar pada <b>' . $namabulan . '</b> ' . $tahun . ' sejumlah <b>Rp ' . number_format($totalinv, $decimal, $a_decimal, $thousand) . ',-</b>'; ?></span>
         <?php } ?>
@@ -376,30 +375,27 @@ $tahun = $_POST['tahun'];
                                 <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-                              </tr><?php;
-                          }
-
-                            ?>
+                              </tr><?php } ?>
                             </tbody>
                   </table>
                   <div align="right"><?php if ($tcount >= $rpp) {
                                         echo paginate_one($reload, $page, $tpages);
                                       } else {
                                       } ?></div>
-              <?php }
+                <?php
                         }
                       }
                     } else {
                       while (($count < $rpp) && ($i < $tcount)) {
                         mysqli_data_seek($result, $i);
                         $fill = mysqli_fetch_array($result);
-              ?>
-              <tbody>
-                <tr>
-                  <td><?php echo ++$no_urut; ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
-                  <?php
+                ?>
+                <tbody>
+                  <tr>
+                    <td><?php echo ++$no_urut; ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
+                    <?php
                         $cust = $fill['nota'];
                         $sql = "SELECT `pelanggan`.*, `sale`.* FROM `pelanggan` LEFT JOIN sale ON sale.pelanggan = pelanggan.kode WHERE nota = '$cust'";
                         $hasile = mysqli_query($conn, $sql);
@@ -415,29 +411,29 @@ $tahun = $_POST['tahun'];
                         $hasilx2 = mysqli_query($conn, $sqlx2);
                         $row = mysqli_fetch_assoc($hasilx2);
                         $jum = $row['data'];
-                  ?>
+                    ?>
 
 
-                  <td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $jum); ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
-                  <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
-                  <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-                </tr>
-              <?php
+                    <td><?php echo mysqli_real_escape_string($conn, $pembeli); ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $jum); ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
+                    <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
+                  </tr>
+                <?php
                         $i++;
                         $count++;
                       }
 
-              ?>
-              </tbody>
-              </table>
-              <div align="right"><?php if ($tcount >= $rpp) {
-                                    echo paginate_one($reload, $page, $tpages);
-                                  } else {
-                                  } ?></div>
-            <?php } ?>
+                ?>
+                </tbody>
+                </table>
+                <div align="right"><?php if ($tcount >= $rpp) {
+                                      echo paginate_one($reload, $page, $tpages);
+                                    } else {
+                                    } ?></div>
+              <?php } ?>
 
                 </div>
                 <!-- /.box-body -->

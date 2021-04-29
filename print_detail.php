@@ -104,7 +104,7 @@ $notelppt = $row['no_tlp'];
 
 		td,
 		th {
-			padding: 7px 29px;
+			padding: 10px 40px;
 			text-align: left;
 			vertical-align: top;
 			border: 1px solid black;

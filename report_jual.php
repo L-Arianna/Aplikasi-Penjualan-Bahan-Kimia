@@ -375,30 +375,27 @@ body();
                                 } ?>
 
                               </td>
-                            </tr><?php;
-                                  }
-
-                                    ?>
+                            </tr><?php } ?>
                           </tbody>
                 </table>
                 <div align="right"><?php if ($tcount >= $rpp) {
                                       echo paginate_one($reload, $page, $tpages);
                                     } else {
                                     } ?></div>
-            <?php 
+              <?php
                       }
                     }
                   } else {
                     while (($count < $rpp) && ($i < $tcount)) {
                       mysqli_data_seek($result, $i);
                       $fill = mysqli_fetch_array($result);
-            ?>
-            <tbody>
-              <tr>
-                <td><?php echo ++$no_urut; ?></td>
-                <td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
-                <td><?php echo mysqli_real_escape_string($conn, $fill['tglbayar']); ?></td>
-                <?php
+              ?>
+              <tbody>
+                <tr>
+                  <td><?php echo ++$no_urut; ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['tglbayar']); ?></td>
+                  <?php
                       $nota = $fill['nota'];
                       $sqle = "SELECT COUNT( nota ) AS data FROM transaksimasuk WHERE nota ='$nota'";
                       $hasile = mysqli_query($conn, $sqle);
@@ -409,34 +406,34 @@ body();
                       $hasil1 = mysqli_query($conn, $jml);
                       $row1 = mysqli_fetch_array($hasil1);
                       $jmljual = $row1['tot_jual'];
-                ?>
+                  ?>
 
-                <td><?php echo mysqli_real_escape_string($conn, $jmljual); ?></td>
-                <td><?php echo mysqli_real_escape_string($conn, $fill['total']); ?></td>
-                <td><?php echo mysqli_real_escape_string($conn, $fill['bayar']); ?></td>
-                <td><?php echo mysqli_real_escape_string($conn, $fill['kembali']); ?></td>
-                <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-                <td>
-                  <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-                    <button type="button" class="btn btn-info btn-xs no-print" onclick="window.location.href='stok_detail?id=1&trx=1&nota=<?php echo $fill['nota']; ?>'">Detail</button>
-                  <?php } else {
+                  <td><?php echo mysqli_real_escape_string($conn, $jmljual); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['total']); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['bayar']); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['kembali']); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
+                  <td>
+                    <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
+                      <button type="button" class="btn btn-info btn-xs no-print" onclick="window.location.href='stok_detail?id=1&trx=1&nota=<?php echo $fill['nota']; ?>'">Detail</button>
+                    <?php } else {
                       } ?>
 
-                </td>
-              </tr>
-            <?php
+                  </td>
+                </tr>
+              <?php
                       $i++;
                       $count++;
                     }
 
-            ?>
-            </tbody>
-            </table>
-            <div align="right"><?php if ($tcount >= $rpp) {
-                                  echo paginate_one($reload, $page, $tpages);
-                                } else {
-                                } ?></div>
-          <?php } ?>
+              ?>
+              </tbody>
+              </table>
+              <div align="right"><?php if ($tcount >= $rpp) {
+                                    echo paginate_one($reload, $page, $tpages);
+                                  } else {
+                                  } ?></div>
+            <?php } ?>
 
               </div>
             </div>

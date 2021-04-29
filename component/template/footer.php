@@ -137,26 +137,29 @@
 		<script src="assets/js/form-date-time-pickes.js"></script>
 		<!-- <script src="js/jquery.min.js"></script> -->
 		<script>
-			$(document).ready(function() { // Ketika halaman selesai di load
+			$(document).ready(function() {
 				$('.input-tanggal').datepicker({
-					dateFormat: 'yy-mm-dd' // Set format tanggalnya jadi yyyy-mm-dd
+					dateFormat: 'yy-mm-dd'
 				});
 
-				$('#form-tanggal, #form-bulan, #form-tahun').hide(); // Sebagai default kita sembunyikan form filter tanggal, bulan & tahunnya
+				$('#form-tanggal, #form-bulan, #form-tahun, #form-nama').hide();
 
-				$('#filter').change(function() { // Ketika user memilih filter
-					if ($(this).val() == '1') { // Jika filter nya 1 (per tanggal)
-						$('#form-bulan, #form-tahun').hide(); // Sembunyikan form bulan dan tahun
-						$('#form-tanggal').show(); // Tampilkan form tanggal
-					} else if ($(this).val() == '2') { // Jika filter nya 2 (per bulan)
-						$('#form-tanggal').hide(); // Sembunyikan form tanggal
-						$('#form-bulan, #form-tahun').show(); // Tampilkan form bulan dan tahun
-					} else { // Jika filternya 3 (per tahun)
-						$('#form-tanggal, #form-bulan').hide(); // Sembunyikan form tanggal dan bulan
-						$('#form-tahun').show(); // Tampilkan form tahun
+				$('#filter').change(function() {
+					if ($(this).val() == '1') {
+						$('#form-bulan, #form-tahun').hide();
+						$('#form-tanggal').show();
+					} else if ($(this).val() == '2') {
+						$('#form-tanggal').hide();
+						$('#form-bulan, #form-tahun').show();
+					} else if ($(this).val() == '3') {
+						$('#form-tanggal, #form-bulan').hide();
+						$('#form-tahun').show();
+					} else {
+						$('#form-tanggal, #form-bulan, #form-tahun').hide();
+						$('#form-nama').show();
 					}
 
-					$('#form-tanggal input, #form-bulan select, #form-tahun select').val(''); // Clear data pada textbox tanggal, combobox bulan & tahun
+					$('#form-tanggal input, #form-bulan select, #form-tahun select').val('');
 				})
 			})
 		</script>

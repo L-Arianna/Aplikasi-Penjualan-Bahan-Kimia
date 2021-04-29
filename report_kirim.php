@@ -66,7 +66,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Terbayar</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap1) ?></h4>
+								<h4 class="my-1 text-white"><sup>Rp</sup><?php echo number_format($lap1) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -80,7 +80,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Belum dibayar</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap2)  ?></h4>
+								<h4 class="my-1 text-white"><sup>Rp</sup><?php echo number_format($lap2)  ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -94,7 +94,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total bulan ini</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap3) ?></h4>
+								<h4 class="my-1 text-white"><sup>Rp</sup><?php echo number_format($lap3) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -108,7 +108,7 @@ $tahun = $_POST['tahun'];
 						<div class="d-flex align-items-center">
 							<div>
 								<p class="mb-0 text-white">Total Hari Ini</p>
-								<h4 class="my-1 text-white"><sup style="font-size: 20px">Rp</sup><?php echo number_format($lap4) ?></h4>
+								<h4 class="my-1 text-white"><sup>Rp</sup><?php echo number_format($lap4) ?></h4>
 							</div>
 							<div class="text-white ms-auto font-35"><i class='bx bx-money'></i>
 							</div>
@@ -172,7 +172,8 @@ $tahun = $_POST['tahun'];
 				<div class="row">
 					<div class="card">
 						<div class="card-header">
-							<h3>#Periode: <?php echo $dari; ?> - <?php echo $sampe; ?></h3>
+							<h6 class="mb-0 text-uppercase">#Periode: <?php echo $dari; ?> - <?php echo $sampe; ?></h6>
+
 						</div>
 						<div class="card-body">
 							<div class="row">
@@ -211,8 +212,7 @@ $tahun = $_POST['tahun'];
 
 		<div class="card">
 			<div class="card-header">
-				<h3>Data <?php echo $dataapa ?> <span class="no-print label label-default" id="no-print"><?php echo $totaldata; ?></span>
-				</h3>
+				<h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
 				<?php if ($totalinv != '' || $totalinv != null) { ?>
 					<span class="no-print pull-right" id="no-print"> <?php echo 'Total Invoice terbayar pada <b>' . $namabulan . '</b> ' . $tahun . ' sejumlah <b>Rp ' . number_format($totalinv, $decimal, $a_decimal, $thousand) . ',-</b>'; ?></span>
 				<?php } ?>
@@ -348,30 +348,27 @@ $tahun = $_POST['tahun'];
 																<td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['biaya'])) ?></td>
 																<td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
 																<td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-															</tr><?php;
-                          }
-
-                            ?>
+															</tr><?php } ?>
 														</tbody>
 									</table>
 									<div align="right"><?php if ($tcount >= $rpp) {
 																	echo paginate_one($reload, $page, $tpages);
 																} else {
 																} ?></div>
-							<?php }
+								<?php
 												}
 											}
 										} else {
 											while (($count < $rpp) && ($i < $tcount)) {
 												mysqli_data_seek($result, $i);
 												$fill = mysqli_fetch_assoc($result);
-							?>
-							<tbody>
-								<tr>
-									<td><?php echo ++$no_urut; ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
-									<?php
+								?>
+								<tbody>
+									<tr>
+										<td><?php echo ++$no_urut; ?></td>
+										<td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
+										<td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
+										<?php
 												$cust = $fill['nota'];
 												$sqle = "SELECT pelanggan FROM sale WHERE nota ='$cust'";
 												$hasile = mysqli_query($conn, $sqle);
@@ -393,26 +390,26 @@ $tahun = $_POST['tahun'];
 												$hasile = mysqli_query($conn, $sql);
 												$rowa = mysqli_fetch_assoc($hasile);
 												$nama = $rowa['nama'];
-									?>
-									<td><?php echo mysqli_real_escape_string($conn, $nama); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
-									<td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['biaya'])) ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-								</tr>
-							<?php
+										?>
+										<td><?php echo mysqli_real_escape_string($conn, $nama); ?></td>
+										<td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
+										<td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['biaya'])) ?></td>
+										<td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
+										<td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
+									</tr>
+								<?php
 												$i++;
 												$count++;
 											}
 
-							?>
-							</tbody>
-							</table>
-							<div align="right"><?php if ($tcount >= $rpp) {
-															echo paginate_one($reload, $page, $tpages);
-														} else {
-														} ?></div>
-						<?php } ?>
+								?>
+								</tbody>
+								</table>
+								<div align="right"><?php if ($tcount >= $rpp) {
+																echo paginate_one($reload, $page, $tpages);
+															} else {
+															} ?></div>
+							<?php } ?>
 
 								</div>
 								<!-- /.box-body -->

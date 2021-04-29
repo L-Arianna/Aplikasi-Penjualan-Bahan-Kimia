@@ -39,7 +39,7 @@ body();
       </div>
     </div>
     <!--end breadcrumb-->
-    <hr />
+
 
     <?php
     //error_reporting(E_ALL ^ (E_NOTICE | E_WARNING) );
@@ -105,7 +105,7 @@ body();
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
-                  <a href="stok_menipis" class="text-white ms-auto">Info lengkap <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="stok_menipis" class="text-white ms-auto">Info lengkap</a>
                 </div>
               </div>
             </div>
@@ -122,7 +122,7 @@ body();
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
-                  <a href="kategori" class="text-white ms-auto">Info lengkap <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="kategori" class="text-white ms-auto">Info lengkap</a>
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@ body();
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
-                  <a href="supplier" class="text-white ms-auto">Info lengkap <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="supplier" class="text-white ms-auto">Info lengkap</a>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ body();
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
-                  <a href="admin" class="text-white ms-auto">Info lengkap <i class="fa fa-arrow-circle-right"></i></a>
+                  <a href="admin" class="text-white ms-auto">Info lengkap</a>
                 </div>
               </div>
             </div>

@@ -146,6 +146,7 @@ if (!login_check()) {
 						<table class="table table-bordered">
 							<thead>
 								<tr>
+									<th>Tanggal</th>
 									<th>Satuan</th>
 									<th>Qty</th>
 									<th>Total Qty</th>
@@ -162,6 +163,7 @@ if (!login_check()) {
 							?>
 								<tbody>
 									<tr>
+										<td><?= $tglbayar ?></td>
 										<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
 										<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
 										<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
