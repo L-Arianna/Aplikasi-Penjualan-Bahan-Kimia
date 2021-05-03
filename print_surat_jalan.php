@@ -128,7 +128,7 @@ $address_new = $row['alamat'];
 
 		}
 
-		td,
+		/* td,
 		th {
 			padding: 3mm 6mm;
 			text-align: left;
@@ -137,6 +137,17 @@ $address_new = $row['alamat'];
 
 		th {
 			font-weight: bold;
+		} */
+		table,
+		td,
+		th {
+			border: 1px solid black;
+			/* text-align: right; */
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
 		}
 	</style>
 </head>
@@ -202,16 +213,9 @@ $address_new = $row['alamat'];
 			<thead>
 				<tr>
 					<th>Packing</th>
-					<th></th>
-					<th></th>
 					<th>Qty</th>
-					<th></th>
-					<th></th>
 					<th>Total Qty </th>
-					<th></th>
-					<th></th>
 					<th>Product</th>
-					<th></th>
 				</tr>
 			</thead>
 			<?php
@@ -223,16 +227,9 @@ $address_new = $row['alamat'];
 				<tbody>
 					<tr>
 						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-						<td></td>
-						<td></td>
 						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
-						<td></td>
-						<td></td>
 						<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-						<td></td>
-						<td></td>
 						<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-						<td></td>
 					</tr>
 				<?php
 				$i++;
