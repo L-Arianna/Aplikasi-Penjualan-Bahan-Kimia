@@ -100,7 +100,8 @@ $today = date('Y-m-d');
 			$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode WHERE nama='" . $_GET['nama'] . "'";
 		}
 	} else {
-		echo '<b>Semua Data Transaksi</b> <br><br>';
+		echo '<b>Semua Data Transaksi</b><br>';
+		$query = "SELECT * FROM sale INNER JOIN pelanggan ON sale.pelanggan = pelanggan.kode ORDER BY tglsale";
 	}
 	?>
 	</div>
