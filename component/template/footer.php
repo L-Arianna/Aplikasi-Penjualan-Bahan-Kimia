@@ -139,7 +139,7 @@
 		<!-- <script src="js/jquery.min.js"></script> -->
 
 
-		<!-- <script>
+		<script>
 			$(document).ready(function() {
 				$('.input-tanggal').datepicker({
 					dateFormat: 'yy-mm-dd'
@@ -165,7 +165,7 @@
 					$('#form-tanggal input, #form-bulan select, #form-tahun select').val('');
 				})
 			})
-		</script> -->
+		</script>
 
 		<script type="text/javascript">
 			//modal auto load
