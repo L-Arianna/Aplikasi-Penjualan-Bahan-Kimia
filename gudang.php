@@ -43,36 +43,6 @@ body();
 		$search = $_POST['search'];
 
 		?>
-
-		<!-- SETTING STOP -->
-
-
-		<!-- BREADCRUMB -->
-
-		<ol class="breadcrumb ">
-			<li><a href="<?php echo $_SESSION['baseurl']; ?>">Dashboard </a></li>
-			<li><a href="<?php echo $halaman; ?>"><?php echo $dataapa ?></a></li>
-			<?php
-
-			if ($search != null || $search != "") {
-			?>
-				<li> <a href="<?php echo $halaman; ?>">Data <?php echo $dataapa ?></a></li>
-				<li class="active"><?php
-											echo $search;
-											?></li>
-			<?php
-			} else {
-			?>
-				<li class="active">Data <?php echo $dataapa ?></li>
-			<?php
-			}
-			?>
-		</ol>
-
-		<!-- BREADCRUMB -->
-
-		<!-- BOX HAPUS BERHASIL -->
-
 		<script>
 			window.setTimeout(function() {
 				$("#myAlert").fadeTo(500, 0).slideUp(1000, function() {
@@ -113,19 +83,36 @@ body();
 		<!-- BOX INFORMASI -->
 		<?php
 		if ($chmod == '1' || $chmod == '2' || $chmod == '3' || $chmod == '4' || $chmod == '5' || $_SESSION['jabatan'] == 'admin') {
-		} else {
+		} elseif ($chmod == '1' || $chmod == '2' || $chmod == '3' || $chmod == '4' || $chmod == '5' || $_SESSION['jabatan'] == 'user') {
 		?>
+		<?php
+		} else { ?>
 			<div class="callout callout-danger">
 				<h4>Info</h4>
 				<b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
 			</div>
-		<?php
-		}
-		?>
+		<?php } ?>
+		<div class="row mb-2">
+			<!-- <div class="col-md-3">
+					<a href="add_gudang" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Gudang</a>
+				</div> -->
+			<form method="post" action="">
+				<div class="col-lg-12 d-flex justify-content-end">
+					<div class="ms-auto">
+						<div class="btn-group">
+							<div class="input-group">
+								<input type="text" name="search" class="form-control radius-30" placeholder="cari">
+								<button type="submit" class="btn btn-primary btn-sm radius-30"><i class="bx bx-search"></i></button>
+							</div>
+						</div>
+						<a href="add_gudang" class="btn btn-primary btn-sm radius-30"><i class="bx bx-plus"></i>Tambah Gudang</a>
 
+					</div>
+				</div>
+			</form>
+		</div>
 		<?php
-		if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') {
-		?>
+		if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 
 			<?php
 
@@ -137,17 +124,10 @@ body();
 			?>
 
 
-			<h6 class="mb-0 text-uppercase"><?= $title ?></h6>
-			<hr />
-			<div class="row mb-2">
-				<div class="col-md-3">
-					<a href="add_gudang" class="btn btn-primary btn-sm"><i class="bx bx-plus"></i>Tambah Gudang</a>
-				</div>
-			</div>
 			<div class="card">
 				<div class="card-header">
-					<h3>Data <?php echo $forward ?> <span class="label label-default"><?php echo $totaldata; ?></span>
-					</h3>
+					<h6 class="mb-0 text-uppercase">Data <?php echo $forward ?>
+					</h6>
 				</div>
 				<?php
 				error_reporting(E_ALL ^ E_DEPRECATED);
@@ -166,17 +146,8 @@ body();
 				$no_urut = ($page - 1) * $rpp;
 				?>
 				<div class="card-body">
-
-					<form method="post">
-						<div class="input-group input-group-sm" style="width: 250px;">
-							<input type="text" name="search" class="form-control pull-right" placeholder="Cari">
-							<div class="input-group-btn">
-								<button type="submit" class="btn btn-primary"><i class="bx bx-search"></i></button>
-							</div>
-						</div>
-					</form>
 					<div class="table-responsive">
-						<table class="table table-hover ">
+						<table class="table table-hover table-bordered ">
 							<thead>
 								<tr>
 									<th>No</th>
@@ -218,10 +189,7 @@ body();
 														<?php } else {
 														} ?>
 													</td>
-												</tr><?php;
-                              }
-
-                           ?>
+												</tr><?php } ?>
 											</tbody>
 						</table>
 					</div>
@@ -229,51 +197,166 @@ body();
 													echo paginate_one($reload, $page, $tpages);
 												} else {
 												} ?></div>
-			<?php }
+				<?php
 									}
 								}
 							} else {
 								while (($count < $rpp) && ($i < $tcount)) {
 									mysqli_data_seek($result, $i);
 									$fill = mysqli_fetch_array($result);
-			?>
-			<tbody>
-				<tr>
-					<td><?php echo ++$no_urut; ?></td>
-					<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-					<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-					<td>
-						<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-							<button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
-						<?php } else {
+				?>
+				<tbody>
+					<tr>
+						<td><?php echo ++$no_urut; ?></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+						<td>
+							<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
+								<button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
+							<?php } else {
 									} ?>
 
-						<?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
-							<button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo $forward . '&'; ?>forwardpage=<?php echo $forwardpage . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
-						<?php } else {
+							<?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
+								<button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo $forward . '&'; ?>forwardpage=<?php echo $forwardpage . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
+							<?php } else {
 									} ?>
-					</td>
-				</tr>
-			<?php
+						</td>
+					</tr>
+				<?php
 									$i++;
 									$count++;
 								}
 
-			?>
-			</tbody>
-			</table>
-			<div align="right"><?php if ($tcount >= $rpp) {
-											echo paginate_one($reload, $page, $tpages);
-										} else {
-										} ?></div>
-		<?php } ?>
+				?>
+				</tbody>
+				</table>
+				<div align="right"><?php if ($tcount >= $rpp) {
+												echo paginate_one($reload, $page, $tpages);
+											} else {
+											} ?></div>
+			<?php } ?>
 
 				</div>
 				<!-- /.box-body -->
 			</div>
 
-		<?php } else {
-		} ?>
+		<?php } elseif ($chmod >= 1 || $_SESSION['jabatan'] == 'user') { ?>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0 text-uppercase">Data <?php echo $forward ?>
+					</h6>
+				</div>
+				<?php
+				error_reporting(E_ALL ^ E_DEPRECATED);
+				$sql    = "select * from $forward order by no";
+				$result = mysqli_query($conn, $sql);
+				$rpp    = 15;
+				$reload = "$halaman" . "?pagination=true";
+				$page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+				if ($page <= 0)
+					$page = 1;
+				$tcount  = mysqli_num_rows($result);
+				$tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+				$count   = 0;
+				$i       = ($page - 1) * $rpp;
+				$no_urut = ($page - 1) * $rpp;
+				?>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-hover table-bordered ">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Kode Gudang</th>
+									<th>Nama Gudang</th>
+									<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'user') { ?>
+										<th>Opsi</th>
+									<?php } else {
+									} ?>
+								</tr>
+							</thead>
+							<?php
+							error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+							$search = $_POST['search'];
+
+							if ($search != null || $search != "") {
+
+								if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+									if (isset($_POST['search'])) {
+										$query1 = "SELECT * FROM  $forward where kode like '%$search%' or nama like '%$search%' order by no limit $rpp";
+										$hasil = mysqli_query($conn, $query1);
+										$no = 1;
+										while ($fill = mysqli_fetch_assoc($hasil)) {
+							?>
+											<tbody>
+												<tr>
+													<td><?php echo ++$no_urut; ?></td>
+													<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+													<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+													<td>
+														<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'user') { ?>
+															<button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
+														<?php } else {
+														} ?>
+
+														<?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'user') { ?>
+															<button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo $forward . '&'; ?>forwardpage=<?php echo $forwardpage . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
+														<?php } else {
+														} ?>
+													</td>
+												</tr><?php } ?>
+											</tbody>
+						</table>
+					</div>
+					<div align="right"><?php if ($tcount >= $rpp) {
+													echo paginate_one($reload, $page, $tpages);
+												} else {
+												} ?></div>
+				<?php
+									}
+								}
+							} else {
+								while (($count < $rpp) && ($i < $tcount)) {
+									mysqli_data_seek($result, $i);
+									$fill = mysqli_fetch_array($result);
+				?>
+				<tbody>
+					<tr>
+						<td><?php echo ++$no_urut; ?></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+						<td>
+							<?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'user') { ?>
+								<button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
+							<?php } else {
+									} ?>
+
+							<?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'user') { ?>
+								<button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo $forward . '&'; ?>forwardpage=<?php echo $forwardpage . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
+							<?php } else {
+									} ?>
+						</td>
+					</tr>
+				<?php
+									$i++;
+									$count++;
+								}
+
+				?>
+				</tbody>
+				</table>
+				<div align="right"><?php if ($tcount >= $rpp) {
+												echo paginate_one($reload, $page, $tpages);
+											} else {
+											} ?></div>
+			<?php } ?>
+
+				</div>
+				<!-- /.box-body -->
+			</div>
+		<?php } ?>
 	</div>
 	<!-- ./col -->
 </div>

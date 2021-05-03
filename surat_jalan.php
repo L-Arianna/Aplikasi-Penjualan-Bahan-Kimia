@@ -49,33 +49,6 @@ if (!login_check()) {
 			date_default_timezone_set("Asia/Jakarta");
 			$today = date('d-m-Y');
 			?>
-
-
-
-
-
-
-			<ol class="breadcrumb ">
-				<li><a href="index">Dashboard </a></li>
-				<li><a href="penjualan"><?php echo $dataapa ?></a></li>
-				<?php
-
-				if ($search != null || $search != "") {
-				?>
-					<li> <a href="<?php echo $halaman; ?>">Data <?php echo $dataapa ?></a></li>
-					<li class="active"><?php
-												echo $search;
-												?></li>
-				<?php
-				} else {
-				?>
-					<li class="active">Data <?php echo $dataapa ?></li>
-				<?php
-				}
-				?>
-			</ol>
-			<h6 class="mb-0 text-uppercase"></h6>
-			<hr />
 			<div class="card">
 				<div class="card-body">
 					<!-- ./col -->
@@ -237,7 +210,7 @@ if (!login_check()) {
 						<div class="box box-default">
 							<div class="box-header with-border">
 								<h3 class="box-title">Data <?php echo $dataapa; ?></h3>
-								<hr />
+
 							</div>
 							<!-- /.box-header -->
 

@@ -53,33 +53,6 @@ body();
     $row = mysqli_fetch_assoc($hasilx2);
     $alert = $row['batas'];
     ?>
-
-    <!-- BREADCRUMB -->
-
-    <ol class="breadcrumb ">
-      <li><a href="<?php echo $_SESSION['baseurl']; ?>">Dashboard </a></li>
-      <li><a href="<?php echo $halaman; ?>"><?php echo $dataapa ?></a></li>
-      <?php
-
-      if ($search != null || $search != "") {
-      ?>
-        <li> <a href="<?php echo $halaman; ?>">Data <?php echo $dataapa ?></a></li>
-        <li class="active"><?php
-                            echo $search;
-                            ?></li>
-      <?php
-      } else {
-      ?>
-        <li class="active">Data <?php echo $dataapa ?></li>
-      <?php
-      }
-      ?>
-    </ol>
-
-    <!-- BREADCRUMB -->
-
-    <!-- BOX INSERT BERHASIL -->
-
     <script>
       window.setTimeout(function() {
         $("#myAlert").fadeTo(500, 0).slideUp(1000, function() {
@@ -114,7 +87,7 @@ body();
           ?>
           <div class="card">
             <div class="card-header">
-              <h3>Barang dengan <?php echo $dataapa; ?></h3>
+              <h6 class="mb-0 text-uppercase">Barang dengan <?php echo $dataapa; ?></h6>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -155,60 +128,57 @@ body();
                               <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
 
                           </tr>
-                          <?php;
-                          }
-
-                            ?>
+                        <?php } ?>
                         </tbody>
               </table>
               <div align="right"><?php if ($tcount >= $rpp) {
                                     echo paginate_one($reload, $page, $tpages);
                                   } else {
                                   } ?></div>
-          <?php }
+            <?php
                     }
                   }
                 } else {
                   while (($count < $rpp) && ($i < $tcount)) {
                     mysqli_data_seek($result, $i);
                     $fill = mysqli_fetch_array($result);
-          ?>
-          <tbody>
-            <tr>
-              <td><?php echo ++$no_urut; ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-              <td> <?php if ($fill['sisa'] >= 10) { ?><span class="badge bg-yellow"><?php echo $fill['sisa']; ?></span><?php } else { ?> <span class="badge bg-red"><?php echo $fill['sisa']; ?></span> <?php  } ?>
+            ?>
+            <tbody>
+              <tr>
+                <td><?php echo ++$no_urut; ?></td>
+                <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+                <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                <td> <?php if ($fill['sisa'] >= 10) { ?><span class="badge bg-warning text-dark"><?php echo $fill['sisa']; ?></span><?php } else { ?> <span class="badge bg-danger text-dark"><?php echo $fill['sisa']; ?></span> <?php  } ?>
 
-              </td>
-              <td><?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-                  <button type="button" class="btn btn-info btn-xs" onclick="window.location.href='stok_masuk?barcode=<?php echo $fill['barcode'] ?>'">Tambah</button>
-                <?php } else {
+                </td>
+                <td><?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+                    <button type="button" class="btn btn-info btn-sm radius-15" onclick="window.location.href='stok_masuk?barcode=<?php echo $fill['barcode'] ?>'">Tambah</button>
+                  <?php } else {
                     } ?>
-              </td>
+                </td>
 
 
-            </tr>
+              </tr>
 
-          <?php
+            <?php
                     $i++;
                     $count++;
                   }
 
-          ?>
-          </tbody>
+            ?>
+            </tbody>
+            </table>
+            <div align="right"><?php if ($tcount >= $rpp) {
+                                  echo paginate_one($reload, $page, $tpages);
+                                } else {
+                                } ?></div>
+          <?php } ?>
+
+
+
+
+
           </table>
-          <div align="right"><?php if ($tcount >= $rpp) {
-                                echo paginate_one($reload, $page, $tpages);
-                              } else {
-                              } ?></div>
-        <?php } ?>
-
-
-
-
-
-        </table>
 
 
             </div>
@@ -222,7 +192,7 @@ body();
         <div class="col-md-6">
           <div class="card">
             <div class="card-header">
-              <h3>Atur Batas Stok Menipis</h3>
+              <h6 class="mb-0 text-uppercase">Atur Batas Stok Menipis</h6>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -241,7 +211,7 @@ body();
             <!-- /.box-body -->
             </form>
             <div class="card-footer">
-              <h5 class="pull-right">Beritahu Jika Stok kurang dari angka diatas</h5>
+              <h6 class="mb-0 text-uppercase">Beritahu Jika Stok kurang dari angka diatas</h6>
             </div>
             <?php
 
@@ -270,32 +240,192 @@ body();
               }
             }
             ?>
+          </div>
+        </div>
+      </div>
+    <?php } elseif ($chmod >= 2 || $_SESSION['jabatan'] == 'user') { ?>
+      <div class="row">
+        <div class="col-md-6">
+          <?php
+          error_reporting(E_ALL ^ E_DEPRECATED);
+          $sql    = "select * from barang where sisa <= '$alert' order by kode";
+          $result = mysqli_query($conn, $sql);
+          $rpp    = 10;
+          $reload = "$halaman" . "?pagination=true";
+          $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+          if ($page <= 0)
+            $page = 1;
+          $tcount  = mysqli_num_rows($result);
+          $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+          $count   = 0;
+          $i       = ($page - 1) * $rpp;
+          $no_urut = ($page - 1) * $rpp;
+          ?>
+          <div class="card">
+            <div class="card-header">
+              <h6 class="mb-0 text-uppercase">Barang dengan <?php echo $dataapa; ?></h6>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Kode</th>
+                    <th>Barang</th>
+                    <th style="width: 40px">Stok</th>
+                    <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'user') { ?>
+                      <th>Opsi</th>
+                    <?php } else {
+                    } ?>
+                  </tr>
+                </thead>
+
+
+                <?php
+                error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+                $search = $_POST['search'];
+
+                if ($search != null || $search != "") {
+
+                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                    if (isset($_POST['search'])) {
+                      $query1 = "select * from barang where kode like '%$search%' or nama like '%$search%' or brand like '%$search%' order by barang.no limit $rpp";
+                      $hasil = mysqli_query($conn, $query1);
+                      $no = 1;
+                      while ($fill = mysqli_fetch_assoc($hasil)) {
+                ?>
+                        <tbody>
+                          <tr>
+                            <td><?php echo ++$no_urut; ?></td>
+                            <<td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+                              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                              <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
+
+                          </tr>
+                        <?php } ?>
+                        </tbody>
+              </table>
+              <div align="right"><?php if ($tcount >= $rpp) {
+                                    echo paginate_one($reload, $page, $tpages);
+                                  } else {
+                                  } ?></div>
+            <?php
+                    }
+                  }
+                } else {
+                  while (($count < $rpp) && ($i < $tcount)) {
+                    mysqli_data_seek($result, $i);
+                    $fill = mysqli_fetch_array($result);
+            ?>
+            <tbody>
+              <tr>
+                <td><?php echo ++$no_urut; ?></td>
+                <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+                <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                <td> <?php if ($fill['sisa'] >= 10) { ?><span class="badge bg-warning text-dark"><?php echo $fill['sisa']; ?></span><?php } else { ?> <span class="badge bg-danger text-dark"><?php echo $fill['sisa']; ?></span> <?php  } ?>
+
+                </td>
+                <td><?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'user') { ?>
+                    <button type="button" class="btn btn-info btn-sm radius-15" onclick="window.location.href='stok_masuk?barcode=<?php echo $fill['barcode'] ?>'">Tambah</button>
+                  <?php } else {
+                    } ?>
+                </td>
+
+
+              </tr>
+
+            <?php
+                    $i++;
+                    $count++;
+                  }
+
+            ?>
+            </tbody>
+            </table>
+            <div align="right"><?php if ($tcount >= $rpp) {
+                                  echo paginate_one($reload, $page, $tpages);
+                                } else {
+                                } ?></div>
+          <?php } ?>
 
 
 
 
+
+          </table>
+
+
+            </div>
 
           </div>
           <!-- /.box -->
 
+        </div> <!-- /.row -->
+
+
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h6 class="mb-0 text-uppercase">Atur Batas Stok Menipis</h6>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="card-body">
+              <form role="form" method="post" action="stok_menipis.php">
+                <div class="form-group mb-1">
+                  <label for="alert">Batas Stok</label>
+                  <input type="text" class="form-control" value="<?php echo $alert; ?>" name="alert" id="alert" placeholder="tidak boleh kosong">
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <button type="submit" name="simpan" class="btn btn-primary btn-sm">Submit</button>
+                  </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            </form>
+            <div class="card-footer">
+              <h6 class="mb-0 text-uppercase">Beritahu Jika Stok kurang dari angka diatas</h6>
+            </div>
+            <?php
+
+
+            if (isset($_POST['simpan'])) {
+              if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $alert = "";
+                $alert = mysqli_real_escape_string($conn, $_POST["alert"]);
+
+                $sql = "select * from backset";
+                $result = mysqli_query($conn, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
+
+                  $sql1 = "update backset set batas='$alert' ";
+                  $result = mysqli_query($conn, $sql1);
+                  echo "<script type='text/javascript'>  alert('Berhasil, Batas telah diupdate!'); </script>";
+                  echo "<script type='text/javascript'>window.location = 'stok_menipis';</script>";
+                } else {
+                  $batas = "20";
+                  $sql1 = "update backset set batas='$batas' ";
+                  $result = mysqli_query($conn, $sql1);
+                  echo "<script type='text/javascript'>  alert('Berhasil, Batas diset ke default yaitu 20!'); </script>";
+                  echo "<script type='text/javascript'>window.location = 'stok_menipis';</script>";
+                }
+              }
+            }
+            ?>
+          </div>
         </div>
-
-
-
-
-
-
-      <?php
-    } else {
-      ?>
-        <div class="callout callout-danger">
-          <h4>Info</h4>
-          <b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
-        </div>
-      <?php
-    }
-      ?>
       </div>
+    <?php } else { ?>
+      <div class="callout callout-danger">
+        <h4>Info</h4>
+        <b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
+      </div>
+    <?php } ?>
   </div>
 </div>
 

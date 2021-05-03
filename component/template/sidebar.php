@@ -30,13 +30,8 @@ $avatar = $row['avatar'];
 				<div class="menu-title">Dashboard</div>
 			</a>
 		</li>
-
-
 		<?php
-
-		if ($chmenu4 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-
-
+		if ($chmenu1 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 			<li>
 				<a class="has-arrow" href="javascript:;">
 					<div class="parent-icon"><i class="bx bx-box"></i>
@@ -106,7 +101,7 @@ $avatar = $row['avatar'];
 
 		<?php } else {
 		}
-		if ($chmenu5 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+		if ($chmenu2 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 			<li>
 				<a class="has-arrow" href="javascript:;">
 					<div class="parent-icon"><i class='bx bx-store'></i>
@@ -114,8 +109,6 @@ $avatar = $row['avatar'];
 					<div class="menu-title">Menu Penjualan</div>
 				</a>
 				<ul>
-					<!-- <li> <a href="add_jual"><i class="bx bx-right-arrow-alt"></i>Trx Retail</a>
-					</li> -->
 					<li> <a href="add_sale"><i class="bx bx-right-arrow-alt"></i>Buat Invoice</a>
 					</li>
 					<li> <a href="penjualan"><i class="bx bx-right-arrow-alt"></i>Data Invoice</a>
@@ -124,38 +117,11 @@ $avatar = $row['avatar'];
 					</li>
 					<!-- <li> <a href="retur"><i class="bx bx-right-arrow-alt"></i>Retur Barang</a>
 					</li> -->
-					<!-- <li> <a href="rekening"><i class="bx bx-right-arrow-alt"></i>Rekening Saya</a>
-					</li> -->
 				</ul>
 			</li>
 		<?php } else {
 		}
-		if ($chmenu6 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-			<!-- <li>
-				<a class="has-arrow" href="javascript:;">
-					<div class="parent-icon"> <i class="bx bx-barcode-reader"></i>
-					</div>
-					<div class="menu-title">Stok</div>
-				</a>
-				<ul>
-					<li> <a href="stok_barang"><i class="bx bx-right-arrow-alt"></i>Data Stok</a>
-					</li>
-					<li> <a href="stok_in"><i class="bx bx-right-arrow-alt"></i>Stok Masuk</a>
-					</li>
-					<li> <a href="stok_out"><i class="bx bx-right-arrow-alt"></i>Stok Keluar</a>
-					</li>
-					<li> <a href="mutasi"><i class="bx bx-right-arrow-alt"></i>Mutasi Stok</a>
-					</li>
-					<li> <a href="stok_retur"><i class="bx bx-right-arrow-alt"></i>Stok Barang Retur</a>
-					</li>
-					<li> <a href="stok_menipis"><i class="bx bx-right-arrow-alt"></i>Stok Menipis</a>
-					</li>
-				</ul>
-			</li> -->
-
-		<?php } else {
-		}
-		if ($chmenu7 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+		if ($chmenu3 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 			<li>
 				<a class="has-arrow" href="javascript:;">
 					<div class="parent-icon"><i class='bx bx-spreadsheet'></i>
@@ -163,10 +129,6 @@ $avatar = $row['avatar'];
 					<div class="menu-title">Laporan</div>
 				</a>
 				<ul>
-					<!-- <li> <a href="report_beli"><i class="bx bx-right-arrow-alt"></i>Pembelian</a>
-					</li> -->
-					<!-- <li> <a href="report_jual"><i class="bx bx-right-arrow-alt"></i>Penjualan Retail</a>
-					</li> -->
 					<li> <a href="report_inv"><i class="bx bx-right-arrow-alt"></i>Invoice Penjualan</a>
 					</li>
 					<li> <a href="report_kirim"><i class="bx bx-right-arrow-alt"></i>Invoice Pengiriman</a>
@@ -178,7 +140,7 @@ $avatar = $row['avatar'];
 			</li>
 		<?php } else {
 		}
-		if ($chmenu2 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+		if ($chmenu4 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 			<li>
 				<a class="has-arrow" href="javascript:;">
 					<div class="parent-icon"><i class="bx bx-note"></i>
@@ -192,28 +154,7 @@ $avatar = $row['avatar'];
 			</li>
 		<?php } else {
 		}
-		if ($chmenu3 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-			<!-- <li>
-				<a class="has-arrow" href="javascript:;">
-					<div class="parent-icon"><i class="bx bx-food-menu"></i>
-					</div>
-					<div class="menu-title">Kategori dan Brand</div>
-				</a>
-				<ul>
-					<li> <a href="kategori"><i class="bx bx-right-arrow-alt"></i>Data Kategori</a>
-					</li>
-					<li> <a href="add_kategori"><i class="bx bx-right-arrow-alt"></i>Tambah Kategori</a>
-					</li>
-					<li> <a href="merek"><i class="bx bx-right-arrow-alt"></i>Data Brand</a>
-					</li>
-					<li> <a href="add_merek"><i class="bx bx-right-arrow-alt"></i>Tambah Brand</a>
-					</li>
-				</ul>
-			</li> -->
-
-		<?php } else {
-		}
-		if ($chmenu1 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+		if ($chmenu5 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 			<li>
 				<a class="has-arrow" href="javascript:;">
 					<div class="parent-icon"><i class="bx bx-user-plus"></i>
@@ -231,7 +172,7 @@ $avatar = $row['avatar'];
 			</li>
 		<?php } else {
 		}
-		if ($chmenu8 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+		if ($chmenu6 >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
 			<li>
 				<a class="has-arrow" href="javascript:;">
 					<div class="parent-icon"><i class="bx bx-wrench"></i>
@@ -241,8 +182,6 @@ $avatar = $row['avatar'];
 				<ul>
 					<li> <a href="set_general"><i class="bx bx-right-arrow-alt"></i>General Setting</a>
 					</li>
-					<!-- <li> <a href="set_themes"><i class="bx bx-right-arrow-alt"></i>Theme Setting</a>
-					</li> -->
 					<li> <a href="backup"><i class="bx bx-right-arrow-alt"></i>Backup & restore</a>
 					</li>
 					<li> <a href="payment_options"><i class="bx bx-right-arrow-alt"></i>Metode Bayar</a>
@@ -250,9 +189,7 @@ $avatar = $row['avatar'];
 				</ul>
 			</li>
 		<?php } else {
-		}
-
-		?>
+		} ?>
 	</ul>
 	<!--end navigation-->
 </div>

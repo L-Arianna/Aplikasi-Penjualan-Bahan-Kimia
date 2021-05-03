@@ -1,33 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PT. Kurnia Makmur| Invoice</title>
-	<!-- Tell the browser to be responsive to screen width -->
-	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<!-- Bootstrap 3.3.7 -->
-	<link rel="stylesheet" href="dist/bootstrap/css/bootstrap.min.css">
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="dist/ico/font-awesome/css/font-awesome.min.css">
-	<!-- Ionicons -->
-	<link rel="stylesheet" href="dist/ico/ionicons/css/ionicons.min.css">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
-	<!-- Google Font -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-</head>
-
-
-
+<?php ob_start(); ?>
 <?php
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 
@@ -101,171 +72,213 @@ $namapt = $row['nama_pt'];
 $alamatpt = $row['alamat_pt'];
 $notelppt = $row['no_tlp'];
 
+$sql3 = "SELECT * FROM update_pelanggan where kode='$pelanggan' ";
+$hasil3 = mysqli_query($conn, $sql3);
+$row = mysqli_fetch_assoc($hasil3);
 
+$kode_new = $row['kode'];
+$customer_new = $row['nama'];
+$nohp_new = $row['nohp'];
+$address_new = $row['alamat'];
 
 ?>
 
+<html>
 
-<body onload="window.print();">
-	<!--   -->
-	<div class="wrapper">
-		<!-- Main content -->
-		<section class="invoice">
-			<!-- title row -->
-			<div class="row">
-				<div class="col-lg-12">
-					<h2 class="page-header">
-						<i class="fa fa-globe"></i> <?php echo $namapt; ?>
-						<small class="pull-right">SURAT JALAN || Date: <?php echo $today; ?></small>
-					</h2>
-				</div>
-				<!-- /.col -->
-			</div>
-			<!-- info row -->
-			<div class="row mb-2">
-				<div class="col-sm-4 invoice-col">
-					FROM:
-					<address>
-						<strong> <?php echo $namapt; ?></strong><br>
-						<?php echo $alamatpt; ?><br>
-						Phone: <?php echo $notelppt; ?><br>
-						<b>No Surat Jalan : <?= $no_surat ?></b><br>
-						<b>No PO : <?= $noPO ?></b><br>
-					</address>
-				</div>
-				<!-- /.col -->
-				<div class="col-sm-4 invoice-col">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
 
-				</div>
-				<!-- /.col -->
-				<div class="col-sm-4 invoice-col">
-					To : <br>
-					<?php
-					$sql3 = "SELECT * FROM update_pelanggan where kode='$pelanggan' ";
-					$hasil3 = mysqli_query($conn, $sql3);
-					$row = mysqli_fetch_assoc($hasil3);
+		body {
+			/* margin: 10; */
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+			width: 24cm;
+			height: 28cm;
+			font-size: 15px;
+		}
 
-					$kode_new = $row['kode'];
-					$customer_new = $row['nama'];
-					$nohp_new = $row['nohp'];
-					$address_new = $row['alamat'];
 
-					if ($kode_new == null) { ?>
-						<strong> <?php echo $customer; ?></strong><br>
-						<?php echo $address; ?><br>
-						Phone: <?php echo $nohp; ?><br>
-					<?php } elseif ($kode_new > 0) { ?>
-						<strong> <?php echo $customer_new; ?></strong><br>
-						<?php echo $address_new; ?><br>
-						Phone: <?php echo $nohp_new; ?><br>
-					<?php } ?>
-				</div>
-				<!-- /.col -->
-			</div>
-			<!-- /.row -->
 
-			<!-- Table row -->
-			<div class="row">
+		/* Create three equal columns that floats next to each other */
+		.column {
+			float: left;
+			width: 28%;
+			padding: 15px;
+		}
+
+		small,
+		.date {
+			text-align: right;
+		}
+
+		/* Clear floats after the columns */
+		.row:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+		table {
+			border: solid thin #000;
+			border-collapse: collapse;
+
+		}
+
+		td,
+		th {
+			padding: 3mm 6mm;
+			text-align: left;
+			vertical-align: top;
+		}
+
+		th {
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="row">
+		<div class="date">
+			<small>SURAT JALAN || Date: <?php echo $today; ?></small>
+		</div>
+
+		<div class="column">
+			<h4><?php echo $namapt; ?></h4>
+			From : <br>
+			<strong> <?php echo $namapt; ?></strong><br>
+			<?php echo $alamatpt; ?><br>
+			Phone: <?php echo $notelppt; ?><br>
+			<b>No Surat Jalan : <?= $no_surat ?></b><br>
+			<b>No PO : <?= $noPO ?></b><br>
+		</div>
+		<div class="column">
+			<p>
+			<p>
+			<p>
+		</div>
+		<div class="column">
+			<p>
+			<p>
+			<p>
+				To : <br>
 				<?php
-				error_reporting(E_ALL ^ E_DEPRECATED);
-
-				$sql    = "select * from $tabeldatabase where nota ='$nota' order by no";
-				$result = mysqli_query($conn, $sql);
-				$rpp    = 15;
-				$reload = "$halaman" . "?pagination=true";
-				$page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
-
-
-
-				if ($page <= 0)
-					$page = 1;
-				$tcount  = mysqli_num_rows($result);
-				$tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
-				$count   = 0;
-				$i       = ($page - 1) * $rpp;
-				$no_urut = ($page - 1) * $rpp;
-				?>
-				<div class="col-xs-12 table-responsive">
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th>Packing</th>
-								<th>Qty</th>
-								<th>Total Qty </th>
-								<th>Product</th>
-							</tr>
-						</thead>
-						<?php
-						error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-						while (($count < $rpp) && ($i < $tcount)) {
-							mysqli_data_seek($result, $i);
-							$fill = mysqli_fetch_array($result);
-						?>
-							<tbody>
-								<tr>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-									<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-								</tr>
-							<?php
-							$i++;
-							$count++;
-						}
-
-							?>
-							</tbody>
-					</table>
-				</div>
-				<!-- /.col -->
-			</div>
-			<div class="col-lg-12">
-				<table class="table table-print">
-					<thead>
-						<tr>
-							<th>Tanda terima </th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th>Hormat Kami</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?php if ($kode_new == null) { ?>
-									<strong><?php echo $customer; ?></strong><br>
-								<?php } elseif ($kode_new > 0) { ?>
-									<strong><?php echo $customer_new; ?></strong><br>
-								<?php } ?>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<table class="table mb-10">
-									<br>
-									<br>
-									<br>
-									<br>
-									<br>
-									<u>(------------------------------)</u>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-
-
-
-		</section>
-		<!-- /.content -->
+				if ($kode_new == null) { ?>
+					<strong> <?php echo $customer; ?></strong><br>
+					<?php echo $address; ?><br>
+					Phone: <?php echo $nohp; ?><br>
+				<?php } elseif ($kode_new > 0) { ?>
+					<strong> <?php echo $customer_new; ?></strong><br>
+					<?php echo $address_new; ?><br>
+					Phone: <?php echo $nohp_new; ?><br>
+				<?php } ?>
+		</div>
 	</div>
-	<H4 align="center"><?php echo $signature ?><H4>
-			<!-- ./wrapper -->
+	<br>
+	<br>
+	<div class="row">
+		<?php
+		error_reporting(E_ALL ^ E_DEPRECATED);
+
+		$sql    = "select * from $tabeldatabase where nota ='$nota' order by no";
+		$result = mysqli_query($conn, $sql);
+		$rpp    = 15;
+		$reload = "$halaman" . "?pagination=true";
+		$page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+		if ($page <= 0)
+			$page = 1;
+		$tcount  = mysqli_num_rows($result);
+		$tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+		$count   = 0;
+		$i       = ($page - 1) * $rpp;
+		$no_urut = ($page - 1) * $rpp;
+		?>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Packing</th>
+					<th></th>
+					<th></th>
+					<th>Qty</th>
+					<th></th>
+					<th></th>
+					<th>Total Qty </th>
+					<th></th>
+					<th></th>
+					<th>Product</th>
+					<th></th>
+				</tr>
+			</thead>
+			<?php
+			error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+			while (($count < $rpp) && ($i < $tcount)) {
+				mysqli_data_seek($result, $i);
+				$fill = mysqli_fetch_array($result);
+			?>
+				<tbody>
+					<tr>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+						<td></td>
+						<td></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+						<td></td>
+						<td></td>
+						<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+						<td></td>
+						<td></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+						<td></td>
+					</tr>
+				<?php
+				$i++;
+				$count++;
+			}
+
+				?>
+				</tbody>
+		</table>
+	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div class="row">
+		<div class="column">
+			Tanda Terima : <br>
+			<?php if ($kode_new == null) { ?>
+				<strong><?php echo $customer; ?></strong><br>
+			<?php } elseif ($kode_new > 0) { ?>
+				<strong><?php echo $customer_new; ?></strong><br>
+			<?php } ?>
+		</div>
+		<div class="column">
+			<p>
+			<p>
+			<p>
+		</div>
+		<div class="column">
+			Hormat Kami :<br>
+			<br>
+			<br>
+			<br>
+			<strong>(----------------------)</strong>
+		</div>
+	</div>
 </body>
 
 </html>
+<?php
+$html = ob_get_contents();
+ob_end_clean();
+
+require_once "./assets/vendor/autoload.php";
+$mpdf = new \Mpdf\Mpdf();
+$mpdf->AddPage("P", "", "", "", "", "10", "10", "10", "10", "15", "15", "", "", "", "", "", "", "", "", "", "A4");
+$mpdf->WriteHTML($html);
+$mpdf->Output();
+// 50,50,50,50,10,10

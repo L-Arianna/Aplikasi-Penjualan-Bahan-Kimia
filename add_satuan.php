@@ -59,37 +59,6 @@ body();
 			return $new_code;
 		}
 		?>
-
-
-		<!-- SETTING STOP -->
-
-
-		<!-- BREADCRUMB -->
-
-		<ol class="breadcrumb ">
-			<li><a href="<?php echo $_SESSION['baseurl']; ?>">Dashboard </a></li>
-			<li><a href="<?php echo $halaman; ?>"><?php echo $dataapa ?></a></li>
-			<?php
-
-			if ($search != null || $search != "") {
-			?>
-				<li> <a href="<?php echo $halaman; ?>">Data <?php echo $dataapa ?></a></li>
-				<li class="active"><?php
-											echo $search;
-											?></li>
-			<?php
-			} else {
-			?>
-				<li class="active">Data <?php echo $dataapa ?></li>
-			<?php
-			}
-			?>
-		</ol>
-
-		<!-- BREADCRUMB -->
-
-		<!-- BOX INSERT BERHASIL -->
-
 		<script>
 			window.setTimeout(function() {
 				$("#myAlert").fadeTo(500, 0).slideUp(1000, function() {
@@ -102,168 +71,272 @@ body();
 		<?php
 		if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
 		?>
-			<hr />
-			<!-- KONTEN BODY AWAL -->
 			<div class="card">
 				<div class="card-header">
-					<h3>Data <?php echo $dataapa; ?></h3>
+					<h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
 				</div>
 				<!-- /.card-header -->
 
 				<div class="card-body">
-					<div class="table-responsive">
-						<!----------------KONTEN------------------->
+					<?php
+					error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+
+					$kode = $nama = "";
+					$kode = $convert = "";
+					$kode = $jumlah = "";
+					$no = $_GET["no"];
+					$insert = '1';
+
+
+
+					if (($no != null || $no != "") && ($chmod >= 3 || $_SESSION['jabatan'] == 'admin')) {
+
+						$sql = "select * from $tabeldatabase where no='$no'";
+						$hasil2 = mysqli_query($conn, $sql);
+
+
+						while ($fill = mysqli_fetch_assoc($hasil2)) {
+
+
+							$kode = $fill["kode"];
+							$nama = $fill["nama_satuan"];
+							$convert = $fill["convert"];
+							$jumlah = $fill["jumlah"];
+							$insert = '3';
+						}
+					}
+					?>
+					<form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform">
+
+						<div class="row">
+							<div class="form-group">
+								<label for="kode" class="col-sm-3 control-label">Kode:</label>
+								<div class="col-md-12">
+									<?php if ($no == null || $no == "") { ?>
+										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required>
+									<?php } else { ?>
+										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="nama" class="col-sm-3 control-label">Nama Satuan:</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" id="nama" name="nama_satuan" value="<?php echo $nama; ?>">
+								</div>
+							</div>
+						</div>
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="convert" class="col-sm-3 control-label">Converter satuan</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" name="convert" value="<?php echo $convert; ?>">
+								</div>
+							</div>
+						</div>
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="jumlah" class="col-sm-3 control-label">Jumlah satuan</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" name="jumlah" value="<?php echo $jumlah; ?>">
+								</div>
+							</div>
+						</div>
+
+
+						<input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
+
+
+						<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-save"></span> Simpan</button>
+
+
+
 						<?php
-						error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-
-						$kode = $nama = "";
-						$kode = $convert = "";
-						$kode = $jumlah = "";
-						$no = $_GET["no"];
-						$insert = '1';
 
 
+						if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-						if (($no != null || $no != "") && ($chmod >= 3 || $_SESSION['jabatan'] == 'admin')) {
-
-							$sql = "select * from $tabeldatabase where no='$no'";
-							$hasil2 = mysqli_query($conn, $sql);
-
-
-							while ($fill = mysqli_fetch_assoc($hasil2)) {
+							$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
+							$nama = mysqli_real_escape_string($conn, $_POST["nama_satuan"]);
+							$convert = mysqli_real_escape_string($conn, $_POST["convert"]);
+							$jumlah = mysqli_real_escape_string($conn, $_POST["jumlah"]);
+							$insert = ($_POST["insert"]);
 
 
-								$kode = $fill["kode"];
-								$nama = $fill["nama_satuan"];
-								$convert = $fill["convert"];
-								$jumlah = $fill["jumlah"];
-								$insert = '3';
+							$sql = "select * from $tabeldatabase where kode='$kode'";
+							$result = mysqli_query($conn, $sql);
+
+							if (mysqli_num_rows($result) > 0) {
+								if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
+									$sql1 = "update `satuan` SET `nama_satuan` = '$nama', `convert` = '$convert', `jumlah` = '$jumlah' WHERE kode = '$kode'";
+									$updatean = mysqli_query($conn, $sql1);
+									echo "<script type='text/javascript'>  alert('Berhasil, Data telah diupdate!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								} else {
+									echo "<script type='text/javascript'>  alert('Gagal, Data gagal diupdate!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								}
+							} else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
+
+								$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','$jumlah','')";
+								if (mysqli_query($conn, $sql2)) {
+									echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								} else {
+									echo "<script type='text/javascript'>  alert('Gagal, Data gagal disimpan!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								}
+								// print_r($sql2);
 							}
 						}
 						?>
-						<div id="main">
-							<div class="container-fluid">
 
-								<form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform">
-									<div class="box-body">
-
-										<div class="row">
-											<div class="form-group">
-												<label for="kode" class="col-sm-3 control-label">Kode:</label>
-												<div class="col-md-12">
-													<?php if ($no == null || $no == "") { ?>
-														<input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required>
-													<?php } else { ?>
-														<input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
-													<?php } ?>
-												</div>
-											</div>
-										</div>
-
-										<div class="row mb-1">
-											<div class="form-group">
-												<label for="nama" class="col-sm-3 control-label">Nama Satuan:</label>
-												<div class="col-md-12">
-													<input type="text" class="form-control" id="nama" name="nama_satuan" value="<?php echo $nama; ?>">
-												</div>
-											</div>
-										</div>
-										<div class="row mb-1">
-											<div class="form-group">
-												<label for="convert" class="col-sm-3 control-label">Converter satuan</label>
-												<div class="col-md-12">
-													<input type="text" class="form-control" name="convert" value="<?php echo $convert; ?>">
-												</div>
-											</div>
-										</div>
-										<div class="row mb-1">
-											<div class="form-group">
-												<label for="jumlah" class="col-sm-3 control-label">Jumlah satuan</label>
-												<div class="col-md-12">
-													<input type="text" class="form-control" name="jumlah" value="<?php echo $jumlah; ?>">
-												</div>
-											</div>
-										</div>
-
-
-										<input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
-
-
-									</div>
-									<!-- /.box-body -->
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-save"></span> Simpan</button>
-									</div>
-									<!-- /.box-footer -->
-
-
-								</form>
-							</div>
-							<?php
-
-
-							if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-								$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
-								$nama = mysqli_real_escape_string($conn, $_POST["nama_satuan"]);
-								$convert = mysqli_real_escape_string($conn, $_POST["convert"]);
-								$jumlah = mysqli_real_escape_string($conn, $_POST["jumlah"]);
-								$insert = ($_POST["insert"]);
-
-
-								$sql = "select * from $tabeldatabase where kode='$kode'";
-								$result = mysqli_query($conn, $sql);
-
-								if (mysqli_num_rows($result) > 0) {
-									if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
-										$sql1 = "update $tabeldatabase set nama_satuan='$nama', convert='$convert', jumlah='$jumlah' where kode='$kode'";
-										$updatean = mysqli_query($conn, $sql1);
-										echo "<script type='text/javascript'>  alert('Berhasil, Data telah diupdate!'); </script>";
-										echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
-									} else {
-										echo "<script type='text/javascript'>  alert('Gagal, Data gagal diupdate!'); </script>";
-										echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
-									}
-								} else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
-
-									$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','$jumlah','')";
-									if (mysqli_query($conn, $sql2)) {
-										echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
-										echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
-									} else {
-										echo "<script type='text/javascript'>  alert('Gagal, Data gagal disimpan!'); </script>";
-										echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
-									}
-									// print_r($sql2);
-								}
+						<script>
+							function myFunction() {
+								document.getElementById("Myform").submit();
 							}
-							?>
-
-							<script>
-								function myFunction() {
-									document.getElementById("Myform").submit();
-								}
-							</script>
-
-							<!-- KONTEN BODY AKHIR -->
-
-						</div>
-					</div>
-
-					<!-- /.box-body -->
+						</script>
+					</form>
 				</div>
 			</div>
 
 		<?php
-		} else {
-		?>
+		} elseif ($chmod >= 2 || $_SESSION['jabatan'] == 'user') { ?>
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
+				</div>
+				<!-- /.card-header -->
+
+				<div class="card-body">
+					<?php
+					error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+
+					$kode = $nama = "";
+					$kode = $convert = "";
+					$kode = $jumlah = "";
+					$no = $_GET["no"];
+					$insert = '1';
+
+
+
+					if (($no != null || $no != "") && ($chmod >= 3 || $_SESSION['jabatan'] == 'user')) {
+
+						$sql = "select * from $tabeldatabase where no='$no'";
+						$hasil2 = mysqli_query($conn, $sql);
+
+
+						while ($fill = mysqli_fetch_assoc($hasil2)) {
+
+
+							$kode = $fill["kode"];
+							$nama = $fill["nama_satuan"];
+							$convert = $fill["convert"];
+							$jumlah = $fill["jumlah"];
+							$insert = '3';
+						}
+					}
+					?>
+					<form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform">
+
+						<div class="row">
+							<div class="form-group">
+								<label for="kode" class="col-sm-3 control-label">Kode:</label>
+								<div class="col-md-12">
+									<?php if ($no == null || $no == "") { ?>
+										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required>
+									<?php } else { ?>
+										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="nama" class="col-sm-3 control-label">Nama Satuan:</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" id="nama" name="nama_satuan" value="<?php echo $nama; ?>">
+								</div>
+							</div>
+						</div>
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="convert" class="col-sm-3 control-label">Converter satuan</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" name="convert" value="<?php echo $convert; ?>">
+								</div>
+							</div>
+						</div>
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="jumlah" class="col-sm-3 control-label">Jumlah satuan</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" name="jumlah" value="<?php echo $jumlah; ?>">
+								</div>
+							</div>
+						</div>
+						<input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
+						<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-save"></span> Simpan</button>
+						<?php
+						if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+							$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
+							$nama = mysqli_real_escape_string($conn, $_POST["nama_satuan"]);
+							$convert = mysqli_real_escape_string($conn, $_POST["convert"]);
+							$jumlah = mysqli_real_escape_string($conn, $_POST["jumlah"]);
+							$insert = ($_POST["insert"]);
+
+
+							$sql = "select * from $tabeldatabase where kode='$kode'";
+							$result = mysqli_query($conn, $sql);
+
+							if (mysqli_num_rows($result) > 0) {
+								if ($chmod >= 5 || $_SESSION['jabatan'] == 'user') {
+									// $sql1 = "update $tabeldatabase set nama_satuan='$nama', convert='$convert', jumlah='$jumlah' where kode='$kode'";
+
+									$sql1 = "update `satuan` SET `nama_satuan` = '$nama', `convert` = '$convert', `jumlah` = '$jumlah' WHERE kode = '$kode'";
+
+									$updatean = mysqli_query($conn, $sql1);
+									echo "<script type='text/javascript'>  alert('Berhasil, Data telah diupdate!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								} else {
+									echo "<script type='text/javascript'>  alert('Gagal, Data gagal diupdate!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								}
+							} else if (($chmod >= 2 || $_SESSION['jabatan'] == 'user')) {
+
+								$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','$jumlah','')";
+								if (mysqli_query($conn, $sql2)) {
+									echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								} else {
+									echo "<script type='text/javascript'>  alert('Gagal, Data gagal disimpan!'); </script>";
+									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
+								}
+								// echo print_r($sql1);
+							}
+						}
+						?>
+
+						<script>
+							function myFunction() {
+								document.getElementById("Myform").submit();
+							}
+						</script>
+					</form>
+				</div>
+			</div>
+		<?php } else { ?>
 			<div class="callout callout-danger">
 				<h4>Info</h4>
 				<b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
 			</div>
-		<?php
-		}
-		?>
+
+		<?php } ?>
 		<!-- ./col -->
 	</div>
 </div>

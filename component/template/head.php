@@ -32,5 +32,7 @@
 	<link rel="stylesheet" href="assets/css/header-colors.css" />
 	<link rel="stylesheet" href="plugin/jquery-ui/jquery-ui.min.css" />
 
+
+
 	<title>KURNIA MAKMUR. PT</title>
 </head>

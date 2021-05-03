@@ -135,8 +135,11 @@
 		<script src="assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
 		<script src="assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
 		<script src="assets/js/form-date-time-pickes.js"></script>
+		<script src="plugin/jquery-ui/jquery-ui.min.js"></script>
 		<!-- <script src="js/jquery.min.js"></script> -->
-		<script>
+
+
+		<!-- <script>
 			$(document).ready(function() {
 				$('.input-tanggal').datepicker({
 					dateFormat: 'yy-mm-dd'
@@ -146,15 +149,15 @@
 
 				$('#filter').change(function() {
 					if ($(this).val() == '1') {
-						$('#form-bulan, #form-tahun').hide();
+						$('#form-bulan, #form-tahun, #form-nama').hide();
 						$('#form-tanggal').show();
 					} else if ($(this).val() == '2') {
-						$('#form-tanggal').hide();
+						$('#form-tanggal, #form-nama').hide();
 						$('#form-bulan, #form-tahun').show();
 					} else if ($(this).val() == '3') {
-						$('#form-tanggal, #form-bulan').hide();
+						$('#form-tanggal, #form-nama').hide();
 						$('#form-tahun').show();
-					} else {
+					} else if ($(this).val() == '4') {
 						$('#form-tanggal, #form-bulan, #form-tahun').hide();
 						$('#form-nama').show();
 					}
@@ -162,8 +165,7 @@
 					$('#form-tanggal input, #form-bulan select, #form-tahun select').val('');
 				})
 			})
-		</script>
-		<script src="plugin/jquery-ui/jquery-ui.min.js"></script>
+		</script> -->
 
 		<script type="text/javascript">
 			//modal auto load
@@ -185,29 +187,24 @@
 			});
 		</script>
 
+		<script>
+			$(document).ready(function() {
 
-
-		<!-- <script>
-			// start fungsi filter
-			$(document).ready(function() { // Ketika halaman selesai di load
-
-				$('#form-tanggal, #form-bulan, #form-tambah1, #form-tambah2').hide(); // Sebagai default kita sembunyikan form filter tanggal, bulan & tahunnya
-				$('#filter').change(function() { // Ketika user memilih filter
-					if ($(this).val() == '1') { // Jika filter nya 1 (per tanggal)
-						$('#form-bulan, #form-tambah2').hide(); // Sembunyikan form bulan dan tahun
-						$('#form-tanggal, #form-tambah1').show(); // Tampilkan form tanggal
-					} else if ($(this).val() == '2') { // Jika filter nya 2 (per bulan)
-						$('#form-tanggal, #form-tambah1').hide(); // Sembunyikan form tanggal
-						$('#form-bulan ,#form-tambah2 ').show(); // Tampilkan form bulan dan tahun
-					} else { // Jika filternya 3 (per tahun)
-						$('#form-tanggal, #form-bulan').hide(); // Sembunyikan form tanggal dan bulan
-						$('#form-tahun').show(); // Tampilkan form tahun
+				$('#form-tanggal, #form-bulan, #form-tambah1, #form-tambah2').hide();
+				$('#filter').change(function() {
+					if ($(this).val() == '1') {
+						$('#form-bulan, #form-tambah2').hide();
+						$('#form-tanggal, #form-tambah1').show();
+					} else if ($(this).val() == '2') {
+						$('#form-tanggal, #form-tambah1').hide();
+						$('#form-bulan ,#form-tambah2 ').show();
+						$('#form-tanggal, #form-bulan').hide();
+						$('#form-tahun').show();
 					}
-					$('#form-tanggal input, #form-bulan select, #form-tahun select').val(''); // Clear data pada textbox tanggal, combobox bulan & tahun
+					$('#form-tanggal input, #form-bulan select, #form-tahun select').val('');
 				})
 			})
-			// end fungsi filter
-		</script> -->
+		</script>
 
 
 

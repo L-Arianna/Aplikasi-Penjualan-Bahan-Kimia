@@ -304,10 +304,7 @@ function autoNumber()
                               <?php } else {
                               } ?>
                             </td>
-                          </tr><?php;
-                            }
-
-                              ?>
+                          </tr><?php } ?>
                         </tbody>
               </table>
             </div>
@@ -315,54 +312,54 @@ function autoNumber()
                                   echo paginate_one($reload, $page, $tpages);
                                 } else {
                                 } ?></div>
-        <?php }
+          <?php
                     }
                   }
                 } else {
                   while (($count < $rpp) && ($i < $tcount)) {
                     mysqli_data_seek($result, $i);
                     $fill = mysqli_fetch_array($result);
-        ?>
-        <tbody>
-          <tr>
-            <td><?php echo ++$no_urut; ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-            <td>
-              <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-                <?php if ($fill['nama'] != 'admin') { ?>
-                  <button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
-              <?php }
+          ?>
+          <tbody>
+            <tr>
+              <td><?php echo ++$no_urut; ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+              <td>
+                <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
+                  <?php if ($fill['nama'] != 'admin') { ?>
+                    <button type="button" class="btn btn-success btn-sm" onclick="window.location.href='add_<?php echo $halaman; ?>?no=<?php echo $fill['no']; ?>'">Edit</button>
+                <?php }
                     } else {
                     } ?>
 
-              <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
+                <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
 
 
 
 
-                <?php if ($fill['nama'] != 'admin') { ?>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='set_chmod?no=<?php echo $fill['nama']; ?>'">HAK AKSES</button>
+                  <?php if ($fill['nama'] != 'admin') { ?>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='set_chmod?no=<?php echo $fill['nama']; ?>'">HAK AKSES</button>
 
-                  <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo "jabatan" . '&'; ?>forwardpage=<?php echo 'add_jabatan' . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
-              <?php }
+                    <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo "jabatan" . '&'; ?>forwardpage=<?php echo 'add_jabatan' . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
+                <?php }
                     } else {
                     } ?>
-            </td>
-          </tr>
-        <?php
+              </td>
+            </tr>
+          <?php
                     $i++;
                     $count++;
                   }
 
-        ?>
-        </tbody>
-        </table>
-        <div align="right"><?php if ($tcount >= $rpp) {
-                              echo paginate_one($reload, $page, $tpages);
-                            } else {
-                            } ?></div>
-      <?php } ?>
+          ?>
+          </tbody>
+          </table>
+          <div align="right"><?php if ($tcount >= $rpp) {
+                                echo paginate_one($reload, $page, $tpages);
+                              } else {
+                              } ?></div>
+        <?php } ?>
 
           </div>
           <!-- /.box-body -->

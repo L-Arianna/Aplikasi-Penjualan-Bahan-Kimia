@@ -45,36 +45,6 @@ body();
 
     ?>
 
-
-    <!-- SETTING STOP -->
-
-
-    <!-- BREADCRUMB -->
-
-    <ol class="breadcrumb ">
-      <li><a href="<?php echo $_SESSION['baseurl']; ?>">Dashboard </a></li>
-      <li><a href="<?php echo $halaman; ?>"><?php echo $dataapa ?></a></li>
-      <?php
-
-      if ($search != null || $search != "") {
-      ?>
-        <li> <a href="<?php echo $halaman; ?>">Data <?php echo $dataapa ?></a></li>
-        <li class="active"><?php
-                            echo $search;
-                            ?></li>
-      <?php
-      } else {
-      ?>
-        <li class="active">Data <?php echo $dataapa ?></li>
-      <?php
-      }
-      ?>
-    </ol>
-
-    <!-- BREADCRUMB -->
-
-    <!-- BOX INSERT BERHASIL -->
-
     <script>
       window.setTimeout(function() {
         $("#myAlert").fadeTo(500, 0).slideUp(1000, function() {
@@ -117,15 +87,11 @@ body();
     if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
     ?>
 
-
-      <h6 class="mb-0 text-uppercase"></h6>
-      <hr />
-
       <!-- KONTEN BODY AWAL -->
       <!-- Default box -->
       <div class="card">
         <div class="card-header with-border">
-          <h3 class="card-title">Stok Barang Hasil Retur Penjualan</h3>
+          <h6 class="mb-0 text-uppercase">Stok Barang Hasil Retur Penjualan</h6>
         </div>
         <div class="card-body">
 
@@ -145,8 +111,8 @@ body();
           $i       = ($page - 1) * $rpp;
           $no_urut = ($page - 1) * $rpp;
           ?>
-          <div class="box-body table-responsive">
-            <table class="table table-hover ">
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered">
               <thead>
                 <tr>
                   <th>No</th>
@@ -180,80 +146,179 @@ body();
                           <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
                           <td>
                           </td>
-                        </tr><?php;
-                                }
-
-                                  ?>
+                        </tr><?php } ?>
                       </tbody>
             </table>
             <div align="right"><?php if ($tcount >= $rpp) {
                                   echo paginate_one($reload, $page, $tpages);
                                 } else {
                                 } ?></div>
-        <?php 
+          <?php
                   }
                 }
               } else {
                 while (($count < $rpp) && ($i < $tcount)) {
                   mysqli_data_seek($result, $i);
                   $fill = mysqli_fetch_array($result);
-        ?>
-        <tbody>
-          <tr>
-            <td><?php echo ++$no_urut; ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?>
-            </td>
+          ?>
+          <tbody>
+            <tr>
+              <td><?php echo ++$no_urut; ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?>
+              </td>
 
-            <td><?php echo mysqli_real_escape_string($conn, $fill['retur']); ?></td>
-            <td>
-              <?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
-                <?php echo "<a href='#myModal' class='btn btn-danger btn-sm' id='custId' data-toggle='modal' data-id=" . $fill['kode'] . "><strong>Pindah Ke Gudang</strong></a>"; ?>
-              <?php } else {
+              <td><?php echo mysqli_real_escape_string($conn, $fill['retur']); ?></td>
+              <td>
+                <?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+                  <?php echo "<a href='#myModal' class='btn btn-danger btn-sm' id='custId' data-toggle='modal' data-id=" . $fill['kode'] . "><strong>Pindah Ke Gudang</strong></a>"; ?>
+                <?php } else {
                   } ?>
-            </td>
-          </tr>
-        <?php
+              </td>
+            </tr>
+          <?php
                   $i++;
                   $count++;
                 }
-        ?>
-        </tbody>
-        </table>
-        <div align="right"><?php if ($tcount >= $rpp) {
-                              echo paginate_one($reload, $page, $tpages);
-                            } else {
-                            } ?></div>
-      <?php } ?>
+          ?>
+          </tbody>
+          </table>
+          <div align="right"><?php if ($tcount >= $rpp) {
+                                echo paginate_one($reload, $page, $tpages);
+                              } else {
+                              } ?></div>
+        <?php } ?>
 
           </div>
         </div>
       </div>
-  </div>
-<?php
-    } else {
-?>
-  <div class="callout callout-danger">
-    <h4>Info</h4>
-    <b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
-  </div>
-<?php
-    }
-?>
-</div>
 
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Pemindahan Stok Retur</h4>
+    <?php } elseif ($chmod >= 2 || $_SESSION['jabatan'] == 'user') { ?>
+      <div class="card">
+        <div class="card-header with-border">
+          <h6 class="mb-0 text-uppercase">Stok Barang Hasil Retur Penjualan</h6>
+        </div>
+        <div class="card-body">
+
+          <?php
+          error_reporting(E_ALL ^ E_DEPRECATED);
+          $sql    = "select * from barang where retur>0 order by no desc";
+          $result = mysqli_query($conn, $sql);
+          $rpp    = 15;
+          $reload = "$halaman" . "?pagination=true";
+          $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+          if ($page <= 0)
+            $page = 1;
+          $tcount  = mysqli_num_rows($result);
+          $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+          $count   = 0;
+          $i       = ($page - 1) * $rpp;
+          $no_urut = ($page - 1) * $rpp;
+          ?>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Stok Gudang</th>
+                  <th>Stok Retur</th>
+                  <th>Opsi</th>
+
+                </tr>
+              </thead>
+              <?php
+              error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+              $search = $_POST['search'];
+
+              if ($search != null || $search != "") {
+
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                  if (isset($_POST['search'])) {
+                    $query1 = "SELECT * from bayar where nota like '%$search%' or tglbayar like '%$search%' or kasir like '%$search%' order by nota DESC limit $rpp ";
+                    $hasil = mysqli_query($conn, $query1);
+                    $no = 1;
+                    while ($fill = mysqli_fetch_assoc($hasil)) {
+              ?>
+                      <tbody>
+                        <tr>
+                          <td><?php echo ++$no_urut; ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?>
+                          </td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
+                          <td>
+                          </td>
+                        </tr><?php } ?>
+                      </tbody>
+            </table>
+            <div align="right"><?php if ($tcount >= $rpp) {
+                                  echo paginate_one($reload, $page, $tpages);
+                                } else {
+                                } ?></div>
+          <?php
+                  }
+                }
+              } else {
+                while (($count < $rpp) && ($i < $tcount)) {
+                  mysqli_data_seek($result, $i);
+                  $fill = mysqli_fetch_array($result);
+          ?>
+          <tbody>
+            <tr>
+              <td><?php echo ++$no_urut; ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?>
+              </td>
+
+              <td><?php echo mysqli_real_escape_string($conn, $fill['retur']); ?></td>
+              <td>
+                <?php if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') { ?>
+                  <?php echo "<a href='#myModal' class='btn btn-danger btn-sm' id='custId' data-toggle='modal' data-id=" . $fill['kode'] . "><strong>Pindah Ke Gudang</strong></a>"; ?>
+                <?php } else {
+                  } ?>
+              </td>
+            </tr>
+          <?php
+                  $i++;
+                  $count++;
+                }
+          ?>
+          </tbody>
+          </table>
+          <div align="right"><?php if ($tcount >= $rpp) {
+                                echo paginate_one($reload, $page, $tpages);
+                              } else {
+                              } ?></div>
+        <?php } ?>
+
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <div class="fetched-data"></div>
+    <?php
+    } else { ?>
+      <div class="callout callout-danger">
+        <h4>Info</h4>
+        <b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
+    <?php } ?>
+
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Pemindahan Stok Retur</h4>
+          </div>
+          <div class="modal-body">
+            <div class="fetched-data"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

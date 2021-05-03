@@ -29,14 +29,7 @@ body();
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
       <div class="breadcrumb-title pe-3">Dashboard</div>
-      <div class="ps-3">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb mb-0 p-0">
-            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
-            </li>
-          </ol>
-        </nav>
-      </div>
+
     </div>
     <!--end breadcrumb-->
 
@@ -179,21 +172,23 @@ body();
         $isi = $fill["isi"];
       }
     ?>
-      <div class="row">
-        <!-- Left col -->
-        <section class="col-lg-12 connectedSortable">
-          <div class="col-md-12">
-            <div class="box">
-              <div class="box-header with-border">
-                <h3 class="box-title">Berita Informasi <span class="badge bg-green">oleh #<?php echo $nama; ?></span> pada tanggal <?php echo $tanggal; ?></h3>
-              </div>
-              <!-- /.box-header -->
-              <div class="box-body">
-                <?php echo $isi; ?>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"> Berita Informasi pada tanggal <?php echo $tanggal; ?></h5>
+          <hr />
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  oleh # <?php echo $nama; ?> pada tanggal <?php echo $tanggal; ?>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body"> <strong><?php echo $isi; ?></strong></div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </div>
     <?php } ?>
 
