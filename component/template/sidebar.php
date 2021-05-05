@@ -184,8 +184,8 @@ $avatar = $row['avatar'];
 					</li>
 					<li> <a href="backup"><i class="bx bx-right-arrow-alt"></i>Backup & restore</a>
 					</li>
-					<li> <a href="payment_options"><i class="bx bx-right-arrow-alt"></i>Metode Bayar</a>
-					</li>
+					<!-- <li> <a href="payment_options"><i class="bx bx-right-arrow-alt"></i>Metode Bayar</a>
+					</li> -->
 				</ul>
 			</li>
 		<?php } else {

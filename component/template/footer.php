@@ -153,10 +153,10 @@
 						$('#form-tanggal').show();
 					} else if ($(this).val() == '2') {
 						$('#form-tanggal, #form-nama').hide();
-						$('#form-bulan, #form-tahun').show();
+						$('#form-tahun').show();
 					} else if ($(this).val() == '3') {
 						$('#form-tanggal, #form-nama').hide();
-						$('#form-tahun').show();
+						$('#form-tahun,#form-bulan').show();
 					} else if ($(this).val() == '4') {
 						$('#form-tanggal, #form-bulan, #form-tahun').hide();
 						$('#form-nama').show();
