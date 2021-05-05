@@ -141,12 +141,13 @@ body();
               ?>
 
               <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="example2 table table-hover table-bordered">
                   <thead>
                     <tr>
                       <th>No</th>
                       <th>SKU</th>
                       <th>Nama</th>
+                      <th>Satuan</th>
                       <th>Merek</th>
                       <th>Kategori</th>
                       <th>Keterangan</th>
@@ -163,7 +164,7 @@ body();
                   if ($search != null || $search != "") {
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       if (isset($_POST['search'])) {
-                        $query1 = "SELECT * from $tabeldatabase where sku like '%$search%' or nama like '%$search%' order by kode limit $rpp";
+                        $query1 = "SELECT a.*, b.nama_satuan from $tabeldatabase a, satuan b where a.satuan = b.kode AND a.sku like '%$search%' or a.nama like '%$search%' group by a.kode limit $rpp";
                         $hasil = mysqli_query($conn, $query1);
                         $no = 1;
                         while ($fill = mysqli_fetch_assoc($hasil)) { ?>
@@ -172,6 +173,7 @@ body();
                               <td><?php echo ++$no_urut; ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['sku']); ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                              <td><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['kategori']); ?></td>
                               <td><?php echo mysqli_real_escape_string($conn, $fill['keterangan']); ?></td>
@@ -207,12 +209,17 @@ body();
                   } else {
                     while (($count < $rpp) && ($i < $tcount)) {
                       mysqli_data_seek($result, $i);
-                      $fill = mysqli_fetch_array($result); ?>
+                      $fill = mysqli_fetch_array($result);
+                      $kodenih = $fill['satuan'];
+                      $sqla = "SELECT nama_satuan FROM satuan WHERE kode ='$kodenih'";
+                      $hasila = mysqli_query($conn, $sqla);
+                      $rowa = mysqli_fetch_assoc($hasila); ?>
               <tbody>
                 <tr>
                   <td><?php echo ++$no_urut; ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['sku']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                  <td><?php echo mysqli_real_escape_string($conn, $rowa['nama_satuan']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['kategori']); ?></td>
                   <td><?php echo mysqli_real_escape_string($conn, $fill['keterangan']); ?></td>

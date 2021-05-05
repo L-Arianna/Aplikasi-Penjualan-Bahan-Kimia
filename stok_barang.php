@@ -218,7 +218,7 @@ $thousand = ".";
         <div class="card-body">
           <?php
           error_reporting(E_ALL ^ E_DEPRECATED);
-          $sql    = "select * from barang order by kode";
+          $sql    = "SELECT a.*, b.nama_satuan from barang a, satuan b where a.satuan = b.kode";
           $result = mysqli_query($conn, $sql);
           $rpp    = 15;
           $reload = "$halaman" . "?pagination=true";
@@ -294,7 +294,7 @@ $thousand = ".";
               <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
