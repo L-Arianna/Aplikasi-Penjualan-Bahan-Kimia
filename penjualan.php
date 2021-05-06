@@ -203,6 +203,20 @@ body();
     <?php
     }
     ?>
+    <div class="row mb-2">
+      <div class="col-lg-12 d-flex justify-content-end">
+        <div class="ms-auto">
+          <form method="post">
+            <div class="btn-group">
+              <div class="input-group">
+                <input type="text" name="search" class="form-control radius-15" placeholder="cari">
+                <button type="submit" class="btn btn-primary btn-sm radius-15"><i class="bx bx-search"></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <div class="card">
       <div class="card-header">
         <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
@@ -220,29 +234,6 @@ body();
           $totaldata = $rowa['totaldata'];
 
           ?>
-
-
-
-          <div class="row mb-2">
-            <div class="col-lg-12">
-              <div class="ms-auto">
-                <form method="post">
-                  <div class="btn-group">
-                    <div class="input-group">
-                      <input type="text" name="search" class="form-control radius-15" placeholder="cari">
-                      <button type="submit" class="btn btn-primary btn-sm radius-15"><i class="bx bx-search"></i></button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-
-
-
-          <!-- /.box-header -->
-          <!-- /.Paginasi -->
           <?php
           error_reporting(E_ALL ^ E_DEPRECATED);
           $sql    = "select * from sale inner join pelanggan on sale.pelanggan=pelanggan.kode order by sale.nota desc";
@@ -260,6 +251,15 @@ body();
           $i       = ($page - 1) * $rpp;
           $no_urut = ($page - 1) * $rpp;
           ?>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <div class="ms-auto">
+                <a onclick="window.location.href='export_penjualan_csv'" class="btn btn-secondary btn-sm radius-15" value="export excel">Export to Excel</a>
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
             <table class="table table-hover table-bordered">
               <thead>

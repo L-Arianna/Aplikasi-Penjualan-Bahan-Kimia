@@ -4,10 +4,10 @@ $(function() {
 	
 	    $(document).ready(function() {
 			$('#example').DataTable();
+			buttons: [ 'copy', 'excel', 'pdf', 'print']
 		  } );
 		  
-		  
-		  
+		  	  
 		  $(document).ready(function() {
 			var table = $('#example2').DataTable( {
 				lengthChange: false,

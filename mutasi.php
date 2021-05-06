@@ -165,6 +165,15 @@ $thousand = ".";
         $no_urut = ($page - 1) * $rpp;
         ?>
         <div class="card-body">
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <div class="ms-auto">
+                <a onclick="window.location.href='export_mutasi_csv'" class="btn btn-secondary btn-sm radius-15" value="export excel">Export to Excel</a>
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
             <table class="table table-hover table-bordered ">
               <thead>

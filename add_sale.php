@@ -355,13 +355,13 @@ body();
                                         <option></option>
                                         <?php
                                         error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                                        $sql = mysqli_query($conn, "select * from barang");
+                                        $sql = mysqli_query($conn, "select a.*, b.nama_satuan, b.jumlah from barang a, satuan b WHERE a.satuan = b.kode");
                                         // $sql = mysqli_query($conn, "SELECT * FROM `barang`");
                                         while ($row = mysqli_fetch_assoc($sql)) {
                                           if ($barang == $row['kode'])
-                                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' gudang='" . $row['gudang'] . "' hargajual='" . $row['hargajual'] . "' hargabeli='" . $row['hargabeli'] . "' sisa='" . $row['sisa'] . "' selected='selected'>" . $row['sku'] . " | " . $row['nama'] . "|" .  $row['gudang'] . "</option>";
+                                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' gudang='" . $row['gudang'] .  "' sisa='" . $row['sisa'] . "' satuan='" . $row['nama_satuan'] ."' jumlah='" . $row['jumlah'] .  "' selected='selected'>" . $row['sku'] . " | " . $row['nama'] . "|" .  $row['gudang'] . "</option>";
                                           else
-                                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' gudang='" . $row['gudang'] .  "' hargajual='" . $row['hargajual'] . "' hargabeli='" . $row['hargabeli'] . "' sisa='" . $row['sisa'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
+                                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' gudang='" . $row['gudang'] .  "' hargajual='" . "' sisa='" . $row['sisa'] .  "' satuan='" . $row['nama_satuan']."' jumlah='" . $row['jumlah'] ."' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
                                         }
                                         ?>
                                       </select>
@@ -418,32 +418,18 @@ body();
                                 </div>
                                 <div class="col-sm-1">
                                   <label for="usr">Satuan</label>
-                                  <select class="form-control" name="satuan" id="provinsi">
-                                    <option value="">Pilih</option>
-                                    <?php
-                                    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                                    $sqle7 = "SELECT * FROM satuan where kode='$satuan'";
-                                    $hasile7 = mysqli_query($conn, $sqle7);
-                                    $row = mysqli_fetch_assoc($hasile7);
-                                    $sql = mysqli_query($conn, "select * from satuan");
-                                    // $sql = mysqli_query($conn, "SELECT * FROM `barang`");
-                                    while ($row = mysqli_fetch_assoc($sql)) {
-                                      if ($satuan == $row['kode'])
-                                        echo "<option value='" . $row['nama_satuan'] . "' nama='" . $row['nama_satuan'] . "' selected='selected'>" . $row['nama_satuan'] . $row['convert'] . "</option>";
-                                      else
-                                        echo "<option value='" . $row['nama_satuan'] . "' nama='" . $row['nama_satuan'] . "' >" . $row['nama_satuan'] . "(" . $row['convert'] . ")" . "</option>";
-                                    }
-                                    ?>
-                                  </select>
+                                  <input class="form-control" name="satuan" id="satuan" readonly="" />
                                   <!-- <input type="text" class="form-control" id="stok" name="stok" value=""> -->
                                 </div>
                                 <script>
                                   function sum() {
                                     var txtFirstNumberValue = document.getElementById('jumlah').value
                                     var txtSecondNumberValue = document.getElementById('hargajual').value;
-                                    var txtTreeNumberValue = document.getElementById('kota').value;
+                                    var txtTreeNumberValue = document.getElementById('jumlah_satuan').value;
                                     var txtFourNumberValue = document.getElementById('kotar').value;
                                     var result = parseFloat(txtFirstNumberValue) * parseFloat(txtSecondNumberValue);
+                                    var jumlah_satuan = document.getElementById('jumlah_satuan').value;
+
                                     if (!isNaN(result)) {
                                       document.getElementById('hargaakhir').value = result;
                                     }
@@ -470,9 +456,7 @@ body();
 
                                 <div class="col-sm-1">
                                   <label for="usr">Jumlah Satuan</label>
-                                  <select class="form-control" name="jumlah_satuan" id="kota" onkeyup="sum();">
-                                    <option value="">Pilih</option>
-                                  </select>
+                                  <input class="form-control" name="jumlah_satuan" id="jumlah_satuan" onkeyup="sum();" readonly="" />
                                 </div>
                                 <div class="col-sm-1">
                                   <label for="usr">Total Satuan</label>
@@ -566,7 +550,7 @@ body();
                                         </td>
                                         <td><?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                                         <td><?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-                                        <td><?php echo mysqli_real_escape_string($conn, $fill['total_satuan']); ?></td>
+                                        <td><?php echo mysqli_real_escape_string($conn, $fill['total_satuan'])." "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
                                         <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
                                         <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                                         <td>
@@ -659,15 +643,15 @@ body();
   $("#barang").on("change", function() {
 
     var nama = $("#barang option:selected").attr("nama");
-    var hargajual = $("#barang option:selected").attr("hargajual");
+    var jml = $("#barang option:selected").attr("jumlah");
     var sisa = $("#barang option:selected").attr("sisa");
-    var hargabeli = $("#barang option:selected").attr("hargabeli");
+    var nama_satuan = $("#barang option:selected").attr("satuan");
 
     $("#nama").val(nama);
-    $("#hargajual").val(hargajual);
+    $("#jumlah_satuan").val(jml);
     $("#stok").val(sisa);
     $("#hargaakhir").val(0);
-    $("#hargabeli").val(hargabeli);
+    $("#satuan").val(nama_satuan);
     $("#jumlah").val(0);
   });
 </script>

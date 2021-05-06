@@ -175,6 +175,8 @@ $tahun = $_POST['tahun'];
               <h3 class="box-title">#Periode: <?php echo $dari; ?> - <?php echo $sampe; ?></h3>
             </div>
             <div class="card-body">
+
+
               <div class="row">
                 <div class="col-md-5">
                   <canvas id="percabang" style="height:280px"></canvas>
@@ -244,6 +246,15 @@ $tahun = $_POST['tahun'];
         <?php } ?>
       </div>
       <div class="card-body">
+
+        <div class="row mb-2">
+          <div class="col-md-4">
+            <div class="ms-auto">
+              <a onclick="window.location.href='export_inv_csv'" class="btn btn-secondary btn-sm radius-15" value="export excel">Export to Excel</a>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-lg-12">
 

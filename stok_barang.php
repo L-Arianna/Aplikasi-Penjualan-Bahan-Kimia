@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html>
 <?php
 include "configuration/config_etc.php";
 include "configuration/config_include.php";
@@ -35,8 +33,6 @@ $thousand = ".";
 ?>
 <div class="page-wrapper">
   <div class="page-content">
-
-
     <!-- SETTING START-->
 
     <?php
@@ -195,6 +191,8 @@ $thousand = ".";
       $totaldata = $rowa['totaldata'];
 
       ?>
+
+
       <div class="row mb-2">
         <form method="post" action="">
           <div class="col-lg-12 d-flex justify-content-end">
@@ -218,7 +216,8 @@ $thousand = ".";
         <div class="card-body">
           <?php
           error_reporting(E_ALL ^ E_DEPRECATED);
-          $sql    = "SELECT a.*, b.nama_satuan from barang a, satuan b where a.satuan = b.kode";
+          $sql    = "SELECT a.*, b.nama_satuan FROM barang a, satuan b where a.satuan = b.kode";
+          //barang.*, satuan.nama_satuan from barang INNER JOIN satuan ON barang.satuan = satuan.kode
           $result = mysqli_query($conn, $sql);
           $rpp    = 15;
           $reload = "$halaman" . "?pagination=true";
@@ -232,8 +231,19 @@ $thousand = ".";
           $i       = ($page - 1) * $rpp;
           $no_urut = ($page - 1) * $rpp;
           ?>
+
+
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <div class="ms-auto">
+                <a onclick="window.location.href='export_stok_csv'" class="btn btn-secondary btn-sm radius-15" value="export excel">Export to Excel</a>
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover table-bordered">
               <thead>
                 <tr>
                   <th>No</th>
@@ -256,7 +266,7 @@ $thousand = ".";
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                   if (isset($_POST['search'])) {
-                    $query1 = "select * from barang where kode like '%$search%' or nama like '%$search%' or gudang like '%$search%' or terjual like '%$search%' or terbeli like '%$search%' or sisa like '%$search%' or brand like '%$search%' order by barang.no limit $rpp";
+                    $query1 = "select a.*, b.nama_satuan from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
                     $hasil = mysqli_query($conn, $query1);
                     $no = 1;
                     while ($fill = mysqli_fetch_assoc($hasil)) {
@@ -268,10 +278,10 @@ $thousand = ".";
                           <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
                           <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
                           <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+
                         </tr><?php } ?>
                       </tbody>
             </table>
@@ -279,167 +289,168 @@ $thousand = ".";
                                   echo paginate_one($reload, $page, $tpages);
                                 } else {
                                 } ?></div>
-          <?php
+          </div>
+        <?php
                   }
                 }
               } else {
                 while (($count < $rpp) && ($i < $tcount)) {
                   mysqli_data_seek($result, $i);
                   $fill = mysqli_fetch_array($result);
-          ?>
-          <tbody>
-            <tr>
-              <td><?php echo ++$no_urut; ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
-            </tr>
-          <?php $i++;
+        ?>
+        <tbody>
+          <tr>
+            <td><?php echo ++$no_urut; ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+          </tr>
+        <?php $i++;
                   $count++;
                 } ?>
-          </tbody>
-          </table>
-          <div align="right"><?php if ($tcount >= $rpp) {
-                                echo paginate_one($reload, $page, $tpages);
-                              } else {
-                              } ?></div>
-        <?php } ?>
-          </div>
+        </tbody>
+        </table>
+        <div align="right"><?php if ($tcount >= $rpp) {
+                              echo paginate_one($reload, $page, $tpages);
+                            } else {
+                            } ?></div>
+      <?php } ?>
         </div>
       </div>
+  </div>
 
-    <?php } elseif ($chmod >= 1 || $_SESSION['jabatan'] == 'user') { ?>
+<?php } elseif ($chmod >= 1 || $_SESSION['jabatan'] == 'user') { ?>
 
-      <?php
+  <?php
 
       $sqla = "SELECT no, COUNT( * ) AS totaldata FROM $forward";
       $hasila = mysqli_query($conn, $sqla);
       $rowa = mysqli_fetch_assoc($hasila);
       $totaldata = $rowa['totaldata'];
 
-      ?>
-      <div class="row mb-2">
-        <form method="post" action="">
-          <div class="col-lg-12 d-flex justify-content-end">
-            <div class="ms-auto">
-              <div class="btn-group">
-                <div class="input-group">
-                  <input type="text" name="search" class="form-control radius-30" placeholder="cari">
-                  <button type="submit" class="btn btn-primary btn-sm radius-30"><i class="bx bx-search"></i></button>
-                </div>
-              </div>
+  ?>
+  <div class="row mb-2">
+    <form method="post" action="">
+      <div class="col-lg-12 d-flex justify-content-end">
+        <div class="ms-auto">
+          <div class="btn-group">
+            <div class="input-group">
+              <input type="text" name="search" class="form-control radius-30" placeholder="cari">
+              <button type="submit" class="btn btn-primary btn-sm radius-30"><i class="bx bx-search"></i></button>
             </div>
           </div>
-        </form>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
-          </h3>
-        </div>
-        <div class="card-body">
-          <?php
-          error_reporting(E_ALL ^ E_DEPRECATED);
-          $sql    = "select * from barang order by kode";
-          $result = mysqli_query($conn, $sql);
-          $rpp    = 15;
-          $reload = "$halaman" . "?pagination=true";
-          $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
-
-          if ($page <= 0)
-            $page = 1;
-          $tcount  = mysqli_num_rows($result);
-          $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
-          $count   = 0;
-          $i       = ($page - 1) * $rpp;
-          $no_urut = ($page - 1) * $rpp;
-          ?>
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Kode Barang</th>
-                  <th>Nama barang</th>
-                  <th>Gudang</th>
-                  <th>Merek</th>
-                  <th>Stok Keluar</th>
-                  <th>Stok Masuk</th>
-                  <th>Sisa Stok</th>
-
-                </tr>
-              </thead>
-              <?php
-              error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-              $search = $_POST['search'];
-
-              if ($search != null || $search != "") {
-
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-                  if (isset($_POST['search'])) {
-                    $query1 = "select * from barang where kode like '%$search%' or nama like '%$search%' or gudang like '%$search%' or terjual like '%$search%' or terbeli like '%$search%' or sisa like '%$search%' or brand like '%$search%' order by barang.no limit $rpp";
-                    $hasil = mysqli_query($conn, $query1);
-                    $no = 1;
-                    while ($fill = mysqli_fetch_assoc($hasil)) {
-              ?>
-                      <tbody>
-                        <tr>
-                          <td><?php echo ++$no_urut; ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
-                        </tr><?php } ?>
-                      </tbody>
-            </table>
-            <div align="right"><?php if ($tcount >= $rpp) {
-                                  echo paginate_one($reload, $page, $tpages);
-                                } else {
-                                } ?></div>
-          <?php
-                  }
-                }
-              } else {
-                while (($count < $rpp) && ($i < $tcount)) {
-                  mysqli_data_seek($result, $i);
-                  $fill = mysqli_fetch_array($result);
-          ?>
-          <tbody>
-            <tr>
-              <td><?php echo ++$no_urut; ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['deposit']); ?></td>
-            </tr>
-          <?php $i++;
-                  $count++;
-                } ?>
-          </tbody>
-          </table>
-          <div align="right"><?php if ($tcount >= $rpp) {
-                                echo paginate_one($reload, $page, $tpages);
-                              } else {
-                              } ?></div>
-        <?php } ?>
-          </div>
         </div>
       </div>
-    <?php } ?>
+    </form>
   </div>
+  <div class="card">
+    <div class="card-header">
+      <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
+      </h3>
+    </div>
+    <div class="card-body">
+      <?php
+      error_reporting(E_ALL ^ E_DEPRECATED);
+      $sql    = "SELECT a.*, b.nama_satuan FROM barang a, satuan b where a.satuan = b.kode";
+      //barang.*, satuan.nama_satuan from barang INNER JOIN satuan ON barang.satuan = satuan.kode
+      $result = mysqli_query($conn, $sql);
+      $rpp    = 15;
+      $reload = "$halaman" . "?pagination=true";
+      $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+      if ($page <= 0)
+        $page = 1;
+      $tcount  = mysqli_num_rows($result);
+      $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+      $count   = 0;
+      $i       = ($page - 1) * $rpp;
+      $no_urut = ($page - 1) * $rpp;
+      ?>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Kode Barang</th>
+              <th>Nama barang</th>
+              <th>Gudang</th>
+              <th>Merek</th>
+              <th>Stok Keluar</th>
+              <th>Stok Masuk</th>
+              <th>Sisa Stok</th>
+
+            </tr>
+          </thead>
+          <?php
+          error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+          $search = $_POST['search'];
+
+          if ($search != null || $search != "") {
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+              if (isset($_POST['search'])) {
+                $query1 = "select a.*, b.nama_satuan from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
+                $hasil = mysqli_query($conn, $query1);
+                $no = 1;
+                while ($fill = mysqli_fetch_assoc($hasil)) {
+          ?>
+                  <tbody>
+                    <tr>
+                      <td><?php echo ++$no_urut; ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+
+                    </tr><?php } ?>
+                  </tbody>
+        </table>
+        <div align="right"><?php if ($tcount >= $rpp) {
+                              echo paginate_one($reload, $page, $tpages);
+                            } else {
+                            } ?></div>
+      </div>
+    <?php
+              }
+            }
+          } else {
+            while (($count < $rpp) && ($i < $tcount)) {
+              mysqli_data_seek($result, $i);
+              $fill = mysqli_fetch_array($result);
+    ?>
+    <tbody>
+      <tr>
+        <td><?php echo ++$no_urut; ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+      </tr>
+    <?php $i++;
+              $count++;
+            } ?>
+    </tbody>
+    </table>
+    <div align="right"><?php if ($tcount >= $rpp) {
+                          echo paginate_one($reload, $page, $tpages);
+                        } else {
+                        } ?></div>
+  <?php } ?>
+    </div>
+  </div>
+</div>
+<?php } ?>
+</div>
 </div>
 <?php footer(); ?>

@@ -59,8 +59,8 @@ $avatar = $row['avatar'];
 									</li>
 									<li> <a href="stok_in"><i class="bx bx-right-arrow-alt"></i>Stok Masuk</a>
 									</li>
-									<li> <a href="stok_out"><i class="bx bx-right-arrow-alt"></i>Stok Keluar</a>
-									</li>
+									<!--<li> <a href="stok_out"><i class="bx bx-right-arrow-alt"></i>Stok Keluar</a>
+									</li>-->
 									<li> <a href="mutasi"><i class="bx bx-right-arrow-alt"></i>Mutasi Stok</a>
 									</li>
 									<li> <a href="stok_retur"><i class="bx bx-right-arrow-alt"></i>Stok Barang Retur</a>

@@ -218,15 +218,17 @@ $tahun = $_POST['tahun'];
 				<?php } ?>
 			</div>
 			<div class="card-body">
+
+				<div class="row mb-2">
+					<div class="col-md-4">
+						<div class="ms-auto">
+							<a onclick="window.location.href='export_kirim_csv'" class="btn btn-secondary btn-sm radius-15" value="export excel">Export to Excel</a>
+						</div>
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col-lg-12">
-
-						<!-- SETTING START-->
-
-						<!-- BREADCRUMB -->
-
-
-						<!-- BOX HAPUS BERHASIL -->
 
 						<script>
 							window.setTimeout(function() {
