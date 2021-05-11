@@ -48,8 +48,8 @@ $avatar = $row['avatar'];
 									</li>
 									<li> <a href="add_barang"><i class="bx bx-right-arrow-alt"></i>Tambah Barang</a>
 									</li>
-									<li> <a href="cetak_barcode"><i class="bx bx-right-arrow-alt"></i>Cetak Barcode</a>
-									</li>
+									<!-- <li> <a href="cetak_barcode"><i class="bx bx-right-arrow-alt"></i>Cetak Barcode</a>
+									</li> -->
 								</ul>
 							</li>
 							<!-- SUB MENU STOK -->
@@ -70,14 +70,14 @@ $avatar = $row['avatar'];
 								</ul>
 							</li>
 							<!-- SUB MENU SUPPLIER -->
-							<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Supplier</a>
+							<!-- <li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Supplier</a>
 								<ul>
 									<li> <a href="supplier"><i class="bx bx-right-arrow-alt"></i>Data Suppliere</a>
 									</li>
 									<li> <a href="add_supplier"><i class="bx bx-right-arrow-alt"></i>Tambah Supplier</a>
 									</li>
 								</ul>
-							</li>
+							</li> -->
 							<!-- sub menu Kategori dan Brand -->
 							<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Kategori dan Brand</a>
 								<ul>

@@ -216,7 +216,8 @@ $thousand = ".";
         <div class="card-body">
           <?php
           error_reporting(E_ALL ^ E_DEPRECATED);
-          $sql    = "SELECT a.*, b.nama_satuan FROM barang a, satuan b where a.satuan = b.kode";
+          $sql    = "SELECT a.*, b.satuan_jual FROM barang a, satuan b where a.satuan = b.kode_satuan";
+          // $sql    = "SELECT a.*, b.nama_satuan FROM barang a, satuan b where a.satuan = b.kode";
           //barang.*, satuan.nama_satuan from barang INNER JOIN satuan ON barang.satuan = satuan.kode
           $result = mysqli_query($conn, $sql);
           $rpp    = 15;
@@ -266,7 +267,8 @@ $thousand = ".";
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                   if (isset($_POST['search'])) {
-                    $query1 = "select a.*, b.nama_satuan from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
+                    $query1 = "select a.*, b.* from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
+                    // $query1 = "select a.*, b.nama_satuan from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
                     $hasil = mysqli_query($conn, $query1);
                     $no = 1;
                     while ($fill = mysqli_fetch_assoc($hasil)) {
@@ -278,9 +280,9 @@ $thousand = ".";
                           <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
                           <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
                           <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
 
                         </tr><?php } ?>
                       </tbody>
@@ -305,9 +307,9 @@ $thousand = ".";
             <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
             <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
             <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
           </tr>
         <?php $i++;
                   $count++;
@@ -355,8 +357,8 @@ $thousand = ".";
     <div class="card-body">
       <?php
       error_reporting(E_ALL ^ E_DEPRECATED);
-      $sql    = "SELECT a.*, b.nama_satuan FROM barang a, satuan b where a.satuan = b.kode";
-      //barang.*, satuan.nama_satuan from barang INNER JOIN satuan ON barang.satuan = satuan.kode
+      $sql    = "SELECT a.*, b.satuan_jual FROM barang a, satuan b where a.satuan = b.kode";
+      //barang.*, satuan.satuan_jual from barang INNER JOIN satuan ON barang.satuan = satuan.kode
       $result = mysqli_query($conn, $sql);
       $rpp    = 15;
       $reload = "$halaman" . "?pagination=true";
@@ -394,7 +396,7 @@ $thousand = ".";
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
               if (isset($_POST['search'])) {
-                $query1 = "select a.*, b.nama_satuan from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
+                $query1 = "select a.*, b.satuan_jual from barang a, satuan b where a.kode like '%$search%' or a.nama like '%$search%' or a.gudang like '%$search%' or a.terjual like '%$search%' or a.terbeli like '%$search%' or a.sisa like '%$search%' or a.brand like '%$search%' AND a.satuan = b.kode group by a.no limit $rpp";
                 $hasil = mysqli_query($conn, $query1);
                 $no = 1;
                 while ($fill = mysqli_fetch_assoc($hasil)) {
@@ -406,9 +408,9 @@ $thousand = ".";
                       <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
                       <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
                       <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-                      <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-                      <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-                      <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+                      <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
 
                     </tr><?php } ?>
                   </tbody>
@@ -433,9 +435,9 @@ $thousand = ".";
         <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
         <td><?php echo mysqli_real_escape_string($conn, $fill['gudang']); ?></td>
         <td><?php echo mysqli_real_escape_string($conn, $fill['brand']); ?></td>
-        <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-        <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
-        <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['nama_satuan']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['terjual']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['terbeli']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+        <td><?php echo mysqli_real_escape_string($conn, $fill['sisa']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
       </tr>
     <?php $i++;
               $count++;

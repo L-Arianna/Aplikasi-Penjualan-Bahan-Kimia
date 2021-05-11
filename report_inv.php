@@ -332,15 +332,13 @@ $tahun = $_POST['tahun'];
                     <thead>
                       <tr>
                         <th>No</th>
-                        <th>No Nota</th>
+                        <th>No. Invoice</th>
                         <th>Tanggal</th>
                         <th>Pembeli</th>
                         <th>Total qty</th>
                         <th>Barang</th>
                         <th>Total Tagihan</th>
                         <th>Status</th>
-                        <th>Cc</th>
-
                       </tr>
                     </thead>
                     <?php
@@ -360,7 +358,7 @@ $tahun = $_POST['tahun'];
                             <tbody>
                               <tr>
                                 <td><?php echo ++$no_urut; ?></td>
-                                <td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
+                                <td><?php echo mysqli_real_escape_string($conn, $fill['nomor']); ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
                                 <?php
                                 $cust = $fill['nota'];
@@ -385,7 +383,6 @@ $tahun = $_POST['tahun'];
                                 <td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
                                 <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                                 <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
-                                <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
                               </tr><?php } ?>
                             </tbody>
                   </table>
@@ -404,7 +401,7 @@ $tahun = $_POST['tahun'];
                 <tbody>
                   <tr>
                     <td><?php echo ++$no_urut; ?></td>
-                    <td><?php echo mysqli_real_escape_string($conn, $fill['nota']); ?></td>
+                    <td><?php echo mysqli_real_escape_string($conn, $fill['nomor']); ?></td>
                     <td><?php echo mysqli_real_escape_string($conn, $fill['tglsale']); ?></td>
                     <?php
                         $cust = $fill['nota'];
@@ -430,7 +427,6 @@ $tahun = $_POST['tahun'];
                     <td><?php echo mysqli_real_escape_string($conn, $barang); ?></td>
                     <td>Rp. <?php echo number_format(mysqli_real_escape_string($conn, $fill['total'])) ?></td>
                     <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
-                    <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
                   </tr>
                 <?php
                         $i++;

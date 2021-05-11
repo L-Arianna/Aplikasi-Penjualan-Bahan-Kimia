@@ -39,6 +39,10 @@ $sql1 = "SELECT * FROM $tabel where nota='$nota'";
 $hasil1 = mysqli_query($conn, $sql1);
 $row = mysqli_fetch_assoc($hasil1);
 
+$sql2 = "SELECT * , sum(hargaakhir) as totalprice FROM invoicejual where nota='$nota'";
+$hasil2 = mysqli_query($conn, $sql2);
+$rowa = mysqli_fetch_assoc($hasil2);
+
 $bayar = $row['kasir'];
 $total = $row['total'];
 $status = $row['status'];
@@ -47,7 +51,12 @@ $pelanggan = $row['pelanggan'];
 $diskon = $row['diskon'];
 $pot = $row['potongan'];
 $biaya = $row['biaya'];
-$totalprice = $total + $pot - $biaya;
+// $totalprice = $total + $pot - $biaya;
+
+$totalprice = $rowa['totalprice'];
+
+
+$totalall = $totalprice + $pot + $biaya;
 
 $tglbayar = date("d-m-Y", strtotime($row['tglsale']));
 
@@ -89,15 +98,10 @@ $notelppt = $row['no_tlp'];
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       width: 24cm;
       height: 28cm;
-      font-size: 16px;
+      font-size: 14px;
       padding: 10px;
     }
 
-    .column {
-      float: left;
-      width: 28%;
-      padding: 15px;
-    }
 
 
     small,
@@ -114,9 +118,9 @@ $notelppt = $row['no_tlp'];
     table,
     td,
     th {
-      border: 1px solid white;
-      text-align: left;
-      /* width: 40px; */
+      border: 1px solid black;
+      text-align: center;
+      width: 40px;
       height: 30px;
     }
 
@@ -128,7 +132,7 @@ $notelppt = $row['no_tlp'];
     .paid,
     .c,
     .b {
-      border: 1px solid white;
+      border: 1px solid black;
     }
 
     .paid {
@@ -142,6 +146,14 @@ $notelppt = $row['no_tlp'];
       width: 300px;
       padding: 10px;
     }
+
+    .column {
+      float: left;
+      /* width: 20%; */
+      width: 350px;
+      /* height: 100px; */
+      /* background: linear-gradient(-45deg, #788cff, #b4c8ff); */
+    }
   </style>
 </head>
 
@@ -149,39 +161,34 @@ $notelppt = $row['no_tlp'];
 
   <div class="row">
     <div class="date">
-      <small>Date: <?php echo $today; ?></small>
-    </div>
-    <div class="column">
-      <h4></h4>
-      From : <br>
-      <strong> <?php echo $namapt; ?></strong><br>
-      <?php echo $alamatpt; ?><br>
-      Phone: <?php echo $notelppt; ?><br>
-      Nomor Invoice #<?php echo $nota; ?><br>
-      Faktur Pajak: <?= $faktur_pajak ?>
-    </div>
-    <div class="column">
-      <p>
-      <p>
-        <!-- <p> -->
-    </div>
-    <div class="column">
-      <p>
-      <p>
-        <!-- <p> -->
-        To : <br>
-        <strong><?php echo $customer; ?></strong><br>
-        <?php echo $address; ?><br>
-        Phone: <?php echo $nohp; ?><br>
-        <?php if ($status == 'belum') { ?>
-          Status : <br>
-          Belum Dibayar<br>
-        <?php } else { ?>
-          Status : <br>
-          Sudah Dibayar
-        <?php } ?>
+      <small>Faktur Penjualan || Date: <?php echo $today; ?></small>
     </div>
   </div>
+
+  <div class="row">
+    <div class="column">
+      <h4></h4>
+      Dari <br>
+      <strong> <?php echo $nama; ?></strong><br>
+      <?php echo $alamat; ?><br>
+      Telp : <?php echo $notelp; ?><br>
+      No. Invoice #<?php echo $nota; ?><br>
+      No. Faktur Pajak: <?= $faktur_pajak ?><br>
+      No. PO: <?= $noPO ?><br>
+
+    </div>
+    <div class="column">
+    </div>
+    <div class="column" style="text-align: right;">
+      <p>
+      <p>
+        Kepada <br>
+        <strong><?php echo $customer; ?></strong><br>
+        <?php echo $address; ?><br>
+        Telp : <?php echo $nohp; ?><br>
+    </div>
+  </div>
+
   <br>
 
   <!-- <br> -->
@@ -226,7 +233,7 @@ $notelppt = $row['no_tlp'];
         <tbody>
           <tr>
             <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
             <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
             <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
             <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
@@ -297,10 +304,11 @@ $notelppt = $row['no_tlp'];
       </tr>
       <tr>
         <th class="b">Total:</th>
-        <td class="c"><b>Rp. <?php echo number_format($total, $decimal, $a_decimal, $thousand) . ',-'; ?></b></td>
+        <td class="c"><b>Rp. <?php echo number_format($totalall, $decimal, $a_decimal, $thousand) . ',-'; ?></b></td>
       </tr>
     </table>
   </div>
+  <br>
   <div class="row">
     <br>
     <br>
@@ -316,35 +324,50 @@ $notelppt = $row['no_tlp'];
       </tr>
     </table>
     <br>
-    <br>
-    <br>
-    <?php if ($status == 'belum') { ?>
-      <p class="lead">Payment Options:</p>
+    <div class="row">
+      Pilih Pembayaran : <br>
       <?php
       $query1 = "SELECT * FROM  rekening order by no ";
       $hasil = mysqli_query($conn, $query1);
-      while ($fill = mysqli_fetch_assoc($hasil)) {
-      ?>
-        <p><strong><?php echo $fill['bank']; ?>:</strong> <?php echo $fill['norek']; ?> A.n <?php echo $fill['nama']; ?></p>
-      <?php } ?>
-      <p> <?php echo $keterangan; ?> </p>
-    <?php } else { ?>
-
-      <p class="lead">Payment Options:</p>
-      <?php
-      $query1 = "SELECT * FROM  rekening order by no ";
-      $hasil = mysqli_query($conn, $query1);
-      while ($fill = mysqli_fetch_assoc($hasil)) {
-      ?>
-        <p><strong><?php echo $fill['bank']; ?>:</strong> <?php echo $fill['norek']; ?> A.n <?php echo $fill['nama']; ?></p>
-      <?php } ?>
-      Keterangan : <br>
-      <p><?php echo $keterangan; ?></p>
-    <?php } ?>
+      while ($fill = mysqli_fetch_assoc($hasil)) { ?>
+        <strong><?php echo $fill['bank']; ?>:</strong> <?php echo $fill['norek']; ?> A.n <?php echo $fill['nama']; ?>
+        <?php } ?>||
+        <br>
+        Keterangan : <?php echo $keterangan; ?>
+    </div>
     <br>
-    <br>
-    <br>
+    <div class="column">
+      Tanda Terima <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      (----------------------)
+    </div>
+    <div class="column">
+    </div>
+    <div class="column" style="text-align: right;">
+      Hormat Kami<br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      (----------------------)
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="row">
     <H6 align="center"><?php echo $signature ?><H6>
+  </div>
   </div>
 
 </body>

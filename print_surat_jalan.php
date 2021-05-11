@@ -98,16 +98,23 @@ $address_new = $row['alamat'];
 			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 			width: 24cm;
 			height: 28cm;
-			font-size: 15px;
+			font-size: 14px;
+			padding: 10px;
 		}
 
 
 
 		/* Create three equal columns that floats next to each other */
 		.column {
-			float: left;
+			/* float: left;
 			width: 28%;
-			padding: 15px;
+			padding: 15px; */
+
+			float: left;
+			/* width: 20%; */
+			width: 350px;
+			/* height: 100px; */
+			/* background: linear-gradient(-45deg, #788cff, #b4c8ff); */
 		}
 
 		small,
@@ -142,7 +149,7 @@ $address_new = $row['alamat'];
 		td,
 		th {
 			border: 1px solid black;
-			/* text-align: right; */
+			text-align: center;
 		}
 
 		table {
@@ -157,35 +164,32 @@ $address_new = $row['alamat'];
 		<div class="date">
 			<small>SURAT JALAN || Date: <?php echo $today; ?></small>
 		</div>
-
+	</div>
+	<div class="row">
 		<div class="column">
-			<h4><?php echo $namapt; ?></h4>
-			From : <br>
-			<strong> <?php echo $namapt; ?></strong><br>
-			<?php echo $alamatpt; ?><br>
-			Phone: <?php echo $notelppt; ?><br>
-			<b>No Surat Jalan : <?= $no_surat ?></b><br>
-			<b>No PO : <?= $noPO ?></b><br>
+			<h4></h4>
+			Dari <br>
+			<strong> <?php echo $nama; ?></strong><br>
+			<?php echo $alamat; ?><br>
+			Telp : <?php echo $notelp; ?><br>
+			<b>No. Surat Jalan : <?= $no_surat ?></b><br>
+			<b>No. PO : <?= $noPO ?></b><br>
 		</div>
 		<div class="column">
-			<p>
-			<p>
-			<p>
 		</div>
-		<div class="column">
+		<div class="column" style="text-align: right;">
 			<p>
 			<p>
-			<p>
-				To : <br>
+				Kepada <br>
 				<?php
 				if ($kode_new == null) { ?>
 					<strong> <?php echo $customer; ?></strong><br>
 					<?php echo $address; ?><br>
-					Phone: <?php echo $nohp; ?><br>
+					Telp : <?php echo $nohp; ?><br>
 				<?php } elseif ($kode_new > 0) { ?>
 					<strong> <?php echo $customer_new; ?></strong><br>
 					<?php echo $address_new; ?><br>
-					Phone: <?php echo $nohp_new; ?><br>
+					Telp : <?php echo $nohp_new; ?><br>
 				<?php } ?>
 		</div>
 	</div>
@@ -227,7 +231,7 @@ $address_new = $row['alamat'];
 				<tbody>
 					<tr>
 						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
+						<td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
 						<td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
 						<td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
 					</tr>
@@ -244,26 +248,32 @@ $address_new = $row['alamat'];
 	<br>
 	<br>
 	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 	<div class="row">
 		<div class="column">
-			Tanda Terima : <br>
-			<?php if ($kode_new == null) { ?>
-				<strong><?php echo $customer; ?></strong><br>
-			<?php } elseif ($kode_new > 0) { ?>
-				<strong><?php echo $customer_new; ?></strong><br>
-			<?php } ?>
+			Tanda Terima <br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			(----------------------)
 		</div>
 		<div class="column">
-			<p>
-			<p>
-			<p>
 		</div>
-		<div class="column">
-			Hormat Kami :<br>
+		<div class="column" style="text-align: right;">
+			Hormat Kami <br>
 			<br>
 			<br>
 			<br>
-			<strong>(----------------------)</strong>
+			<br>
+			<br>
+			(----------------------)
 		</div>
 	</div>
 </body>

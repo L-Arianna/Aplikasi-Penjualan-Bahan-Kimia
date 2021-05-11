@@ -49,7 +49,7 @@ body();
 		{
 			include "configuration/config_connect.php";
 			global $forward;
-			$query = "SELECT MAX(RIGHT(kode, 4)) as max_id FROM $forward ORDER BY kode";
+			$query = "SELECT MAX(RIGHT(kode_satuan, 4)) as max_id FROM $forward ORDER BY kode_satuan";
 			$result = mysqli_query($conn, $query);
 			$data = mysqli_fetch_array($result);
 			$id_max = $data['max_id'];
@@ -83,7 +83,6 @@ body();
 
 					$kode = $nama = "";
 					$kode = $convert = "";
-					$kode = $jumlah = "";
 					$no = $_GET["no"];
 					$insert = '1';
 
@@ -98,10 +97,9 @@ body();
 						while ($fill = mysqli_fetch_assoc($hasil2)) {
 
 
-							$kode = $fill["kode"];
-							$nama = $fill["nama_satuan"];
-							$convert = $fill["convert"];
-							$jumlah = $fill["jumlah"];
+							$kode = $fill["kode_satuan"];
+							$nama = $fill["satuan_isi"];
+							$convert = $fill["satuan_jual"];
 							$insert = '3';
 						}
 					}
@@ -113,39 +111,32 @@ body();
 								<label for="kode" class="col-sm-3 control-label">Kode:</label>
 								<div class="col-md-12">
 									<?php if ($no == null || $no == "") { ?>
-										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required>
+										<input type="text" class="form-control" id="kode" name="kode_satuan" value="<?php echo autoNumber(); ?>" maxlength="50" required>
 									<?php } else { ?>
-										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
+										<input type="text" class="form-control" id="kode" name="kode_satuan" value="<?php echo $kode; ?>" maxlength="50" required readonly>
 									<?php } ?>
 								</div>
 							</div>
 						</div>
 
+
 						<div class="row mb-1">
 							<div class="form-group">
-								<label for="nama" class="col-sm-3 control-label">Nama Satuan:</label>
+								<label for="convert" class="col-sm-3 control-label">Satuan jual</label>
 								<div class="col-md-12">
-									<input type="text" class="form-control" id="nama" name="nama_satuan" value="<?php echo $nama; ?>">
-								</div>
-							</div>
-						</div>
-						<div class="row mb-1">
-							<div class="form-group">
-								<label for="convert" class="col-sm-3 control-label">Converter satuan</label>
-								<div class="col-md-12">
-									<input type="text" class="form-control" name="convert" value="<?php echo $convert; ?>">
-								</div>
-							</div>
-						</div>
-						<div class="row mb-1">
-							<div class="form-group">
-								<label for="jumlah" class="col-sm-3 control-label">Jumlah satuan</label>
-								<div class="col-md-12">
-									<input type="text" class="form-control" name="jumlah" value="<?php echo $jumlah; ?>">
+									<input type="text" class="form-control" name="satuan_jual" value="<?php echo $convert; ?>">
 								</div>
 							</div>
 						</div>
 
+						<div class="row mb-1">
+							<div class="form-group">
+								<label for="nama" class="col-sm-3 control-label">Satuan isi</label>
+								<div class="col-md-12">
+									<input type="text" class="form-control" id="nama" name="satuan_isi" value="<?php echo $nama; ?>">
+								</div>
+							</div>
+						</div>
 
 						<input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
 
@@ -159,19 +150,18 @@ body();
 
 						if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-							$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
-							$nama = mysqli_real_escape_string($conn, $_POST["nama_satuan"]);
-							$convert = mysqli_real_escape_string($conn, $_POST["convert"]);
-							$jumlah = mysqli_real_escape_string($conn, $_POST["jumlah"]);
+							$kode = mysqli_real_escape_string($conn, $_POST["kode_satuan"]);
+							$nama = mysqli_real_escape_string($conn, $_POST["satuan_isi"]);
+							$convert = mysqli_real_escape_string($conn, $_POST["satuan_jual"]);
 							$insert = ($_POST["insert"]);
 
 
-							$sql = "select * from $tabeldatabase where kode='$kode'";
+							$sql = "select * from $tabeldatabase where kode_satuan='$kode'";
 							$result = mysqli_query($conn, $sql);
 
 							if (mysqli_num_rows($result) > 0) {
 								if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
-									$sql1 = "update `satuan` SET `nama_satuan` = '$nama', `convert` = '$convert', `jumlah` = '$jumlah' WHERE kode = '$kode'";
+									$sql1 = "update `satuan` SET `satuan_isi` = '$nama', `satuan_jual` = '$convert' WHERE kode_satuan = '$kode'";
 									$updatean = mysqli_query($conn, $sql1);
 									echo "<script type='text/javascript'>  alert('Berhasil, Data telah diupdate!'); </script>";
 									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
@@ -181,7 +171,7 @@ body();
 								}
 							} else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
 
-								$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','$jumlah','')";
+								$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','')";
 								if (mysqli_query($conn, $sql2)) {
 									echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
 									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
@@ -217,7 +207,6 @@ body();
 
 					$kode = $nama = "";
 					$kode = $convert = "";
-					$kode = $jumlah = "";
 					$no = $_GET["no"];
 					$insert = '1';
 
@@ -232,10 +221,9 @@ body();
 						while ($fill = mysqli_fetch_assoc($hasil2)) {
 
 
-							$kode = $fill["kode"];
-							$nama = $fill["nama_satuan"];
-							$convert = $fill["convert"];
-							$jumlah = $fill["jumlah"];
+							$kode = $fill["kode_satuan"];
+							$nama = $fill["satuan_isi"];
+							$convert = $fill["satuan_jual"];
 							$insert = '3';
 						}
 					}
@@ -247,9 +235,9 @@ body();
 								<label for="kode" class="col-sm-3 control-label">Kode:</label>
 								<div class="col-md-12">
 									<?php if ($no == null || $no == "") { ?>
-										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required>
+										<input type="text" class="form-control" id="kode" name="kode_satuan" value="<?php echo autoNumber(); ?>" maxlength="50" required>
 									<?php } else { ?>
-										<input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
+										<input type="text" class="form-control" id="kode" name="kode_satuan" value="<?php echo $kode; ?>" maxlength="50" required readonly>
 									<?php } ?>
 								</div>
 							</div>
@@ -257,37 +245,31 @@ body();
 
 						<div class="row mb-1">
 							<div class="form-group">
-								<label for="nama" class="col-sm-3 control-label">Nama Satuan:</label>
+								<label for="convert" class="col-sm-3 control-label">Satuan jual</label>
 								<div class="col-md-12">
-									<input type="text" class="form-control" id="nama" name="nama_satuan" value="<?php echo $nama; ?>">
+									<input type="text" class="form-control" name="satuan_jual" value="<?php echo $convert; ?>">
 								</div>
 							</div>
 						</div>
+
+
 						<div class="row mb-1">
 							<div class="form-group">
-								<label for="convert" class="col-sm-3 control-label">Converter satuan</label>
+								<label for="nama" class="col-sm-3 control-label">Satuan isi</label>
 								<div class="col-md-12">
-									<input type="text" class="form-control" name="convert" value="<?php echo $convert; ?>">
+									<input type="text" class="form-control" id="nama" name="satuan_isi" value="<?php echo $nama; ?>">
 								</div>
 							</div>
 						</div>
-						<div class="row mb-1">
-							<div class="form-group">
-								<label for="jumlah" class="col-sm-3 control-label">Jumlah satuan</label>
-								<div class="col-md-12">
-									<input type="text" class="form-control" name="jumlah" value="<?php echo $jumlah; ?>">
-								</div>
-							</div>
-						</div>
+
 						<input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
 						<button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-save"></span> Simpan</button>
 						<?php
 						if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-							$kode = mysqli_real_escape_string($conn, $_POST["kode"]);
-							$nama = mysqli_real_escape_string($conn, $_POST["nama_satuan"]);
-							$convert = mysqli_real_escape_string($conn, $_POST["convert"]);
-							$jumlah = mysqli_real_escape_string($conn, $_POST["jumlah"]);
+							$kode = mysqli_real_escape_string($conn, $_POST["kode_satuan"]);
+							$nama = mysqli_real_escape_string($conn, $_POST["satuan_isi"]);
+							$convert = mysqli_real_escape_string($conn, $_POST["satuan_jual"]);
 							$insert = ($_POST["insert"]);
 
 
@@ -298,7 +280,7 @@ body();
 								if ($chmod >= 5 || $_SESSION['jabatan'] == 'user') {
 									// $sql1 = "update $tabeldatabase set nama_satuan='$nama', convert='$convert', jumlah='$jumlah' where kode='$kode'";
 
-									$sql1 = "update `satuan` SET `nama_satuan` = '$nama', `convert` = '$convert', `jumlah` = '$jumlah' WHERE kode = '$kode'";
+									$sql1 = "update `satuan` SET `satuan_isi` = '$nama', `satuan_jual` = '$convert' WHERE kode_satuan = '$kode'";
 
 									$updatean = mysqli_query($conn, $sql1);
 									echo "<script type='text/javascript'>  alert('Berhasil, Data telah diupdate!'); </script>";
@@ -309,7 +291,7 @@ body();
 								}
 							} else if (($chmod >= 2 || $_SESSION['jabatan'] == 'user')) {
 
-								$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','$jumlah','')";
+								$sql2 = "insert into $tabeldatabase values( '$kode','$nama','$convert','')";
 								if (mysqli_query($conn, $sql2)) {
 									echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
 									echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";

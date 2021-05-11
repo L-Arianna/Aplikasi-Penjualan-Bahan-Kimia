@@ -18,7 +18,7 @@ $csv->getProperties()->setCreator('IDwares')
 
 // Buat header tabel nya pada baris ke 1
 $csv->setActiveSheetIndex(0)->setCellValue('A1', "NO"); // Set kolom A1 dengan tulisan "NO"
-$csv->setActiveSheetIndex(0)->setCellValue('B1', "Nomor Nota"); // Set kolom B1 dengan tulisan "NIS"
+$csv->setActiveSheetIndex(0)->setCellValue('B1', "No. Invoice"); // Set kolom B1 dengan tulisan "NIS"
 $csv->setActiveSheetIndex(0)->setCellValue('C1', "Tanggal Transaksi"); // Set kolom C1 dengan tulisan "NAMA"
 $csv->setActiveSheetIndex(0)->setCellValue('D1', "Pembeli"); // Set kolom D1 dengan tulisan "JENIS KELAMIN"
 $csv->setActiveSheetIndex(0)->setCellValue('E1', "Total Qty"); // Set kolom F1 dengan tulisan "ALAMAT"
@@ -27,13 +27,13 @@ $csv->setActiveSheetIndex(0)->setCellValue('G1', "Total Tagihan"); // Set kolom 
 $csv->setActiveSheetIndex(0)->setCellValue('H1', "Status"); // Set kolom F1 dengan tulisan "ALAMAT"
 
 // Buat query untuk menampilkan semua data siswa
-$sql = mysqli_query($conn, "SELECT pelanggan.nama, sale.nota, sale.tglsale, sale.status, sale.total, invoicejual.jumlah, invoicejual.nama as barang FROM `sale` LEFT JOIN pelanggan ON pelanggan.kode = sale.pelanggan LEFT JOIN invoicejual ON invoicejual.nota = sale.nota");
+$sql = mysqli_query($conn, "SELECT pelanggan.nama, sale.nomor, sale.tglsale, sale.status, sale.total, invoicejual.jumlah, invoicejual.nama as barang FROM `sale` LEFT JOIN pelanggan ON pelanggan.kode = sale.pelanggan LEFT JOIN invoicejual ON invoicejual.nota = sale.nota");
 
 $no = 1; // Untuk penomoran tabel, di awal set dengan 1
 $numrow = 2; // Set baris pertama untuk isi tabel adalah baris ke 2
 while ($data = mysqli_fetch_array($sql)) { // Ambil semua data dari hasil eksekusi $sql
 	$csv->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $no);
-	$csv->setActiveSheetIndex(0)->setCellValue('B' . $numrow, $data['nota']);
+	$csv->setActiveSheetIndex(0)->setCellValue('B' . $numrow, $data['nomor']);
 	$csv->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $data['tglsale']);
 	$csv->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $data['nama']);
 	$csv->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $data['jumlah']);

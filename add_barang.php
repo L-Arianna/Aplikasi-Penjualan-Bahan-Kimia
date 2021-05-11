@@ -79,195 +79,157 @@ body();
             if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
             ?>
               <div class="card-body">
-                <div class="table-responsive">
-                  <!----------------KONTEN------------------->
-                  <?php
-                  error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                  $kode = $nama =  "";
-                  // $keterangan = $kategori = $brand = $gudang =
-                  $kode =  $keterangan =  "";
-                  $kode =  $kategori =  "";
-                  $kode =  $brand =  "";
-                  $kode =  $gudang =  "";
-                  $kode =  $barcode =  "";
-                  $kode =  $satuan = "";
-                  $kode =  $avatar =  "";
-                  $kode =  $gambar =  "";
-                  $no = $_GET["no"];
-                  $insert = '1';
-                  if (($no != null || $no != "") && ($chmod >= 3 || $_SESSION['jabatan'] == 'admin')) {
-                    $sql = "select * from $tabeldatabase where no='$no'";
-                    $hasil2 = mysqli_query($conn, $sql);
-                    while ($fill = mysqli_fetch_assoc($hasil2)) {
-                      $kode = $fill["kode"];
-                      $sku = $fill["sku"];
-                      $nama = $fill["nama"];
-                      $satuan = $fill["satuan"];
-                      $brand = $fill["brand"];
-                      $kategori = $fill["kategori"];
-                      $keterangan = $fill["keterangan"];
-                      $gudang = $fill["gudang"];
-                      $barcode = $fill["barcode"];
-                      $gambar = $fill["avatar"];
-                      $insert = '3';
-                    }
+                <?php
+                error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+                $kode = $nama =  "";
+                // $keterangan = $kategori = $brand = $gudang =
+                $kode =  $keterangan =  "";
+                $kode =  $kategori =  "";
+                $kode =  $brand =  "";
+                $kode =  $gudang =  "";
+                $kode =  $satuan = "";
+                $kode =  $avatar =  "";
+                $kode =  $gambar =  "";
+                $no = $_GET["no"];
+                $insert = '1';
+                if (($no != null || $no != "") && ($chmod >= 3 || $_SESSION['jabatan'] == 'admin')) {
+                  $sql = "select * from $tabeldatabase where no='$no'";
+                  $hasil2 = mysqli_query($conn, $sql);
+                  while ($fill = mysqli_fetch_assoc($hasil2)) {
+                    $kode = $fill["kode"];
+                    $sku = $fill["sku"];
+                    $nama = $fill["nama"];
+                    $satuan = $fill["satuan"];
+                    $brand = $fill["brand"];
+                    $kategori = $fill["kategori"];
+                    $keterangan = $fill["keterangan"];
+                    $gudang = $fill["gudang"];
+                    $gambar = $fill["avatar"];
+                    $insert = '3';
                   }
-                  ?>
+                }
+                ?>
 
-                  <form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform" enctype="multipart/form-data">
+                <form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform" enctype="multipart/form-data">
 
-                    <div class="col-lg-12">
-                      <label for="kode" class="col-sm-3 control-label">Kode Induk:</label>
-                      <div class="col-lg-12">
-                        <?php if ($no == null || $no == "") { ?>
-                          <input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required readonly>
-                        <?php } else { ?>
-                          <input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
-                        <?php } ?>
-                      </div>
+                  <div class="row mb-1">
+                    <div class="col-md-3">
+                      <label for="form-control">Kode Barang</label>
+                      <?php if ($no == null || $no == "") { ?>
+                        <input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required readonly>
+                      <?php } else { ?>
+                        <input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
+                      <?php } ?>
+
+                      <!-- FORM INPUT SKU -->
+                      <?php if ($no == null || $no == "") { ?>
+                        <input type="hidden" class="form-control" id="sku" name="sku" value="SKU<?php echo autoNumber(); ?>" maxlength="10" required>
+                      <?php } else { ?>
+                        <input type="hidden" class="form-control" id="sku" name="sku" value="<?php echo $sku; ?>" maxlength="50" required>
+                      <?php } ?>
+                      <!-- END FORM INPUT SKU -->
                     </div>
-
-                    <div class="col-lg-12">
-                      <label for="kode" class="col-sm-3 control-label">SKU:</label>
-                      <div class="col-lg-12">
-                        <?php if ($no == null || $no == "") { ?>
-                          <input type="text" class="form-control" id="sku" name="sku" value="SKU<?php echo autoNumber(); ?>" maxlength="10" required>
-                        <?php } else { ?>
-                          <input type="text" class="form-control" id="sku" name="sku" value="<?php echo $sku; ?>" maxlength="50" required>
-                        <?php } ?>
-                      </div>
+                    <div class="col-md-3">
+                      <label for="form-control">Nama Barang *</label>
+                      <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama; ?>" placeholder="Masukan Nama Barang" maxlength="50">
                     </div>
-
-                    <div class="col-lg-12">
-                      <label for="nama" class="col-sm-3 control-label">Nama Barang:</label>
-                      <div class="col-lg-12">
-                        <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama; ?>" placeholder="Masukan Nama" maxlength="50">
-                      </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                      <label for="kategori" class="col-sm-3 control-label"> Satuan:</label>
-                      <div class="col-lg-12 mb-2">
-                        <select class="form-control select2" style="width: 100%;" name="satuan">
+                    <div class="col-md-4">
+                      <label for="form-control">Satuan Isi Barang*</label>
+                      <div class="input-group mb-3">
+                        <select class="form-control select2" name="satuan" id="produk" required>
                           <option value="pilih">Pilih</option>
                           <?php
                           $sql = mysqli_query($conn, "select * from satuan");
                           while ($row = mysqli_fetch_assoc($sql)) {
-                            if ($kategori == $row['kode'])
-                              echo "<option value='" . $row['kode'] . "' selected='selected'>" . $row['nama_satuan'] . "</option>";
+                            if ($satuan == $row['kode_satuan'])
+                              echo "<option value='" . $row['kode_satuan'] .  "' satuan='" . $row['satuan_jual'] . "' selected='selected'>" . $row['satuan_isi'] . "</option>";
                             else
-                              echo "<option value='" . $row['kode'] . "'>" . $row['nama_satuan'] . "</option>";
+                              echo "<option value='" . $row['kode_satuan'] . "' satuan='" . $row['satuan_jual'] . "'>" . $row['satuan_isi'] . "</option>";
                           }
                           ?>
                         </select>
-                      </div>
-                      <div class="col-lg-12">
-                        <div class="col-xs-1" align="left">
-                          <a href="add_satuan" class="btn btn-info btn-sm" role="button">Tambah Satuan</a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                      <label for="kategori" class="col-sm-3 control-label"> Kategori:</label>
-                      <div class="col-lg-12 mb-2">
-                        <select class="form-control select2" style="width: 100%;" name="kategori">
-                          <option value="pilih">Pilih</option>
-                          <?php
-                          $sql = mysqli_query($conn, "select * from kategori");
-                          while ($row = mysqli_fetch_assoc($sql)) {
-                            if ($kategori == $row['nama'])
-                              echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
-                            else
-                              echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
-                          }
-                          ?>
-                        </select>
-                      </div>
-                      <div class="col-lg-12">
-                        <div class="col-xs-1" align="left">
-                          <a href="add_kategori" class="btn btn-info btn-sm" role="button">Tambah Kategori</a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-lg-12">
-                      <label for="brand" class="col-sm-3 control-label"> Brand:</label>
-                      <div class="col-lg-12 mb-2">
-                        <select class="form-control select2" style="width: 100%;" name="brand">
-                          <option value="pilih">Pilih</option>
-                          <?php
-                          $sql = mysqli_query($conn, "select * from brand");
-                          while ($row = mysqli_fetch_assoc($sql)) {
-                            if ($brand == $row['nama'])
-                              echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
-                            else
-                              echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
-                          }
-                          ?>
-                        </select>
-                      </div>
-                      <div class="col-lg-12">
-                        <div class="col-xs-1" align="left">
-                          <a href="add_merek" class="btn btn-info btn-sm" role="button">Tambah Brand</a>
-                        </div>
+                        <label class="input-group-text satuanspan" for="inputGroupSelect01">Satuan Jual</label>
                       </div>
                     </div>
 
 
-                    <div class="col-lg-12">
-                      <label for="brand" class="col-sm-3 control-label"> Gudang:</label>
-                      <div class="col-lg-12 mb-2">
-                        <select class="form-control select2" style="width: 100%;" name="gudang">
-                          <option value="pilih">Pilih</option>
-                          <?php
-                          $sql = mysqli_query($conn, "select * from gudang");
-                          while ($row = mysqli_fetch_assoc($sql)) {
-                            if ($gudang == $row['nama'])
-                              echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
-                            else
-                              echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
-                          }
-                          ?>
-                        </select>
-                      </div>
-                      <div class="col-lg-12">
-                        <div class="col-xs-1" align="left">
-                          <a href="add_gudang" class="btn btn-info btn-sm" role="button">Tambah Gudang</a>
-                        </div>
-                      </div>
-                    </div>
 
-                    <div class="col-lg-12">
-                      <label for="keterangan" class="col-sm-3 control-label">Keterangan:</label>
-                      <div class="col-lg-12">
-                        <textarea class="form-control" rows="3" id="keterangan" name="keterangan" maxlength="255" placeholder="Masukan Keterangan" required><?php echo $keterangan; ?></textarea>
-                      </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-12">
-                  <label for="nama" class="col-sm-3 control-label">Label Barcode:</label>
-                  <div class="col-lg-12 mb-2">
-                    <input type="text" class="form-control" id="barcode" name="barcode" value="<?php echo $barcode; ?>" placeholder="Masukan barcode" maxlength="50">
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="col-xs-1" align="left">
-                      <button type="button" class="btn btn-info btn-sm" onclick="sync();">Barcode dr system</button>
+                    <div class="col-md-2">
+                      <label for="form-control">Kategori *</label>
+                      <select class="form-control select2" name="kategori">
+                        <option value="0">Pilih</option>
+                        <?php
+                        $sql = mysqli_query($conn, "select * from kategori");
+                        while ($row = mysqli_fetch_assoc($sql)) {
+                          if ($kategori == $row['nama'])
+                            echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
+                          else
+                            echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
+                        }
+                        ?>
+                      </select>
                     </div>
                   </div>
-                </div>
 
-                <div class="col-lg-12">
-                  <label for="avatar" value="<?php echo $avatar; ?>" class="col-sm-3 control-label">Gambar</label>
-                  <div class="col-lg-12 mb-2">
-                    <input type="file" name="avatar" class="form-control" value="<?php echo $gambar; ?>">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <label for="form-control">Brand *</label>
+                      <select class="form-control select2" name="brand">
+                        <option value="0">Pilih</option>
+                        <?php
+                        $sql = mysqli_query($conn, "select * from brand");
+                        while ($row = mysqli_fetch_assoc($sql)) {
+                          if ($brand == $row['nama'])
+                            echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
+                          else
+                            echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
+                        }
+                        ?>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="form-control">Gudang *</label>
+                      <select class="form-control select2" name="gudang">
+                        <option value="0">Pilih</option>
+                        <?php
+                        $sql = mysqli_query($conn, "select * from gudang");
+                        while ($row = mysqli_fetch_assoc($sql)) {
+                          if ($gudang == $row['nama'])
+                            echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
+                          else
+                            echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
+                        }
+                        ?>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="form-control" value="<?php echo $avatar; ?>">Gambar</label>
+                      <input type="file" name="avatar" class="form-control" value="<?php echo $gambar; ?>">
+                    </div>
                   </div>
-                </div>
-                <input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
 
-                <button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-plus"></span> Simpan</button>
+                  <div class="row mb-2">
+                    <div class="col-md-12">
+                      <label for="form-control">Keterangan</label>
+                      <textarea class="form-control" id="keterangan" name="keterangan" maxlength="255" placeholder="Masukan Keterangan"><?php echo $keterangan; ?></textarea>
+                    </div>
+                  </div>
+
+                  <input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
+
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-plus"></span> Simpan</button>
+                    </div>
+                    <div class="d-flex flex-row-reverse mt-1">
+                      <p>* :Wajib diisi.</p>
+                    </div>
+                  </div>
                 </form>
+
+
+
 
 
                 <script>
@@ -287,7 +249,7 @@ body();
                   $brand = mysqli_real_escape_string($conn, $_POST["brand"]);
                   $keterangan = mysqli_real_escape_string($conn, $_POST["keterangan"]);
                   $gudang = mysqli_real_escape_string($conn, $_POST["gudang"]);
-                  $barcode = mysqli_real_escape_string($conn, $_POST["barcode"]);
+                  // $barcode = mysqli_real_escape_string($conn, $_POST["barcode"]);
                   $namaavatar = $_FILES['avatar']['name'];
                   $ukuranavatar = $_FILES['avatar']['size'];
                   $tipeavatar = $_FILES['avatar']['type'];
@@ -295,38 +257,45 @@ body();
                   $avatar = "dist/upload/" . $namaavatar;
                   $insert = ($_POST["insert"]);
 
+                  if ($sku == '0' || $nama == '' || $satuan == '0' || $kategori == '0' || $brand == '0' || $gudang == '0') {
+                    echo "<div class='alert alert-danger' role='alert'>
+                    Data Yang Anda Masukkan Tidak Sesuai
+                    </div>";
+                    exit();
+                  }
+
                   $sql = "select * from $tabeldatabase where kode='$kode'";
                   $result = mysqli_query($conn, $sql);
 
                   if (mysqli_num_rows($result) > 0) {
                     if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
                       move_uploaded_file($tmp, $avatar);
-                      $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang',barcode='$barcode', avatar='$avatar' where kode='$kode'";
-                      echo print_r($sql1);
+                      $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang',avatar='$avatar' where kode='$kode'";
+                      // echo print_r($sql1);
                       $updatean = mysqli_query($conn, $sql1);
                       echo "<script type='text/javascript'>  alert('Berhasil, Data barang telah diupdate!'); </script>";
                       echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                     } else if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
 
                       $avatar = "dist/upload/index.jpg";
-                      $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan,' kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang, barcode='$barcode', avatar='$avatar' where kode='$kode'";
+                      $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan,' kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang, avatar='$avatar' where kode='$kode'";
                       $updatean = mysqli_query($conn, $sql1);
 
                       echo "<script type='text/javascript'>  alert('Berhasil, Data barang telah diupdate!'); </script>";
                       echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                     } else {
-                      echo "<script type='text/javascript'>  alert('Gagal, Data gagal diupdate! 318'); </script>";
+                      echo "<script type='text/javascript'>  alert('Gagal, Data Input Tidak Sesuai, gagal diupdate! 318'); </script>";
                       echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                     }
                   } else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
                     move_uploaded_file($tmp, $avatar);
-                    $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama', '$satuan' ,'$kategori','$brand','$keterangan','$gudang','$barcode','','','','','$avatar')";
+                    $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','','','','','$avatar','$satuan')";
                     if (mysqli_query($conn, $sql2)) {
                       echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
                       echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                     } else {
                       $avatar = "dist/upload/index.jpg";
-                      $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama', '$satuan','$kategori','$brand','$keterangan','$gudang','$barcode','','','','','$avatar')";
+                      $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','','','','','$avatar','$satuan')";
 
                       // echo print_r($sql1);
 
@@ -335,7 +304,7 @@ body();
                         echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                       } else {
 
-                        echo "<script type='text/javascript'>  alert('Gagal, Data gagal disimpan! 338'); </script>";
+                        echo "<script type='text/javascript'>  alert('Gagal, Data Input Tidak Sesuai gagal disimpan! 338'); </script>";
                         echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                       }
                     }
@@ -355,9 +324,7 @@ body();
         <!-- Mnenu untuk user -->
       <?php } elseif ($chmod >= 2 || $_SESSION['jabatan'] == 'user') { ?>
         <div class="card-body">
-          <div class="table-responsive">
-            <!----------------KONTEN------------------->
-            <?php
+          <?php
               error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
               $kode = $nama =  "";
               // $keterangan = $kategori = $brand = $gudang =
@@ -365,8 +332,7 @@ body();
               $kode =  $kategori =  "";
               $kode =  $brand =  "";
               $kode =  $gudang =  "";
-              $kode =  $satuan =  "";
-              $kode =  $barcode =  "";
+              $kode =  $satuan = "";
               $kode =  $avatar =  "";
               $kode =  $gambar =  "";
               $no = $_GET["no"];
@@ -378,171 +344,130 @@ body();
                   $kode = $fill["kode"];
                   $sku = $fill["sku"];
                   $nama = $fill["nama"];
-                  $brand = $fill["brand"];
                   $satuan = $fill["satuan"];
+                  $brand = $fill["brand"];
                   $kategori = $fill["kategori"];
                   $keterangan = $fill["keterangan"];
                   $gudang = $fill["gudang"];
-                  $barcode = $fill["barcode"];
                   $gambar = $fill["avatar"];
                   $insert = '3';
                 }
               }
-            ?>
+          ?>
 
-            <form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform" enctype="multipart/form-data">
+          <form class="form-horizontal" method="post" action="add_<?php echo $halaman; ?>" id="Myform" enctype="multipart/form-data">
 
-              <div class="col-lg-12">
-                <label for="kode" class="col-sm-3 control-label">Kode Induk:</label>
-                <div class="col-lg-12">
-                  <?php if ($no == null || $no == "") { ?>
-                    <input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required readonly>
-                  <?php } else { ?>
-                    <input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
-                  <?php } ?>
-                </div>
+            <div class="row mb-1">
+              <div class="col-md-3">
+                <label for="form-control">Kode Barang</label>
+                <?php if ($no == null || $no == "") { ?>
+                  <input type="text" class="form-control" id="kode" name="kode" value="<?php echo autoNumber(); ?>" maxlength="50" required readonly>
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="kode" name="kode" value="<?php echo $kode; ?>" maxlength="50" required readonly>
+                <?php } ?>
+
+                <!-- FORM INPUT SKU -->
+                <?php if ($no == null || $no == "") { ?>
+                  <input type="hidden" class="form-control" id="sku" name="sku" value="SKU<?php echo autoNumber(); ?>" maxlength="10" required>
+                <?php } else { ?>
+                  <input type="hidden" class="form-control" id="sku" name="sku" value="<?php echo $sku; ?>" maxlength="50" required>
+                <?php } ?>
+                <!-- END FORM INPUT SKU -->
               </div>
-
-              <div class="col-lg-12">
-                <label for="kode" class="col-sm-3 control-label">SKU:</label>
-                <div class="col-lg-12">
-                  <?php if ($no == null || $no == "") { ?>
-                    <input type="text" class="form-control" id="sku" name="sku" value="SKU<?php echo autoNumber(); ?>" maxlength="10" required>
-                  <?php } else { ?>
-                    <input type="text" class="form-control" id="sku" name="sku" value="<?php echo $sku; ?>" maxlength="50" required>
-                  <?php } ?>
-                </div>
+              <div class="col-md-3">
+                <label for="form-control">Nama Barang</label>
+                <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama; ?>" placeholder="Masukan Nama Barang" maxlength="50">
               </div>
-
-              <div class="col-lg-12">
-                <label for="nama" class="col-sm-3 control-label">Nama Barang:</label>
-                <div class="col-lg-12">
-                  <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama; ?>" placeholder="Masukan Nama" maxlength="50">
-                </div>
-              </div>
-
-              <div class="col-lg-12">
-                <label for="kategori" class="col-sm-3 control-label"> Satuan:</label>
-                <div class="col-lg-12 mb-2">
-                  <select class="form-control select2" style="width: 100%;" name="satuan">
+              <div class="col-md-3">
+                <!-- <label for="form-control">Satuan</label> -->
+                <div class="input-group mb-3">
+                  <label class="input-group-text satuanspan" for="inputGroupSelect01">Satuan Jual</label>
+                  <select class="form-control select2" style="width: 100%;" name="satuan" id="produk" required>
                     <option value="pilih">Pilih</option>
                     <?php
                     $sql = mysqli_query($conn, "select * from satuan");
                     while ($row = mysqli_fetch_assoc($sql)) {
-                      if ($kategori == $row['kode'])
-                        echo "<option value='" . $row['kode'] . "' selected='selected'>" . $row['nama_satuan'] . "</option>";
+                      if ($satuan == $row['kode_satuan'])
+                        echo "<option value='" . $row['kode_satuan'] .  "' satuan='" . $row['satuan_jual'] . "' selected='selected'>" . $row['satuan_isi'] . "</option>";
                       else
-                        echo "<option value='" . $row['kode'] . "'>" . $row['nama_satuan'] . "</option>";
+                        echo "<option value='" . $row['kode_satuan'] . "' satuan='" . $row['satuan_jual'] . "'>" . $row['satuan_isi'] . "</option>";
                     }
                     ?>
                   </select>
                 </div>
-                <div class="col-lg-12">
-                  <div class="col-xs-1" align="left">
-                    <a href="add_satuan" class="btn btn-info btn-sm" role="button">Tambah Satuan</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-12">
-                <label for="kategori" class="col-sm-3 control-label"> Kategori:</label>
-                <div class="col-lg-12 mb-2">
-                  <select class="form-control select2" style="width: 100%;" name="kategori">
-                    <option value="pilih">Pilih</option>
-                    <?php
-                    $sql = mysqli_query($conn, "select * from kategori");
-                    while ($row = mysqli_fetch_assoc($sql)) {
-                      if ($kategori == $row['nama'])
-                        echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
-                      else
-                        echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
-                    }
-                    ?>
-                  </select>
-                </div>
-                <div class="col-lg-12">
-                  <div class="col-xs-1" align="left">
-                    <a href="add_kategori" class="btn btn-info btn-sm" role="button">Tambah Kategori</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-12">
-                <label for="brand" class="col-sm-3 control-label"> Brand:</label>
-                <div class="col-lg-12 mb-2">
-                  <select class="form-control select2" style="width: 100%;" name="brand">
-                    <option value="pilih">Pilih</option>
-                    <?php
-                    $sql = mysqli_query($conn, "select * from brand");
-                    while ($row = mysqli_fetch_assoc($sql)) {
-                      if ($brand == $row['nama'])
-                        echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
-                      else
-                        echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
-                    }
-                    ?>
-                  </select>
-                </div>
-                <div class="col-lg-12">
-                  <div class="col-xs-1" align="left">
-                    <a href="add_merek" class="btn btn-info btn-sm" role="button">Tambah Brand</a>
-                  </div>
-                </div>
               </div>
 
 
-              <div class="col-lg-12">
-                <label for="brand" class="col-sm-3 control-label"> Gudang:</label>
-                <div class="col-lg-12 mb-2">
-                  <select class="form-control select2" style="width: 100%;" name="gudang">
-                    <option value="pilih">Pilih</option>
-                    <?php
-                    $sql = mysqli_query($conn, "select * from gudang");
-                    while ($row = mysqli_fetch_assoc($sql)) {
-                      if ($gudang == $row['nama'])
-                        echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
-                      else
-                        echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
-                    }
-                    ?>
-                  </select>
-                </div>
-                <div class="col-lg-12">
-                  <div class="col-xs-1" align="left">
-                    <a href="add_gudang" class="btn btn-info btn-sm" role="button">Tambah Gudang</a>
-                  </div>
-                </div>
-              </div>
 
-              <div class="col-lg-12">
-                <label for="keterangan" class="col-sm-3 control-label">Keterangan:</label>
-                <div class="col-lg-12">
-                  <textarea class="form-control" rows="3" id="keterangan" name="keterangan" maxlength="255" placeholder="Masukan Keterangan" required><?php echo $keterangan; ?></textarea>
-                </div>
-              </div>
-          </div>
 
-          <div class="col-lg-12">
-            <label for="nama" class="col-sm-3 control-label">Label Barcode:</label>
-            <div class="col-lg-12 mb-2">
-              <input type="text" class="form-control" id="barcode" name="barcode" value="<?php echo $barcode; ?>" placeholder="Masukan barcode" maxlength="50">
-            </div>
-            <div class="col-lg-12">
-              <div class="col-xs-1" align="left">
-                <button type="button" class="btn btn-info btn-sm" onclick="sync();">Barcode dr system</button>
+              <div class="col-md-3">
+                <label for="form-control">Kategori</label>
+                <select class="form-control select2" name="kategori">
+                  <option value="pilih">Pilih</option>
+                  <?php
+                  $sql = mysqli_query($conn, "select * from kategori");
+                  while ($row = mysqli_fetch_assoc($sql)) {
+                    if ($kategori == $row['nama'])
+                      echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
+                    else
+                      echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
+                  }
+                  ?>
+                </select>
               </div>
             </div>
-          </div>
 
-          <div class="col-lg-12">
-            <label for="avatar" value="<?php echo $avatar; ?>" class="col-sm-3 control-label">Gambar</label>
-            <div class="col-lg-12 mb-2">
-              <input type="file" name="avatar" class="form-control" value="<?php echo $gambar; ?>">
+            <div class="row">
+              <div class="col-md-3">
+                <label for="form-control">Brand</label>
+                <select class="form-control select2" name="brand">
+                  <option value="pilih">Pilih</option>
+                  <?php
+                  $sql = mysqli_query($conn, "select * from brand");
+                  while ($row = mysqli_fetch_assoc($sql)) {
+                    if ($brand == $row['nama'])
+                      echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
+                    else
+                      echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
+                  }
+                  ?>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="form-control">Gudang</label>
+                <select class="form-control select2" name="gudang">
+                  <option value="pilih">Pilih</option>
+                  <?php
+                  $sql = mysqli_query($conn, "select * from gudang");
+                  while ($row = mysqli_fetch_assoc($sql)) {
+                    if ($gudang == $row['nama'])
+                      echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nama'] . "</option>";
+                    else
+                      echo "<option value='" . $row['nama'] . "'>" . $row['nama'] . "</option>";
+                  }
+                  ?>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="form-control" value="<?php echo $avatar; ?>">Gambar</label>
+                <input type="file" name="avatar" class="form-control" value="<?php echo $gambar; ?>">
+              </div>
             </div>
-          </div>
-          <input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
 
-          <button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-plus"></span> Simpan</button>
+            <div class="row mb-2">
+              <div class="col-md-12">
+                <label for="form-control">Keterangan</label>
+                <textarea class="form-control" id="keterangan" name="keterangan" maxlength="255" placeholder="Masukan Keterangan"><?php echo $keterangan; ?></textarea>
+              </div>
+            </div>
+
+            <input type="hidden" class="form-control" id="insert" name="insert" value="<?php echo $insert; ?>" maxlength="1">
+
+            <div class="row">
+              <div class="col-md-3">
+                <button type="submit" class="btn btn-primary btn-sm" name="simpan" onclick="document.getElementById('Myform').submit();"><span class="bx bx-plus"></span> Simpan</button>
+              </div>
+            </div>
           </form>
 
 
@@ -563,7 +488,7 @@ body();
                 $brand = mysqli_real_escape_string($conn, $_POST["brand"]);
                 $keterangan = mysqli_real_escape_string($conn, $_POST["keterangan"]);
                 $gudang = mysqli_real_escape_string($conn, $_POST["gudang"]);
-                $barcode = mysqli_real_escape_string($conn, $_POST["barcode"]);
+                // $barcode = mysqli_real_escape_string($conn, $_POST["barcode"]);
                 $namaavatar = $_FILES['avatar']['name'];
                 $ukuranavatar = $_FILES['avatar']['size'];
                 $tipeavatar = $_FILES['avatar']['type'];
@@ -577,32 +502,32 @@ body();
                 if (mysqli_num_rows($result) > 0) {
                   if ($chmod >= 3 || $_SESSION['jabatan'] == 'user') {
                     move_uploaded_file($tmp, $avatar);
-                    $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang',barcode='$barcode', avatar='$avatar' where kode='$kode'";
-                    echo print_r($sql1);
+                    $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang',avatar='$avatar' where kode='$kode'";
+                    // echo print_r($sql1);
                     $updatean = mysqli_query($conn, $sql1);
                     echo "<script type='text/javascript'>  alert('Berhasil, Data barang telah diupdate!'); </script>";
                     echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                   } else if ($chmod >= 3 || $_SESSION['jabatan'] == 'user') {
 
                     $avatar = "dist/upload/index.jpg";
-                    $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan', kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang, barcode='$barcode', avatar='$avatar' where kode='$kode'";
+                    $sql1 = "update $tabeldatabase set sku='$sku', nama='$nama', satuan='$satuan,' kategori='$kategori', brand='$brand', keterangan='$keterangan', gudang='$gudang, avatar='$avatar' where kode='$kode'";
                     $updatean = mysqli_query($conn, $sql1);
 
                     echo "<script type='text/javascript'>  alert('Berhasil, Data barang telah diupdate!'); </script>";
                     echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                   } else {
-                    echo "<script type='text/javascript'>  alert('Gagal, Data gagal diupdate!'); </script>";
+                    echo "<script type='text/javascript'>  alert('Gagal, Data gagal diupdate! 318'); </script>";
                     echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                   }
                 } else if (($chmod >= 2 || $_SESSION['jabatan'] == 'user')) {
                   move_uploaded_file($tmp, $avatar);
-                  $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$satuan','$kategori','$brand','$keterangan','$gudang','$barcode','','','','','$avatar')";
+                  $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','','','','','$avatar','$satuan')";
                   if (mysqli_query($conn, $sql2)) {
                     echo "<script type='text/javascript'>  alert('Berhasil, Data telah disimpan!'); </script>";
                     echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                   } else {
                     $avatar = "dist/upload/index.jpg";
-                    $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$satuan','$kategori','$brand','$keterangan','$gudang','$barcode','','','','','$avatar')";
+                    $sql2 = "insert into $tabeldatabase values( '','$kode','$sku','$nama','$kategori','$brand','$keterangan','$gudang','','','','','$avatar','$satuan')";
 
                     // echo print_r($sql1);
 
@@ -611,12 +536,15 @@ body();
                       echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                     } else {
 
-                      echo "<script type='text/javascript'>  alert('Gagal, Data gagal disimpan!'); </script>";
+                      echo "<script type='text/javascript'>  alert('Gagal, Data gagal disimpan! 338'); </script>";
                       echo "<script type='text/javascript'>window.location = '$forwardpage';</script>";
                     }
                   }
                 }
-              } ?>
+              }
+
+          ?>
+
           <script>
             function myFunction() {
               document.getElementById("Myform").submit();
@@ -625,12 +553,135 @@ body();
         </div>
       </div>
     </div>
-  <?php } else { ?>
-    <div class="callout callout-danger">
-      <h4>Info</h4>
-      <b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
-    </div>
-  <?php } ?>
   </div>
+<?php } else { ?>
+  <div class="callout callout-danger">
+    <h4>Info</h4>
+    <b>Hanya user tertentu yang dapat mengakses halaman <?php echo $dataapa; ?> ini .</b>
+  </div>
+<?php } ?>
 </div>
+</div>
+
+<script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="dist/plugins/jQuery/jquery-ui.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#produk").on("change", function() {
+
+      // var nama = $("#produk option:selected").attr("nama");
+      // var kode = $("#produk option:selected").attr("kode");
+      // var stok = $("#produk option:selected").attr("stok");
+      var satuan = $("#produk option:selected").attr("satuan");
+      // $("#nama").val(nama);
+      // $("#stok").val(stok);
+      // $("#kode").val(kode);
+      $(".satuanspan").html(satuan);
+      //$(".satuanspan").html(satuan);
+      //$("#jumlah").val(1);
+    });
+  });
+</script>
+
+
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="dist/plugins/fastclick/fastclick.js"></script>
+<script src="dist/plugins/select2/select2.full.min.js"></script>
+<script src="dist/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="dist/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="dist/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="dist/plugins/iCheck/icheck.min.js"></script> -->
+
+<!--fungsi AUTO Complete-->
+<!-- Script -->
+<script type='text/javascript'>
+  $(function() {
+
+    $("#barcode").autocomplete({
+      source: function(request, response) {
+
+        $.ajax({
+          url: "server.php",
+          type: 'post',
+          dataType: "json",
+          data: {
+            search: request.term
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      select: function(event, ui) {
+        $('#nama').val(ui.item.label);
+        $('#barcode').val(ui.item.value); // display the selected text
+        $('#hargajual').val(ui.item.hjual);
+        $('#stok').val(ui.item.sisa); // display the selected text
+        $('#hargabeli').val(ui.item.hbeli);
+        $('#jumlah').val(ui.item.jumlah);
+        $('#kode').val(ui.item.kode); // save selected id to input
+        return false;
+
+      }
+    });
+
+    // Multiple select
+    $("#multi_autocomplete").autocomplete({
+      source: function(request, response) {
+
+        var searchText = extractLast(request.term);
+        $.ajax({
+          url: "server.php",
+          type: 'post',
+          dataType: "json",
+          data: {
+            search: searchText
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      select: function(event, ui) {
+        var terms = split($('#multi_autocomplete').val());
+
+        terms.pop();
+
+        terms.push(ui.item.label);
+
+        terms.push("");
+        $('#multi_autocomplete').val(terms.join(", "));
+
+        // Id
+        var terms = split($('#selectuser_ids').val());
+
+        terms.pop();
+
+        terms.push(ui.item.value);
+
+        terms.push("");
+        $('#selectuser_ids').val(terms.join(", "));
+
+        return false;
+      }
+
+    });
+  });
+
+  function split(val) {
+    return val.split(/,\s*/);
+  }
+
+  function extractLast(term) {
+    return split(term).pop();
+  }
+</script>
+
+<!--AUTO Complete-->
+
 <?php footer(); ?>

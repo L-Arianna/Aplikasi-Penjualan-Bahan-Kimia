@@ -261,20 +261,19 @@ body();
           </div>
 
           <div class="table-responsive">
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered align-middle">
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>No.Invoice</th>
                   <th>Tgl Pembuatan</th>
-                  <th>Jatuh Tempo</th>
+                  <th>No. Invoice</th>
                   <th>Pelanggan</th>
+                  <th>No. PO</th>
+                  <th>Jatuh Tempo</th>
                   <th>Total</th>
-                  <th>Kasir</th>
-                  <th>Status</th>
-                  <th>Pengiriman</th>
+
                   <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-                    <th>Opsi</th>
+                    <th style="align-items: center;">Opsi</th>
                   <?php } else {
                   } ?>
                 </tr>
@@ -296,9 +295,11 @@ body();
                       <tbody>
                         <tr>
                           <td><?php echo ++$no_urut; ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['nomor']); ?></td>
                           <?php $tglsale = date("d-m-Y", strtotime($fill['tglsale'])); ?>
                           <td><?php echo mysqli_real_escape_string($conn, $tglsale); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['nomor']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['no_po']); ?></td>
                           <?php $due = date("d-m-Y", strtotime($fill['duedate'])); ?>
                           <td><?php if ($fill['duedate'] <= $now) { ?> <span class="badge bg-warning text-dark"><?php echo $due; ?></span>
                             <?php } else { ?>
@@ -307,29 +308,18 @@ body();
 
 
                           </td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+
                           <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
-                          <td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
+
 
                           <td>
+                            <a type="button" class="btn btn-danger btn-sm" onclick="window.location.href='penjualan_batal?q=<?php echo $fill['nota']; ?>'" title="Batal"><i class="bx bx-x"></i></a>
 
-                            <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
+                            <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
 
-                            <?php } ?>
-                            <?php if ($fill['status'] == "belum") { ?>
-                              <a type="button" class="btn btn-danger btn-sm" onclick="window.location.href='penjualan_batal?q=<?php echo $fill['nota']; ?>'" title="Batal"><i class="bx bx-x"></i></a>
+                            <a data-id="<?= $fill['nota'] ?>" data-nama="<?= $fill['nama'] ?>" data-nip="<?= number_format($fill['total']) ?>" data-bank="<?= $pegawai->nama_bank ?>" data-an="<?= $pegawai->atas_nama ?>" data-rek="<?= $pegawai->no_rek ?>" title="Bayar" class="open-AddBookDialog btn btn-success btn-sm"><i class="bx bx-credit-card"></i></a>
 
-                              <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
-
-                              <a data-id="<?= $fill['nota'] ?>" data-nama="<?= $fill['nama'] ?>" data-nip="<?= number_format($fill['total']) ?>" data-bank="<?= $pegawai->nama_bank ?>" data-an="<?= $pegawai->atas_nama ?>" data-rek="<?= $pegawai->no_rek ?>" title="Bayar" class="open-AddBookDialog btn btn-success btn-sm"><i class="bx bx-credit-card"></i></a>
-
-                            <?php } else { ?>
-                              <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
-
-                              <a type="button" class="btn btn-primary btn-sm" onclick="window.location.href='surat_jalan?nota=<?php echo $fill['nota'] ?>'" title="Cetak Surat Jalan"><i class="bx bx-printer"></i></a>
-                            <?php } ?>
+                            <a type="button" class="btn btn-primary btn-sm" onclick="window.location.href='surat_jalan?nota=<?php echo $fill['nota'] ?>'" title="Cetak Surat Jalan"><i class="bx bx-printer"></i></a>
                           </td>
                         </tr>
                       <?php } ?>
@@ -349,11 +339,14 @@ body();
                   $fill = mysqli_fetch_array($result);
           ?>
           <tbody>
-            <tr>
+            <tr class="align-middle">
               <td><?php echo ++$no_urut; ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['nomor']); ?></td>
+
               <?php $tglsale = date("d-m-Y", strtotime($fill['tglsale'])); ?>
               <td><?php echo mysqli_real_escape_string($conn, $tglsale); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nomor']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+              <td><?php echo mysqli_real_escape_string($conn, $fill['no_po']); ?></td>
               <?php $due = date("d-m-Y", strtotime($fill['duedate'])); ?>
               <td><?php if ($fill['duedate'] <= $now) { ?> <span class="badge bg-warning text-dark"><?php echo $due; ?></span>
                 <?php } else { ?>
@@ -362,29 +355,15 @@ body();
 
 
               </td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
               <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['kasir']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['status']); ?></td>
-              <td><?php echo mysqli_real_escape_string($conn, $fill['kirim']); ?></td>
-
               <td>
+                <a type="button" class="btn btn-danger btn-sm" onclick="window.location.href='penjualan_batal?q=<?php echo $fill['nota']; ?>'" title="Batal"><i class="bx bx-x"></i></a>
 
-                <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
+                <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
 
-                <?php } ?>
-                <?php if ($fill['status'] == "belum") { ?>
-                  <a type="button" class="btn btn-danger btn-sm" onclick="window.location.href='penjualan_batal?q=<?php echo $fill['nota']; ?>'" title="Batal"><i class="bx bx-x"></i></a>
+                <a data-id="<?= $fill['nota'] ?>" data-nama="<?= $fill['nama'] ?>" data-nip="<?= number_format($fill['total']) ?>" data-bank="<?= $pegawai->nama_bank ?>" data-an="<?= $pegawai->atas_nama ?>" data-rek="<?= $pegawai->no_rek ?>" title="Bayar" class="open-AddBookDialog btn btn-success btn-sm"><i class="bx bx-credit-card"></i></a>
 
-                  <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
-
-                  <a data-id="<?= $fill['nota'] ?>" data-nama="<?= $fill['nama'] ?>" data-nip="<?= number_format($fill['total']) ?>" data-bank="<?= $pegawai->nama_bank ?>" data-an="<?= $pegawai->atas_nama ?>" data-rek="<?= $pegawai->no_rek ?>" title="Bayar" class="open-AddBookDialog btn btn-success btn-sm"><i class="bx bx-credit-card"></i></a>
-
-                <?php } else { ?>
-                  <a type="button" class="btn btn-info btn-sm text-white" onclick="window.location.href='invoice_jual?nota=<?php echo $fill['nota'] ?>'" title="Detail"><i class="bx bx-detail"></i></a>
-
-                  <a type="button" class="btn btn-primary btn-sm" onclick="window.location.href='surat_jalan?nota=<?php echo $fill['nota'] ?>'" title="Cetak Surat Jalan"><i class="bx bx-printer"></i></a>
-                <?php } ?>
+                <a type="button" class="btn btn-primary btn-sm" onclick="window.location.href='surat_jalan?nota=<?php echo $fill['nota'] ?>'" title="Cetak Surat Jalan"><i class="bx bx-printer"></i></a>
               </td>
             </tr>
           <?php

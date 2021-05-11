@@ -64,9 +64,13 @@ if (!login_check()) {
       $signature = $row['signature'];
       $avatar = $row['avatar'];
 
-      $sql1 = "SELECT * FROM $tabel where nota='$nota'";
+      $sql1 = "SELECT * , count(total) as totalprice FROM $tabel where nota='$nota'";
       $hasil1 = mysqli_query($conn, $sql1);
       $row = mysqli_fetch_assoc($hasil1);
+
+      $sql2 = "SELECT * , sum(hargaakhir) as totalprice FROM invoicejual where nota='$nota'";
+      $hasil2 = mysqli_query($conn, $sql2);
+      $rowa = mysqli_fetch_assoc($hasil2);
 
 
       $tglbayar = date("d-m-Y", strtotime($row['tglsale']));
@@ -76,15 +80,17 @@ if (!login_check()) {
 
 
       $bayar = $row['kasir'];
-      $total = $row['total'];
+      $total = $row['totalprice'];
       $keterangan = $row['keterangan'];
       $pelanggan = $row['pelanggan'];
       $status = $row['status'];
       $diskon = $row['diskon'];
       $pot = $row['potongan'];
       $biaya = $row['biaya'];
-      $totalprice = $total + $pot - $biaya;
+      $totalprice = $rowa['totalprice'];
 
+
+      $totalall = $totalprice + $pot + $biaya;
       $sql2 = "SELECT * FROM pelanggan where kode='$pelanggan' ";
       $hasil2 = mysqli_query($conn, $sql2);
       $row = mysqli_fetch_assoc($hasil2);
@@ -125,192 +131,189 @@ if (!login_check()) {
         <!-- KONTEN BODY AWAL -->
         <div class="card">
           <div class="card-header">
-            <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
+            <div class="row">
+              <div class="col-sm">
+                <h6 class="mb-0 text-uppercase">Data <?php echo $dataapa; ?></h6>
+              </div>
+              <div class="col-sm" style="text-align: right;">
+                <small>Faktur Penjualan || Date: <?php echo $today; ?></small>
+              </div>
+            </div>
           </div>
           <!-- /.box-header -->
 
           <div class="card-body">
-            <div class="table-responsive">
-              <!----------------KONTEN------------------->
-              <?php
+            <!-- <div class="table-responsive"> -->
+            <!----------------KONTEN------------------->
+            <?php
 
-              ?>
-              <section class="invoice">
-                <div class="row">
-                  <div class="col-sm">
-                    <h3>
-                      <?php echo $namapt; ?>
-                    </h3>
-                  </div>
-                  <div class="col-sm">
-                  </div>
-                  <div class="col-sm">
-                    <small>Date: <?php echo $today; ?></small>
-                  </div>
-                </div>
-                <div class="row mb-1">
-                  <div class="col-md-4 ">
-                    FROM:
-                    <address>
-                      <strong> <?php echo $namapt; ?></strong><br>
-                      <?php echo $alamatpt; ?><br>
-                      Phone: <?php echo $notelppt; ?><br>
-                      <b>Nomor Invoice #<?php echo $nota; ?></b><br>
-                      <b>Jatuh Tempo</b> <?php echo $due; ?><br>
-                      <strong>Faktur Pajak: <?= $faktur_pajak ?></strong>
-                    </address>
-                  </div>
-                  <div class="col-md-4 ">
+            ?>
+            <!-- <section class="invoice"> -->
 
-                  </div>
-                  <div class="col-sm-4 invoice-col">
-                    To : <br>
-                    <strong><?php echo $customer; ?></strong><br>
-                    <?php echo $address; ?><br>
-                    Phone: <?php echo $nohp; ?>
-                  </div>
-                </div>
-                <div class="row mb-2">
-                  <?php
-                  error_reporting(E_ALL ^ E_DEPRECATED);
+            <div class="row mb-1">
+              <div class="col-md-4 ">
+                Dari
+                <address>
+                  <strong> <?php echo $nama; ?></strong><br>
+                  <?php echo $alamat; ?><br>
+                  Telp : <?php echo $notelp; ?><br>
+                  <b>No. Invoice #<?php echo $nota; ?></b><br>
+                  <strong>No. Faktur Pajak: <?= $faktur_pajak ?></strong><br>
+                  <strong>No. PO: <?= $noPO ?></strong><br>
+                  <b>Jatuh Tempo</b> <?php echo $due; ?>
+                </address>
+              </div>
+              <div class="col-md-4 ">
 
-                  $sql    = "select * from $tabeldatabase where nota ='$nota' order by no";
-                  $result = mysqli_query($conn, $sql);
-                  $rpp    = 15;
-                  $reload = "$halaman" . "?pagination=true";
-                  $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
-
-                  if ($page <= 0)
-                    $page = 1;
-                  $tcount  = mysqli_num_rows($result);
-                  $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
-                  $count   = 0;
-                  $i       = ($page - 1) * $rpp;
-                  $no_urut = ($page - 1) * $rpp;
-                  ?>
-                  <div class="col-sm-12">
-                    <div class="table-responsive">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>Satuan</th>
-                            <th>Qty</th>
-                            <th>Total Qty</th>
-                            <th>Product</th>
-                            <th>Price/item</th>
-                            <th>Subtotal</th>
-                          </tr>
-                        </thead>
-                        <?php
-                        error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                        while (($count < $rpp) && ($i < $tcount)) {
-                          mysqli_data_seek($result, $i);
-                          $fill = mysqli_fetch_array($result);
-                        ?>
-                          <tbody>
-                            <tr>
-                              <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-                              <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
-                              <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
-                              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                              <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
-                              <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
-                            </tr>
-
-
-                          <?php
-                          $i++;
-                          $count++;
-                        }
-
-                          ?>
-                          </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <?php if ($status == 'belum') { ?>
-                    <div class="col-lg-6">
-                      <p class="text-muted">Keterangan : <?php echo $keterangan; ?></p>
-                      <p class="lead">Jatuh Tempo <?php echo $due; ?></p>
-                    </div>
-                  <?php } else { ?>
-                    <div class="col-lg-6 mb-2">
-                      <h4></h4>
-                    </div>
-                  <?php } ?>
-
-                  <?php function penyebut($nilai)
-                  {
-                    $nilai = abs($nilai);
-                    $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
-                    $temp = "";
-                    if ($nilai < 12) {
-                      $temp = " " . $huruf[$nilai];
-                    } else if ($nilai < 20) {
-                      $temp = penyebut($nilai - 10) . " belas";
-                    } else if ($nilai < 100) {
-                      $temp = penyebut($nilai / 10) . " puluh" . penyebut($nilai % 10);
-                    } else if ($nilai < 200) {
-                      $temp = " seratus" . penyebut($nilai - 100);
-                    } else if ($nilai < 1000) {
-                      $temp = penyebut($nilai / 100) . " ratus" . penyebut($nilai % 100);
-                    } else if ($nilai < 2000) {
-                      $temp = " seribu" . penyebut($nilai - 1000);
-                    } else if ($nilai < 1000000) {
-                      $temp = penyebut($nilai / 1000) . " ribu" . penyebut($nilai % 1000);
-                    } else if ($nilai < 1000000000) {
-                      $temp = penyebut($nilai / 1000000) . " juta" . penyebut($nilai % 1000000);
-                    } else if ($nilai < 1000000000000) {
-                      $temp = penyebut($nilai / 1000000000) . " milyar" . penyebut(fmod($nilai, 1000000000));
-                    } else if ($nilai < 1000000000000000) {
-                      $temp = penyebut($nilai / 1000000000000) . " trilyun" . penyebut(fmod($nilai, 1000000000000));
-                    }
-                    return $temp;
-                  }
-
-                  function terbilang($nilai)
-                  {
-                    if ($nilai < 0) {
-                      $hasil = "minus " . trim(penyebut($nilai));
-                    } else {
-                      $hasil = trim(penyebut($nilai));
-                    }
-                    return $hasil;
-                  }
-                  ?>
-
-                  <div class="table-responsive">
-                    <table class="table table-bordered">
-                      <tr>
-                        <th>Sub Total:</th>
-                        <td>Rp. <?php echo number_format($totalprice, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
-                      </tr>
-                      <tr>
-                        <th>PPn(<?php echo $diskon; ?>)%:</th>
-                        <td>Rp. <?php echo number_format($pot, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
-                      </tr>
-                      <tr>
-                        <th>Kirim Tambahan:</th>
-                        <td>Rp. <?php echo number_format($biaya, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
-                      </tr>
-                      <tr>
-                        <th>Total:</th>
-                        <td><b>Rp. <?php echo number_format($total, $decimal, $a_decimal, $thousand) . ',-'; ?></b></td>
-                      </tr>
-                      <tr>
-                        <th>Terbilang:</th>
-                        <td><b><?php echo terbilang($total); ?> rupiah</b></td>
-                      </tr>
-                    </table>
-                  </div>
-                  <div class="col-md-3">
-                    <a href="print_jual?nota=<?php echo $nota; ?>" target="_blank" class="btn btn-primary btn-sm"><i class="bx bx-printer"></i> Print</a>
-                  </div>
-                </div>
-              </section>
+              </div>
+              <div class="col-sm-4 invoice-col mt-2" style="text-align: right;">
+                Kepada <br>
+                <strong><?php echo $customer; ?></strong><br>
+                <?php echo $address; ?><br>
+                Telp : <?php echo $nohp; ?>
+              </div>
             </div>
+            <div class="row mb-2">
+              <?php
+              error_reporting(E_ALL ^ E_DEPRECATED);
+
+              $sql    = "select * from $tabeldatabase where nota ='$nota' order by no";
+              $result = mysqli_query($conn, $sql);
+              $rpp    = 15;
+              $reload = "$halaman" . "?pagination=true";
+              $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
+
+              if ($page <= 0)
+                $page = 1;
+              $tcount  = mysqli_num_rows($result);
+              $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
+              $count   = 0;
+              $i       = ($page - 1) * $rpp;
+              $no_urut = ($page - 1) * $rpp;
+              ?>
+              <div class="col-sm-12">
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Satuan</th>
+                        <th>Qty</th>
+                        <th>Total Qty</th>
+                        <th>Product</th>
+                        <th>Price/item</th>
+                        <th>Subtotal</th>
+                      </tr>
+                    </thead>
+                    <?php
+                    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+                    while (($count < $rpp) && ($i < $tcount)) {
+                      mysqli_data_seek($result, $i);
+                      $fill = mysqli_fetch_array($result);
+                    ?>
+                      <tbody>
+                        <tr>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, number_format($fill['total_satuan'])); ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+                          <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
+                          <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                          <td>Rp. <?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
+                        </tr>
+
+
+                      <?php
+                      $i++;
+                      $count++;
+                    }
+
+                      ?>
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <?php if ($status == 'belum') { ?>
+                <div class="col-lg-6">
+                  <p class="text-muted">Keterangan : <?php echo $keterangan; ?></p>
+                  <p class="lead">Jatuh Tempo <?php echo $due; ?></p>
+                </div>
+              <?php } else { ?>
+                <div class="col-lg-6 mb-2">
+                  <h4></h4>
+                </div>
+              <?php } ?>
+
+              <?php function penyebut($nilai)
+              {
+                $nilai = abs($nilai);
+                $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+                $temp = "";
+                if ($nilai < 12) {
+                  $temp = " " . $huruf[$nilai];
+                } else if ($nilai < 20) {
+                  $temp = penyebut($nilai - 10) . " belas";
+                } else if ($nilai < 100) {
+                  $temp = penyebut($nilai / 10) . " puluh" . penyebut($nilai % 10);
+                } else if ($nilai < 200) {
+                  $temp = " seratus" . penyebut($nilai - 100);
+                } else if ($nilai < 1000) {
+                  $temp = penyebut($nilai / 100) . " ratus" . penyebut($nilai % 100);
+                } else if ($nilai < 2000) {
+                  $temp = " seribu" . penyebut($nilai - 1000);
+                } else if ($nilai < 1000000) {
+                  $temp = penyebut($nilai / 1000) . " ribu" . penyebut($nilai % 1000);
+                } else if ($nilai < 1000000000) {
+                  $temp = penyebut($nilai / 1000000) . " juta" . penyebut($nilai % 1000000);
+                } else if ($nilai < 1000000000000) {
+                  $temp = penyebut($nilai / 1000000000) . " milyar" . penyebut(fmod($nilai, 1000000000));
+                } else if ($nilai < 1000000000000000) {
+                  $temp = penyebut($nilai / 1000000000000) . " trilyun" . penyebut(fmod($nilai, 1000000000000));
+                }
+                return $temp;
+              }
+
+              function terbilang($nilai)
+              {
+                if ($nilai < 0) {
+                  $hasil = "minus " . trim(penyebut($nilai));
+                } else {
+                  $hasil = trim(penyebut($nilai));
+                }
+                return $hasil;
+              }
+              ?>
+
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tr>
+                    <th>Sub Total:</th>
+                    <td>Rp. <?php echo number_format($totalprice, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
+                  </tr>
+                  <tr>
+                    <th>PPn(<?php echo $diskon; ?>)%:</th>
+                    <td>Rp. <?php echo number_format($pot, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
+                  </tr>
+                  <tr>
+                    <th>Kirim Tambahan:</th>
+                    <td>Rp. <?php echo number_format($biaya, $decimal, $a_decimal, $thousand) . ',-'; ?></td>
+                  </tr>
+                  <tr>
+                    <th>Total:</th>
+                    <td><b>Rp. <?php echo number_format($totalall, $decimal, $a_decimal, $thousand) . ',-'; ?></b></td>
+                  </tr>
+                  <tr>
+                    <th>Terbilang:</th>
+                    <td><b><?php echo terbilang($totalall); ?> rupiah</b></td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-md-3">
+                <a href="print_jual?nota=<?php echo $nota; ?>" target="_blank" class="btn btn-primary btn-sm"><i class="bx bx-printer"></i> Print</a>
+              </div>
+            </div>
+            <!-- </section> -->
+            <!-- </div> -->
           </div>
         </div>
 

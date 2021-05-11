@@ -94,6 +94,10 @@ body();
         $usr = $_SESSION['nama'];
         $today = date('Y-m-d');
 
+        if ($jumlah == '') {
+          alert('data jumlah kosong');
+        }
+
 
         $brg = mysqli_query($conn, "SELECT * FROM barang WHERE kode='$kode'");
         $ass = mysqli_fetch_assoc($brg);
@@ -167,34 +171,22 @@ body();
             <div class="card-body">
 
               <div OnLoad='document.getElementById("barcode").focus();'>
-                <form method="post" action="">
-                  <div class="row">
-                    <div class="form-group col-md-12 col-xs-12">
-                      <label for="barang" class="col-sm-2 control-label">Barcode:</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" id="barcode" name="barcode">
-                      </div>
-                      <div class="col-sm-2">
-                        <b>atau</b>
-                      </div>
-                    </div>
-                  </div>
-                </form>
+
 
                 <div class="row">
                   <div class="form-group col-md-12 col-xs-12">
-                    <label for="barang" class="col-sm-2 control-label">Pilih Barang:</label>
+                    <label for="barang" class="col-sm-12 control-label">Pilih Barang:<small class="text-muted">contoh: SKU|Nama Barang|Gudang</small></label>
                     <div class="col-sm-10">
-                      <select class="form-control select2" style="width: 100%;" name="produk" id="produk">
-                        <option selected="selected">Pilih Barang</option>
+                      <select class="form-control single-select" style="width: 100%;" name="produk" id="produk">
+                        <option></option>
                         <?php
                         error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                        $sql = mysqli_query($conn, "select *,barang.nama as nama, barang.kode as kode, barang.sku as sku from barang");
+                        $sql = mysqli_query($conn, "SELECT `barang`.*, `satuan`.* FROM `barang` LEFT JOIN satuan ON satuan.kode_satuan = barang.satuan");
                         while ($row = mysqli_fetch_assoc($sql)) {
                           if ($barcode == $row['barcode'])
-                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
+                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' satuan='" . $row['satuan_isi'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
                           else
-                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
+                            echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' satuan='" . $row['satuan_isi'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
                         }
                         ?>
                       </select>
@@ -205,7 +197,7 @@ body();
                 <form method="post" action="">
                   <div class="row">
                     <div class="form-group col-md-12 col-xs-12">
-                      <label for="barang" class="col-sm-2 control-label">Nama Produk:</label>
+                      <label for="barang" class="col-sm-4 control-label">Nama Produk:</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" readonly id="nama" name="nama" value="<?php echo $nama; ?>">
                         <input type="hidden" class="form-control" readonly id="kode" name="kode" value="<?php echo $kode; ?>">
@@ -232,11 +224,23 @@ body();
                       </div>
                     </div>
                   </div>
-                  <div class="row">
+
+                  <!-- <div class="row">
                     <div class="form-group col-md-12 col-xs-12">
+                      <label for="form-control">Satuan:</label>
+                      <div class="col-sm-5">
+                        <input type="text" class="form-control" id="satuan" name="satuan" readonly>
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="row">
+                    <div class="form-group col-md-10 col-xs-10">
                       <label for="barang" class="col-sm-2 control-label">Jumlah:</label>
-                      <div class="col-sm-5 mb-1">
+                      <div class="input-group col-sm-3 mb-1">
                         <input type="text" class="form-control" id="jumlah" name="jumlah" value="<?php echo $jumlah; ?>">
+                        <div class="input-group-append">
+                          <span class="input-group-text satuanspan">satuan</span>
+                        </div>
                       </div>
                       <div class="col-sm-5">
                         <button type="submit" name="masuk" class="btn btn-primary btn btn-sm">Tambahkan</button>
@@ -248,142 +252,6 @@ body();
             </div>
           </div>
         </div>
-
-
-
-
-        <div class="col-lg-6 col-xs-12">
-          <div class="card">
-            <div class="card-header with-border">
-              <h6 class="mb-0 text-uppercase">Daftar Masuk</h6>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="box box-success">
-                    <div class="box-header with-border">
-
-                    </div>
-
-                    <?php
-                    error_reporting(E_ALL ^ E_DEPRECATED);
-
-                    $sql    = "select * from stok_masuk_daftar where nota =" . autoNumber() . " order by no";
-                    $result = mysqli_query($conn, $sql);
-                    $rpp    = 30;
-                    $reload = "$halaman" . "?pagination=true";
-                    $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
-
-
-
-                    if ($page <= 0)
-                      $page = 1;
-                    $tcount  = mysqli_num_rows($result);
-                    $tpages  = ($tcount) ? ceil($tcount / $rpp) : 1;
-                    $count   = 0;
-                    $i       = ($page - 1) * $rpp;
-                    $no_urut = ($page - 1) * $rpp;
-                    ?>
-                    <div class="box-body table-responsive">
-                      <table class="data table table-hover table-bordered">
-                        <thead>
-                          <tr>
-                            <th style="width:10px">No</th>
-                            <th>Nama Barang</th>
-                            <th style="width:10%">Jumlah Masuk</th>
-
-                            <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-                              <th style="width:10px">Opsi</th>
-                            <?php } else {
-                            } ?>
-                          </tr>
-                        </thead>
-                        <?php
-                        error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                        while (($count < $rpp) && ($i < $tcount)) {
-                          mysqli_data_seek($result, $i);
-                          $fill = mysqli_fetch_array($result);
-                        ?>
-                          <tbody>
-                            <tr>
-                              <td><?php echo ++$no_urut; ?></td>
-
-
-                              <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-
-                              <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?></td>
-
-                              <td>
-                                <?php if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
-                                  <button type="button" class="btn btn-danger btn-xs" onclick="window.location.href='component/delete/delete_stok?get=<?php echo 'in' . '&'; ?>barang=<?php echo $fill['kode_barang'] . '&'; ?>jumlah=<?php echo $fill['jumlah'] . '&'; ?>&kode=<?php echo $kode . '&'; ?>no=<?php echo $fill['no'] . '&'; ?>forward=<?php echo $tabel . '&'; ?>forwardpage=<?php echo "" . $forwardpage . '&'; ?>chmod=<?php echo $chmod; ?>'">Hapus</button>
-                                <?php } else {
-                                } ?>
-                              </td>
-                            </tr>
-                          <?php
-                          $i++;
-                          $count++;
-                        }
-
-                          ?>
-                          </tbody>
-                      </table>
-                      <div align="right"><?php if ($tcount >= $rpp) {
-                                            echo paginate_one($reload, $page, $tpages);
-                                          } else {
-                                          } ?></div>
-
-
-                    </div>
-
-                  </div>
-
-
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="box box-danger">
-                    <div class="box-header with-border">
-
-                      <form method="post" action="">
-                        <div class="row">
-                          <div class="form-group col-md-12 col-xs-12">
-                            <label for="barang" class="col-sm-2 control-label">Supplier:</label>
-                            <div class="col-sm-10">
-                              <select class="form-control select2" style="width: 100%;" name="supplier">
-                                <?php
-                                $sql = mysqli_query($conn, "select * from supplier");
-                                while ($row = mysqli_fetch_assoc($sql)) {
-                                  if ($supplier == $row['kode'])
-                                    echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nohp'] . " | " . $row['nama'] . "</option>";
-                                  else
-                                    echo "<option value='" . $row['nama'] . "'>" . $row['nohp'] . " | " . $row['nama'] . "</option>";
-                                }
-                                ?>
-                              </select>
-                            </div>
-
-                          </div>
-                        </div>
-                        <br>
-                        <input type="hidden" class="form-control" readonly id="notae" name="notae" value="<?php echo autoNumber(); ?>">
-                        <div class="row">
-                          <div class="form-group col-md-12 col-xs-12">
-                            <button type="submit" name="simpan" class="btn btn-primary btn btn-sm">SIMPAN</button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-        </div>
-
       </div>
 
 
@@ -435,26 +303,7 @@ body();
                     </div>
                   </form>
 
-                  <div class="row">
-                    <div class="form-group col-md-12 col-xs-12">
-                      <label for="barang" class="col-sm-2 control-label">Pilih Barang:</label>
-                      <div class="col-sm-10">
-                        <select class="form-control select2" style="width: 100%;" name="produk" id="produk">
-                          <option selected="selected">Pilih Barang</option>
-                          <?php
-                          error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-                          $sql = mysqli_query($conn, "select *,barang.nama as nama, barang.kode as kode, barang.sku as sku from barang");
-                          while ($row = mysqli_fetch_assoc($sql)) {
-                            if ($barcode == $row['barcode'])
-                              echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
-                            else
-                              echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' kode='" . $row['kode'] . "' stok='" . $row['sisa'] . "' gudang='" . $row['gudang'] . "' >" . $row['sku'] . " | " . $row['nama'] . " | " . $row['gudang'] . "</option>";
-                          }
-                          ?>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
+
 
                   <form method="post" action="">
                     <div class="row">
@@ -477,6 +326,8 @@ body();
                     <?php
                     $s = $stok + $sa;
                     ?>
+
+
 
                     <div class="row">
                       <div class="form-group col-md-12 col-xs-12">
@@ -598,44 +449,13 @@ body();
 
                   </div>
                 </div>
-
                 <div class="row">
-                  <div class="col-md-12">
-                    <div class="box box-danger">
-                      <div class="box-header with-border">
-
-                        <form method="post" action="">
-                          <div class="row">
-                            <div class="form-group col-md-12 col-xs-12">
-                              <label for="barang" class="col-sm-2 control-label">Supplier:</label>
-                              <div class="col-sm-10">
-                                <select class="form-control select2" style="width: 100%;" name="supplier">
-                                  <?php
-                                  $sql = mysqli_query($conn, "select * from supplier");
-                                  while ($row = mysqli_fetch_assoc($sql)) {
-                                    if ($supplier == $row['kode'])
-                                      echo "<option value='" . $row['nama'] . "' selected='selected'>" . $row['nohp'] . " | " . $row['nama'] . "</option>";
-                                    else
-                                      echo "<option value='" . $row['nama'] . "'>" . $row['nohp'] . " | " . $row['nama'] . "</option>";
-                                  }
-                                  ?>
-                                </select>
-                              </div>
-
-                            </div>
-                          </div>
-                          <br>
-                          <input type="hidden" class="form-control" readonly id="notae" name="notae" value="<?php echo autoNumber(); ?>">
-                          <div class="row">
-                            <div class="form-group col-md-12 col-xs-12">
-                              <button type="submit" name="simpan" class="btn btn-primary btn btn-sm">SIMPAN</button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+                  <div class="form-group col-md-12 col-xs-12">
+                    <button type="submit" name="simpan" class="btn btn-primary btn btn-sm">SIMPAN</button>
                   </div>
                 </div>
+
+
               </div>
               <!-- /.box-body -->
             </div>
@@ -679,15 +499,20 @@ body();
 <script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="dist/plugins/jQuery/jquery-ui.min.js"></script>
 <script>
-  $("#produk").on("change", function() {
+  $(document).ready(function() {
+    $("#produk").on("change", function() {
 
-    var nama = $("#produk option:selected").attr("nama");
-    var kode = $("#produk option:selected").attr("kode");
-    var stok = $("#produk option:selected").attr("stok");
-    $("#nama").val(nama);
-    $("#stok").val(stok);
-    $("#kode").val(kode);
-    $("#jumlah").val(1);
+      var nama = $("#produk option:selected").attr("nama");
+      var kode = $("#produk option:selected").attr("kode");
+      var stok = $("#produk option:selected").attr("stok");
+      var satuan = $("#produk option:selected").attr("satuan");
+      $("#nama").val(nama);
+      $("#stok").val(stok);
+      $("#kode").val(kode);
+      $(".satuanspan").html(satuan);
+      //$(".satuanspan").html(satuan);
+      //$("#jumlah").val(1);
+    });
   });
 </script>
 
@@ -695,7 +520,7 @@ body();
 <script>
   $.widget.bridge('uibutton', $.ui.button);
 </script>
-
+<!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
 <script src="dist/plugins/fastclick/fastclick.js"></script>
@@ -703,7 +528,7 @@ body();
 <script src="dist/plugins/input-mask/jquery.inputmask.js"></script>
 <script src="dist/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
 <script src="dist/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-<script src="dist/plugins/iCheck/icheck.min.js"></script>
+<script src="dist/plugins/iCheck/icheck.min.js"></script> -->
 
 <!--fungsi AUTO Complete-->
 <!-- Script -->

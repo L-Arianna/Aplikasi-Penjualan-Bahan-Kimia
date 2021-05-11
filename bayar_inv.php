@@ -98,9 +98,6 @@ body();
             $faktur_pajak = mysqli_real_escape_string($conn, $_POST["faktur_pajak"]);
             $no_po = mysqli_real_escape_string($conn, $_POST["no_po"]);
             $no_surat_jalan = mysqli_real_escape_string($conn, $_POST["no_surat_jalan"]);
-            $nama_pt = mysqli_real_escape_string($conn, $_POST["nama_pt"]);
-            $alamat_pt = mysqli_real_escape_string($conn, $_POST["alamat_pt"]);
-            $no_tlp = mysqli_real_escape_string($conn, $_POST["no_tlp"]);
             $keterangan = mysqli_real_escape_string($conn, $_POST["keterangan"]);
             $databelitotal = mysqli_real_escape_string($conn, $_POST["beli"]);
 
@@ -121,7 +118,7 @@ body();
               echo "<script type='text/javascript'>  alert('Data penjualan yang sudah ada tidak bisa diubah!');</script>";
             } else if (($chmod >= 2 || $_SESSION['jabatan'] == 'admin')) {
 
-              $sql2 = "insert into sale values( '$nota','$nomor','$tglnota','$duedate','$total','$diskon','$pot','$biaya','$pelanggan','$kasir','$keterangan','','$belum','$kirim', '$faktur_pajak', '$no_po', '$no_surat_jalan', '$nama_pt', '$alamat_pt', '$no_tlp')";
+              $sql2 = "insert into sale values( '$nota','$nomor','$tglnota','$duedate','$total','$diskon','$pot','$biaya','$pelanggan','$kasir','$keterangan','','$belum','$kirim', '$faktur_pajak', '$no_po', '$no_surat_jalan')";
               $insertan = mysqli_query($conn, $sql2);
 
               //update mutasi
@@ -219,7 +216,7 @@ body();
                             <td><?php echo ++$no_urut; ?></td>
 
                             <td><?php echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']); ?> * <?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?> </td>
+                            <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah_satuan']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?> * <?php echo mysqli_real_escape_string($conn, $fill['jumlah']) . " "; ?><?php echo mysqli_real_escape_string($conn, $fill['satuan_jual']); ?> </td>
                             <td><?php echo mysqli_real_escape_string($conn, $fill['jumlah']); ?> * <?php echo mysqli_real_escape_string($conn, number_format($fill['harga'], $decimal, $a_decimal, $thousand) . ',-'); ?></td>
                             <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['total_satuan']))) ?> <?php echo mysqli_real_escape_string($conn, $fill['satuan']); ?> </td>
                             <td><?php echo mysqli_real_escape_string($conn, number_format(($fill['jumlah'] * $fill['harga']), $decimal, $a_decimal, $thousand) . ',-'); ?></td>
@@ -433,18 +430,6 @@ body();
                           <tr>
                             <td>Nomor Surat Jalan</td>
                             <td><input type="text" name="no_surat_jalan" class="form-control" required></td>
-                          </tr>
-                          <tr>
-                            <td>Nama PT</td>
-                            <td><input type="text" name="nama_pt" class="form-control" required></td>
-                          </tr>
-                          <tr>
-                            <td>Alamat PT</td>
-                            <td><input type="text" name="alamat_pt" class="form-control" required></td>
-                          </tr>
-                          <tr>
-                            <td>Nomor Telepon PT</td>
-                            <td><input type="text" name="no_tlp" class="form-control" required></td>
                           </tr>
                           <tr>
                             <td>Keterangan</td>
